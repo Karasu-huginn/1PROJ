@@ -1,12 +1,11 @@
 import pygame
 
 class Pion:
-    def __init__(self, red, green, blue, X, Y, type):
+    def __init__(self, red, green, blue, type):
         self.red = red
         self.green = green
         self.blue = blue
         self.type = type
-        #?self.hitbox = pygame.Rect((X, Y, 50, 25))
     
     def get_red(self):
         return self.red
@@ -19,6 +18,3 @@ class Pion:
     
     def get_type(self):
         return self.type
-
-    #?def get_hitbox(self):
-    #?    return self.hitbox

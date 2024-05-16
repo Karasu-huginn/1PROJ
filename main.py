@@ -48,7 +48,6 @@ def main():
 
     objetPlateau = Plateau(10)
     objetPlateau.plateauInitialisation()
-    objetPlateau.pionsInitialisation()
 
     estClique = False
     tourJoueur = 0
@@ -58,7 +57,6 @@ def main():
 
     while windowStayOpened:
 
-        objetPlateau.displayPyGame()
         objetPlateau.affichagePlateau(screen)
         objetPlateau.affichagePions(screen)
 

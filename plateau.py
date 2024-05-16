@@ -20,9 +20,6 @@ class Plateau:
     def get_plateau(self):
         return self.plateau
     
-    def get_pions(self):
-        return self.pions
-    
     def get_anneauxPlaces(self):
         return self.anneauxPlaces
 
@@ -50,9 +47,6 @@ class Plateau:
                         self.plateau[0][i][u] = 0
                     if u == self.taillePlateauX-(self.taillePlateauY//2) and i == self.taillePlateauY-1: #* suppresion du coin bas droit
                         self.plateau[0][i][u] = 0
-        
-    def pionsInitialisation(self):
-        self.pions = [[0]*self.taillePlateauX for i in range(self.taillePlateauY)]
 
 
     def display(self):
@@ -69,23 +63,6 @@ class Plateau:
                     print(" ", end="")
             print("")
 
-    def displayPyGame(self):
-        for i in range(self.taillePlateauY):
-            for u in range(self.taillePlateauX):
-                if self.plateau[0][i][u] == 1:
-                    if self.plateau[1][i][u] == "a":
-                        self.pions[i][u] = Pion(0, 0, 0, i*50, u*25, "a")
-                    elif self.plateau[1][i][u] == "m":
-                        self.pions[i][u] = Pion(0, 0, 0, i*50, u*25, "m")
-                    elif self.plateau[1][i][u] == "A":
-                        self.pions[i][u] = Pion(255, 255, 255, i*50, u*25, "A")
-                    elif self.plateau[1][i][u] == "M":
-                        self.pions[i][u] = Pion(255, 255, 255, i*50, u*25, "M")
-                    else:
-                        self.pions[i][u] = Pion(255, 255, 255, i*50, u*25, "x")
-                if self.plateau[0][i][u] == 0:
-                    self.pions[i][u] = Pion(0, 0, 0, i*50, u*25, "0")
-
     def affichagePlateau(self, screen):
         for i in range(len(self.plateau[0])):
             for u in range(len(self.plateau[0][i])):
@@ -95,12 +72,17 @@ class Plateau:
                     pygame.draw.rect(screen, (50,50,50), pygame.Rect((i*50, u*25, 50, 25)))
 
     def affichagePions(self, screen):
-        for i in range(len(self.pions)):
-            for u in range(len(self.pions[i])):
-                if self.pions[i][u].get_type() == "M" or self.pions[i][u].get_type() == "m":
-                    pygame.draw.circle(screen, (self.pions[i][u].red,self.pions[i][u].green,self.pions[i][u].blue),(i*50+25,u*25+12), 8)
-                elif self.pions[i][u].get_type() == "A" or self.pions[i][u].get_type() == "a":
-                    pygame.draw.circle(screen, (self.pions[i][u].red,self.pions[i][u].green,self.pions[i][u].blue),(i*50+25,u*25+12), 12)
+        for i in range(len(self.plateau[1])):
+            for u in range(len(self.plateau[1][i])):
+                if self.plateau[1][i][u] == "m":
+                    pygame.draw.circle(screen, (0,0,0),(i*50+25,u*25+12), 8)
+                elif self.plateau[1][i][u] == "M":
+                    pygame.draw.circle(screen, (255,255,255),(i*50+25,u*25+12), 8)
+                elif self.plateau[1][i][u] == "a":
+                    pygame.draw.circle(screen, (0,0,0),(i*50+25,u*25+12), 12)
+                    pygame.draw.circle(screen, (200,200,200),(i*50+25,u*25+12), 8)
+                elif self.plateau[1][i][u] == "A":
+                    pygame.draw.circle(screen, (255,255,255),(i*50+25,u*25+12), 12)
                     pygame.draw.circle(screen, (200,200,200),(i*50+25,u*25+12), 8)
                         
     def retournerMarqueurs(self, positionAnneauX, positionAnneauY):
@@ -136,7 +118,7 @@ class Plateau:
     def placementAnneaux(self, tourJoueur):
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
-        if self.pions[x][y].get_type() == "x":
+        if self.plateau[0][x][y] == 1:
             if tourJoueur%2 == 0:
                 self.plateau[1][x][y] = "A"
                 tourJoueur+=1
@@ -150,7 +132,7 @@ class Plateau:
     def selectionAnneaux(self, tourJoueur):
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
-        if self.pions[x][y].get_type() == chr((tourJoueur%2)*32+65):
+        if self.plateau[1][x][y] == chr((tourJoueur%2)*32+65):
             if tourJoueur%2 == 0:
                 self.plateau[1][x][y] = "M"
             else:
@@ -184,7 +166,7 @@ class Plateau:
         self.anneauSurChemin = False
         self.marqueurSurChemin = False
         coordsFinales = [0,0]
-        if self.pions[x][y].get_type() == "x":
+        if self.plateau[0][x][y] == 1:
             if abs(diffX) == abs(diffY):
                 for i in range(1,abs(diffX)+1):
                     loopX = positionAnneauX-i*(diffX//abs(diffX))
