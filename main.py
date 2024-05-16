@@ -51,7 +51,7 @@ def main():
     objetPlateau.pionsInitialisation()
 
     estClique = False
-    tourJoueur = 1
+    tourJoueur = 0
     anneauEnDeplacement = False
     positionAnneauX = 0
     positionAnneauY = 0
