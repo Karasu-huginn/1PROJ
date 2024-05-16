@@ -1,5 +1,4 @@
 import pygame
-from pion import *
 
 class Plateau:
     def __init__(self, taillePlateau):
@@ -49,7 +48,7 @@ class Plateau:
                         self.plateau[0][i][u] = 0
 
 
-    def display(self):
+    def display(self):      #* affiche le plateau en CLI
         for i in range(self.taillePlateauY):
             for u in range(self.taillePlateauX):
                 if self.plateau[0][i][u] == 1:
@@ -63,7 +62,7 @@ class Plateau:
                     print(" ", end="")
             print("")
 
-    def affichagePlateau(self, screen):
+    def affichagePlateau(self, screen):     #* affiche le plateau sur la fenêtre Pygame
         for i in range(len(self.plateau[0])):
             for u in range(len(self.plateau[0][i])):
                 if self.plateau[0][i][u] == 1:
@@ -71,7 +70,7 @@ class Plateau:
                 if self.plateau[0][i][u] == 0:
                     pygame.draw.rect(screen, (50,50,50), pygame.Rect((i*50, u*25, 50, 25)))
 
-    def affichagePions(self, screen):
+    def affichagePions(self, screen):       #* affiche les pions sur la fenêtre Pygame
         for i in range(len(self.plateau[1])):
             for u in range(len(self.plateau[1][i])):
                 if self.plateau[1][i][u] == "m":
@@ -85,20 +84,20 @@ class Plateau:
                     pygame.draw.circle(screen, (255,255,255),(i*50+25,u*25+12), 12)
                     pygame.draw.circle(screen, (200,200,200),(i*50+25,u*25+12), 8)
                         
-    def retournerMarqueurs(self, positionAnneauX, positionAnneauY):
+    def retournerMarqueurs(self, positionAnneauX, positionAnneauY):     #* retourne tous les marqueurs sur le chemin prit par un anneau
         x,y = pygame.mouse.get_pos()
-        x,y = x//50, y//25
-        diffX = positionAnneauX-x
+        x,y = x//50, y//25                                              #* récupère les coordonnées du curseur et les divise par la taille d'une case pour avoir les coordonnées sur le plateau
+        diffX = positionAnneauX-x                                       #* nombre de cases entre la position orginale et la nouvelle position de l'anneau
         diffY = positionAnneauY-y
-        if abs(diffX) == abs(diffY):
+        if abs(diffX) == abs(diffY):                                    #* vérifie que la case sélectionnée est une diagonale de la case originale
             for i in range(1,abs(diffX)):
-                loopX = positionAnneauX-i*(diffX//abs(diffX))
+                loopX = positionAnneauX-i*(diffX//abs(diffX))           #* définit les coordonnées d'une case où retourner le marqueur si présent
                 loopY = positionAnneauY-i*(diffY//abs(diffY))
-                if self.plateau[1][loopX][loopY] == "m":
+                if self.plateau[1][loopX][loopY] == "m":                #* retourne le marqueur
                     self.plateau[1][loopX][loopY] = "M"
                 elif self.plateau[1][loopX][loopY] == "M":
                     self.plateau[1][loopX][loopY] = "m"
-        elif abs(diffX)%2 == 0 and abs(diffY) == 0 or abs(diffY)%2 == 0 and abs(diffX) == 0:
+        elif abs(diffX)%2 == 0 and abs(diffY) == 0 or abs(diffY)%2 == 0 and abs(diffX) == 0:    #* vérifie que la case sélectionnée est une ligne horizontale ou verticale de la case originale
             for i in range(1,(abs(diffX)+abs(diffY)+1)//2):
                 if abs(diffX) == 0:
                     loopX = positionAnneauX
@@ -115,11 +114,11 @@ class Plateau:
                     elif self.plateau[1][loopX][loopY] == "M":
                         self.plateau[1][loopX][loopY] = "m"
 
-    def placementAnneaux(self, tourJoueur):
+    def placementAnneaux(self, tourJoueur):     #* place un anneau où le joueur a cliqué
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
-        if self.plateau[0][x][y] == 1:
-            if tourJoueur%2 == 0:
+        if self.plateau[0][x][y] == 1:          #* vérifie que la case sélectionnée est une intersection libre
+            if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
                 self.plateau[1][x][y] = "A"
                 tourJoueur+=1
                 self.anneauxPlaces+=1
@@ -129,29 +128,29 @@ class Plateau:
                 self.anneauxPlaces+=1
         return tourJoueur
  
-    def selectionAnneaux(self, tourJoueur):
+    def selectionAnneaux(self, tourJoueur):     #* sélectionne un anneau à déplacer
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
-        if self.plateau[1][x][y] == chr((tourJoueur%2)*32+65):
+        if self.plateau[1][x][y] == chr((tourJoueur%2)*32+65):  #* vérifie que le pion sélectionné correspond à un anneau de la couleur du joueur (si tourJoueur est pair, 32 n'est pas ajouté à 65 et reste "m", sinon le chr() le passe en majuscule selon son code ASCII)
             if tourJoueur%2 == 0:
-                self.plateau[1][x][y] = "M"
+                self.plateau[1][x][y] = "M"                     #* remplace l'anneau par un marqueur en vue de la suite du tour
             else:
                 self.plateau[1][x][y] = "m"
             return True, x, y
         else:
             return False, 0, 0    
         
-    def checkCaseDeplacementAnneau(self, loopX, loopY):
+    def checkCaseDeplacementAnneau(self, loopX, loopY):     #* vérifie si la case respecte les règles de déplacement de l'anneau
         coordsFinales = [0,0]
         stop = False
         if self.plateau[1][loopX][loopY] == "M" or self.plateau[1][loopX][loopY] == "m":
-            self.marqueurSurChemin = True
+            self.marqueurSurChemin = True                   #* si la case est un marqueur, on indique que l'anneau passe sur des marqueurs
             coordsFinales[0], coordsFinales[1] = loopX,loopY
         elif self.plateau[1][loopX][loopY] == "A" or self.plateau[1][loopX][loopY] == "a":
-            self.anneauSurChemin = True
+            self.anneauSurChemin = True                     #* si la case est un anneau, on indique que l'anneau passe sur un anneau et ne peut donc pas continuer
             coordsFinales[0], coordsFinales[1] = loopX,loopY
         elif self.plateau[1][loopX][loopY] == 0:
-            if self.marqueurSurChemin:
+            if self.marqueurSurChemin:                      #* si la case est vide et que l'anneau est passé par dessus des marqueurs, on le fait s'arrêter ici
                 coordsFinales[0], coordsFinales[1] = loopX,loopY
                 self.marqueurSurChemin = False
                 stop = True
@@ -166,9 +165,9 @@ class Plateau:
         self.anneauSurChemin = False
         self.marqueurSurChemin = False
         coordsFinales = [0,0]
-        if self.plateau[0][x][y] == 1:
-            if abs(diffX) == abs(diffY):
-                for i in range(1,abs(diffX)+1):
+        if self.plateau[0][x][y] == 1:                      #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
+            if abs(diffX) == abs(diffY):                    #* on définit si la case sélectionnée est sur une diagonale ou sur une ligne horizontale/verticale
+                for i in range(1,abs(diffX)+1):             #* on répète jusqu'à la case sélectionnée
                     loopX = positionAnneauX-i*(diffX//abs(diffX))
                     loopY = positionAnneauY-i*(diffY//abs(diffY))
                     coordsFinales[0], coordsFinales[1], stop = self.checkCaseDeplacementAnneau(loopX, loopY)
@@ -190,7 +189,7 @@ class Plateau:
                         if stop:
                             break
                 coordsFinales[0], coordsFinales[1] = loopX,loopY
-        if coordsFinales[0] == x and coordsFinales[1] == y and self.anneauSurChemin == False:
+        if coordsFinales[0] == x and coordsFinales[1] == y and self.anneauSurChemin == False:   #* si les coordonnées retenues par la méthode checkCaseDeplacementAnneau sont les mêmes que la case sélectionnée par l'utilisateur et qu'il n'y a pas d'anneau sur le chemin, alors on peut continuer
             return False
         else:
             return True
