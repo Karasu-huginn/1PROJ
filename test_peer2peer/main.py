@@ -38,6 +38,7 @@ def debugCaseValide(oldX,oldY):     #* affiche si la case cliquée est valide po
 
 
 def main():
+    #updateboard = False
     pygame.init()
     windowWidth = 600       #* Largeur fenêtre (int)
     windowHeight = 600      #* Hauteur fenêtre (int)
@@ -83,8 +84,10 @@ def main():
         for event in pygame.event.get():    #* on récupère les events qui se passent
             if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
                 windowStayOpened = False        #* on toggle la variable pour arrêter la boucle
-        pygame.display.update()
-        print(objetPlateau)         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
+        pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
+        if estClique: 
+            print("\n\n\ntest1_get_plateau")
+            print (objetPlateau.get_plateau())
     pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
 main()
