@@ -5,7 +5,6 @@ class Plateau:
         self.taillePlateauY = taillePlateau+1
         self.taillePlateauX = int(taillePlateau*2)
         self.plateau = [list(),list()]
-        self.pions = list()
         self.anneauxPlaces = 0
         self.marqueurSurChemin = False
         self.anneauSurChemin = False
