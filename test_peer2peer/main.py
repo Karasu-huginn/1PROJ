@@ -93,15 +93,15 @@ def main():
 
 
 def mainP2P ():
-    host_name = Server.get_local_ip()
-    port = 1111
-    server = Server(host_name, port)
-    server.bind()
-    connection, addr = server.accept_connection()
+    host_name = Server.get_local_ip() #* récupérer hostname pour bind la connexion
+    port = 1111 #* definition du port utilisé
+    server = Server(host_name, port) #* création de l'instance server
+    server.bind() #* bind la connexion avec le port et l'adresse ip
+    connection, addr = server.accept_connection() #* accept la connexion du client -> serveur
     #test connection
-    message_recu = server.receive_message(connection)
-    message = ("Server : Bonjour le serveur est aussi vivant ! :D")
-    server.send_message(connection, message)
+    message_recu = server.receive_message(connection) #* test de connection
+    message = ("Server : Bonjour le serveur est aussi vivant ! :D") #* test de connection
+    server.send_message(connection, message) #* test de connection
     pygame.init()
     windowWidth = 600       #* Largeur fenêtre (int)
     windowHeight = 600      #* Hauteur fenêtre (int)
@@ -119,20 +119,20 @@ def mainP2P ():
     positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
     positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
     print ("\ntest envoie liste vite\n")
-    server.send_message(connection, str(objetPlateau.plateau))
-    server.send_message(connection, str(tourJoueur))
-    while windowStayOpened:
+    server.send_message(connection, str(objetPlateau.plateau)) #* envoie d'une liste vide au client
+    server.send_message(connection, str(tourJoueur)) #* envoie du tour par défaut au client
+    while windowStayOpened: #* boucle execution pygame
         objetPlateau.affichagePlateau(screen)   #* affichage des cases du plateau dans la fenêtre
         objetPlateau.affichagePions(screen)     #* affichage des pions dans la fenêtre
         #plateau ="[[[0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0], [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0], [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1], [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0], [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1], [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0], [0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0], [0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0]], [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'A', 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]]"
         estClique = gestionClic(estClique)
-        if estClique:
-            if tourJoueur%2 == 0: #les blancs jouent
-                if objetPlateau.get_anneauxPlaces() < 4:
-                    tourJoueur = objetPlateau.placementAnneaux(tourJoueur)
+        if estClique: #* si on clique dans la fenetre 
+            if tourJoueur%2 == 0: #les blancs jouent #* et que c'est le joueur blanc qui joue
+                if objetPlateau.get_anneauxPlaces() < 4: #* vérif que tous les anneaux sont placés
+                    tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
                     print ("\nenvoie liste après premier anneaux")
-                    server.send_message(connection, str(tourJoueur))
-                    server.send_message(connection,str(objetPlateau.plateau))
+                    server.send_message(connection, str(tourJoueur)) #* envoie du tableau après mouvements
+                    server.send_message(connection,str(objetPlateau.plateau)) #* envoie du tableau après mouvements
                 else:
                     if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en marqueur et qu'on attend la position finale de l'anneau pour le replacer
                         anneauEnDeplacement = objetPlateau.checkLigneDeplacementAnneau(positionAnneauX, positionAnneauY)    #* on vérifie que l'anneau puisse être placé aux nouvelles coordonnées selon les règles du jeu
@@ -145,7 +145,7 @@ def mainP2P ():
         #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
         font = pygame.font.SysFont(None, 22)        #* texte à afficher
-        img = font.render(tourJoueurTexte, True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc offi
+        img = font.render(tourJoueurTexte, True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc office
         screen.blit(img, (20, 20))      #* pareil
 
         for event in pygame.event.get():    #* on récupère les events qui se passent
@@ -164,7 +164,7 @@ def mainP2P ():
         #    x = Pos[0]
         #    y = Pos[1]
         #    #tourdujoueur, plateau, x, y = 
-
+#$ truc temporaire à la con sera remplacé par une interface pygame
 try:
     input = 1
     #input = int(input("Enter 1-réseau or 2-local: "))

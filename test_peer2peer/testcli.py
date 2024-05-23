@@ -51,17 +51,17 @@ def renduTexteTourJoueur(tourJoueur):       #* renvoie le texte à afficher selo
     
 def main ():
     if __name__ == "__main__":
-        host_name = Client.get_local_ip()
-        port = 1111
-        client = Client(host_name, port)
-        client.connect()
-        client.send_message("Bonjour le client est vivant ! :)")
-        client.receive_message()
+        host_name = Client.get_local_ip() #$ récupérer hostname pour bind la connexion (à changer pour un input)
+        port = 1111 #* definition du port utilisé
+        client = Client(host_name, port) #* création de l'instance server
+        client.connect() #* connextion à l'adresse donné
+        client.send_message("Bonjour le client est vivant ! :)") #* test de connection
+        client.receive_message() #* test de connection
 
 
-        message_recu = client.receive_message()
+        message_recu = client.receive_message() #* réception d'une grille vide
         plateau_recu = ast.literal_eval(message_recu)
-        tour = client.receive_message()
+        tour = client.receive_message() #* réception du tour
         objetPlateau = Plateau(10)
         objetPlateau.plateau = plateau_recu
 
@@ -76,29 +76,26 @@ def main ():
         anneauEnDeplacement = False     #* détermine si un anneau est en train d'être déplacé (bool)
         positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
         positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
-        first_exec = True
+        first_exec = True 
         while windowStayOpened:
-            objetPlateau.affichagePlateau(screen)
-            objetPlateau.affichagePions(screen)
-            if first_exec == True:
-                pygame.display.update()
-                first_exec = False
-            while tourJoueur%2 == 0:
-                print ("test")
-                tour = client.receive_message()
-                message_recu = client.receive_message()
-                plateau_recu = ast.literal_eval(message_recu)
-                objetPlateau.plateau = plateau_recu                    
+            objetPlateau.affichagePlateau(screen)  #* affiche le plateau
+            objetPlateau.affichagePions(screen) #* affiche les pions si ils sont présent
+            if first_exec == True: #* permet d'afficher la grille lors de l'ouverture
+                pygame.display.update() #* update l'interface afin d'affciher le plateau recu
+                first_exec = False #* ajout de cette variable pour concel l'auto refresh permanent
+            if tourJoueur%2 == 0: #* si le joueur à jouer n'est pas l'invité on receptionne le plateau lors qde chaque mouvements
+                print ("test") 
+                tour = client.receive_message() #*réception tour après tour du joueur blanc
+                message_recu = client.receive_message() #* réception du plateau après le tour du joueur blanc
+                plateau_recu = ast.literal_eval(message_recu) #* converti le tableau qui est en str en list
+                objetPlateau.plateau = plateau_recu #* affectation du tableau à la classe Plateau              
                 print ("test1")
-                tourJoueur = int(tour)
+                tourJoueur = int(tour) #* affectation et conversion du tourjoueur
                 print ("test3")
-                objetPlateau.affichagePlateau(screen)
-                objetPlateau.affichagePions(screen)
-                pygame.display.update()
+                objetPlateau.affichagePlateau(screen) #* affichage du nouveau plateau après le tour du joueur blanc
+                objetPlateau.affichagePions(screen) #* affichage des pions après le tour du joueur blanc
+                pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus
                 print ("test4")
-                #pygame.time.delay(1000)                    message_recu = client.receive_message()
-                plateau_recu = ast.literal_eval(message_recu)
-                objetPlateau.plateau = plateau_recu
             else :
                 estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
                 if estClique:
