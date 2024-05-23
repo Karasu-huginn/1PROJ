@@ -127,6 +127,18 @@ class Plateau:
                 tourJoueur+=1
                 self.anneauxPlaces+=1
         return tourJoueur
+    
+    def placementAnneauxP2P(self, tourJoueur, x, y):
+        if self.plateau[0][x][y] == 1:
+            if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
+                self.plateau[1][x][y] = "A"
+                tourJoueur+=1
+                self.anneauxPlaces+=1
+            else:
+                self.plateau[1][x][y] = "a"
+                tourJoueur+=1
+                self.anneauxPlaces+=1
+            return tourJoueur, self.plateau , x, y
  
     def selectionAnneaux(self, tourJoueur):     #* sélectionne un anneau à déplacer
         x,y = pygame.mouse.get_pos()
@@ -193,3 +205,10 @@ class Plateau:
             return False
         else:
             return True
+        
+    def update_display(self,screen):
+        while True:
+            self.affichagePlateau(screen)
+            self.affichagePions(screen)
+            pygame.display.update()
+            pygame.time.delay(100)  # update display every 100ms

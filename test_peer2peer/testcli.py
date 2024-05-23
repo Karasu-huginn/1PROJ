@@ -22,7 +22,7 @@ class Client:
 
     def receive_message(self):
         message = self.client_socket.recv(self.buf_size).decode()
-        #print(f"Received message: {message}")
+        print(f"Received message: {message}")
         return message
 
     def close(self):
@@ -56,14 +56,12 @@ def main ():
         client = Client(host_name, port)
         client.connect()
         client.send_message("Bonjour le client est vivant ! :)")
+        client.receive_message()
+
+
         message_recu = client.receive_message()
         plateau_recu = ast.literal_eval(message_recu)
         tour = client.receive_message()
-        #print(plateau_recu)
-        #print(type(message_recu))
-        #print(message_recu)
-        #print("test1\n")
-        #print(plateau_recu[1])
         objetPlateau = Plateau(10)
         objetPlateau.plateau = plateau_recu
 
@@ -78,16 +76,36 @@ def main ():
         anneauEnDeplacement = False     #* détermine si un anneau est en train d'être déplacé (bool)
         positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
         positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
+        first_exec = True
         while windowStayOpened:
             objetPlateau.affichagePlateau(screen)
             objetPlateau.affichagePions(screen)
-
-            estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
-            if estClique:
-                if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
-                    x,y = pygame.mouse.get_pos()
-                    x,y = x//50, y//25
-                    client.send_message(str([x, y]))  #* Envoyer les positions x et y dans une liste
+            if first_exec == True:
+                pygame.display.update()
+                first_exec = False
+            while tourJoueur%2 == 0:
+                print ("test")
+                tour = client.receive_message()
+                message_recu = client.receive_message()
+                plateau_recu = ast.literal_eval(message_recu)
+                objetPlateau.plateau = plateau_recu                    
+                print ("test1")
+                tourJoueur = int(tour)
+                print ("test3")
+                objetPlateau.affichagePlateau(screen)
+                objetPlateau.affichagePions(screen)
+                pygame.display.update()
+                print ("test4")
+                #pygame.time.delay(1000)                    message_recu = client.receive_message()
+                plateau_recu = ast.literal_eval(message_recu)
+                objetPlateau.plateau = plateau_recu
+            else :
+                estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
+                if estClique:
+                    if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
+                        x,y = pygame.mouse.get_pos()
+                        x,y = x//50, y//25
+                        client.send_message(str([x, y]))  #* Envoyer les positions x et y dans une liste
 
             #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
             tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
@@ -98,5 +116,5 @@ def main ():
                 if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
                     windowStayOpened = False
             pygame.display.update() 
-    client.close()
+        client.close()
 main()
