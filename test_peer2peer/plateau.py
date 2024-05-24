@@ -207,8 +207,5 @@ class Plateau:
             return True
         
     def update_display(self,screen):
-        while True:
-            self.affichagePlateau(screen)
-            self.affichagePions(screen)
-            pygame.display.update()
-            pygame.time.delay(100)  # update display every 100ms
+        self.affichagePlateau(screen)  #* affiche le plateau
+        self.affichagePions(screen) #* affiche les pions si ils sont présent
