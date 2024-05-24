@@ -9,6 +9,7 @@ class Plateau:
         self.anneauxPlaces = 0
         self.marqueurSurChemin = False
         self.anneauSurChemin = False
+        self.token = int
     
     def get_taillePlateauY(self):
         return self.taillePlateauY
@@ -138,7 +139,7 @@ class Plateau:
                 self.plateau[1][x][y] = "a"
                 tourJoueur+=1
                 self.anneauxPlaces+=1
-            return tourJoueur, self.plateau , x, y
+            return tourJoueur
  
     def selectionAnneaux(self, tourJoueur):     #* sélectionne un anneau à déplacer
         x,y = pygame.mouse.get_pos()

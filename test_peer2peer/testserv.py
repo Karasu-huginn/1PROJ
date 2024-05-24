@@ -1,5 +1,6 @@
 import socket
 from plateau import *
+from queue import Queue
 BUFF_SIZE = 2048
 
 class Server:
@@ -7,6 +8,8 @@ class Server:
         self.host_name = host_name
         self.port = port
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.buf_size = 2048
+        self.connected = False
 
     def bind(self):
         self.server_socket.bind((self.host_name, self.port))
@@ -16,10 +19,11 @@ class Server:
     def accept_connection(self):
         connection, addr = self.server_socket.accept()
         print(f"Connected to client : {addr}")
+        self.connected = True
         return connection, addr
 
     def receive_message(self, connection):
-        message = connection.recv(BUFF_SIZE).decode()
+        message = connection.recv(self.buf_size).decode()
         print(f"Received message: {message}")
         return message
 
@@ -35,4 +39,9 @@ class Server:
         host_name = socket.gethostname()
         local_ip = socket.gethostbyname(host_name)
         return local_ip
-
+                
+    def receive_position_thread(self, queue, connection): #* ajoute x et y à la queue (utilise dans le thread)
+        while self.connected:
+            message_recu = self.receive_message(connection)
+            queue.put(message_recu)
+            print("une pos x et y à été ajouté à la queue")

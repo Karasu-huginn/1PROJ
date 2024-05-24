@@ -99,10 +99,14 @@ def main ():
 
         first_exec = True 
         while windowStayOpened:
+
+            #* affichage de la fenetre (première execution)
             objetPlateau.update_display(screen) #* affiche le plateau
             if first_exec == True: #* permet d'afficher la grille lors de l'ouverture
                 pygame.display.update() #* update l'interface afin d'affciher le plateau recu
                 first_exec = False #* ajout de cette variable pour concel l'auto refresh permanent
+
+            #* gestion tour host
             if tourJoueur%2 == 0: #* si le joueur à jouer n'est pas l'invité on receptionne le plateau lors qde chaque mouvements
                 while not queue.empty(): #* itère les éléments de la queue
                     element = queue.get() #* récupère les éléments de la queue
@@ -115,14 +119,25 @@ def main ():
                         tourJoueur = int(message_recu[5:]) #* formate la data retire l'identifiant
                     objetPlateau.update_display(screen) #* affiche le plateau avec un refresh
                     pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus
+            #* gestion tour invité (envoie de data vers server) 
             else :
                 estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
                 if estClique:
-                    if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
-                        x,y = pygame.mouse.get_pos()
-                        x,y = x//50, y//25
-                        client.send_message(str([x, y]))  #* Envoyer les positions x et y dans une liste
-
+                        x,y = pygame.mouse.get_pos() #* obtention des valeur x et y
+                        x,y = x//50, y//25 #* formatage par rapport au tableau
+                        message = [x,y] #* on les ajoute à une liste pour les envoyer plus tard
+                        client.send_message(str(message))  #* Envoyer les positions x et y dans une liste
+                while not queue.empty(): #* itère les éléments de la queue
+                    element = queue.get() #* récupère les éléments de la queue
+                    if element.startswith("plateau:"): #* check l'identificant pour savoir de quelle donnée il s'agit
+                        message_recu = element
+                        plateau_recu = ast.literal_eval(message_recu[8:]) #* formate la data retire l'identifiant
+                        objetPlateau.plateau = plateau_recu
+                    elif element.startswith("tour:"): #* check l'identificant pour savoir de quelle donnée il s'agit
+                        message_recu = element
+                        tourJoueur = int(message_recu[5:]) #* formate la data retire l'identifiant
+                    objetPlateau.update_display(screen) #* affiche le plateau avec un refresh
+                    pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus
             #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
             tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
             font = pygame.font.SysFont(None, 22)        #* texte à afficher
