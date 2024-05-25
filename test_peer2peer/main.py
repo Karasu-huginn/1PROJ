@@ -139,12 +139,12 @@ def mainP2P ():
                 if estClique: #* si on clique dans la fenetre 
                     if objetPlateau.get_anneauxPlaces() < 4: #* vérif que tous les anneaux sont placés
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
-                        message_plateau = "plateau:" + str(objetPlateau.plateau)
+                        message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                         server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-                        message_tour = "tour:" + str(tourJoueur)
-                        server.send_message(connection, message_tour)#* envoie du tour après mouvements
+                        message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
+                        server.send_message(connection, message_tour)#* envoie du tableau après mouvements
                         objetPlateau.update_display(screen)
-                        pygame.display.update()
+                        pygame.display.update()   
                     else:
                         if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en marqueur et qu'on attend la position finale de l'anneau pour le replacer
                             anneauEnDeplacement = objetPlateau.checkLigneDeplacementAnneau(positionAnneauX, positionAnneauY)    #* on vérifie que l'anneau puisse être placé aux nouvelles coordonnées selon les règles du jeu
@@ -154,9 +154,9 @@ def mainP2P ():
                                 message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                                 server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
                                 message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-                                server.send_message(connection, message_tour)#* envoie du tourn après mouvements
+                                server.send_message(connection, message_tour)#* envoie du tableau après mouvements
                                 objetPlateau.update_display(screen)
-                                pygame.display.update()
+                                pygame.display.update()   
                         else:
                             anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante
                             message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
@@ -174,12 +174,12 @@ def mainP2P ():
                         y = Pos_x_y[1] #* affectation de valeur de y
                         if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
                             tourJoueur = objetPlateau.placementAnneauxP2P(tourJoueur,x,y) #* placement de l'anneau en fonction de x et y
-                            message_plateau = "plateau:" + str(objetPlateau.plateau) #* concatenation pour format lisible
+                            message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                             server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-                            message_tour = "tour:" + str(tourJoueur) #* concatenation pour format lisible
-                            server.send_message(connection, message_tour)#* envoie du tour après mouvements
-                            objetPlateau.update_display(screen) #* refresh des list 
-                            pygame.display.update()   #* refresh interface
+                            message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
+                            server.send_message(connection, message_tour)#* envoie du tableau après mouvements
+                            objetPlateau.update_display(screen)
+                            pygame.display.update()   
                         else:
                             #$debugCasePos()
                             if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en marqueur et qu'on attend la position finale de l'anneau pour le replacer
@@ -187,30 +187,32 @@ def mainP2P ():
                                 if not anneauEnDeplacement:     #* si anneauEnDeplacement est false c'est que la vérification d'avant est validée, donc on continue, sinon on ne fait rien
                                     tourJoueur = objetPlateau.placementAnneauxP2P(tourJoueur,x,y)      #* on place l'anneau
                                     objetPlateau.retournerMarqueursP2P(positionAnneauX, positionAnneauY,x,y)  #* on retourne les marqueurs du chemin s'il y en a
-                                    message_plateau = "plateau:" + str(objetPlateau.plateau) #* concatenation pour format lisible
+                                    message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                                     server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-                                    message_tour = "tour:" + str(tourJoueur) #* concatenation pour format lisible
-                                    server.send_message(connection, message_tour)#* envoie du tour après mouvements
-                                    objetPlateau.update_display(screen) #* refresh des list 
-                                    pygame.display.update()   #* refresh interface
+                                    message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
+                                    server.send_message(connection, message_tour)#* envoie du tableau après mouvements
+                                    objetPlateau.update_display(screen)
+                                    pygame.display.update()   
                             else:
                                 anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneauxP2P(tourJoueur,x,y)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante
-                                message_plateau = "plateau:" + str(objetPlateau.plateau) #* concatenation pour format lisible
+                                message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                                 server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-                                message_tour = "tour:" + str(tourJoueur) #* concatenation pour format lisible
-                                server.send_message(connection, message_tour)#* envoie du tour après mouvements
-                                objetPlateau.update_display(screen) #* refresh des list 
-                                pygame.display.update()   #* refresh interface
+                                message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
+                                server.send_message(connection, message_tour)#* envoie du tableau après mouvements
+                                objetPlateau.update_display(screen)
+                                pygame.display.update()   
     
             #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
             tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
             font = pygame.font.SysFont(None, 22)        #* texte à afficher
             img = font.render(tourJoueurTexte, True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc office
+            txt = font.render("Vous jouez les blancs", True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc office
             screen.blit(img, (20, 20))      #* pareil
-    
+            screen.blit(txt, (375, 20))      #* pareil
             for event in pygame.event.get():    #* on récupère les events qui se passent
                 if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
                     windowStayOpened = False        #* on toggle la variable pour arrêter la boucle
+                    server.connected = False
             pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
         server.connected = False
         pygame.quit()

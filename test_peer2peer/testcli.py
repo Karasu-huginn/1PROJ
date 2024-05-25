@@ -143,10 +143,13 @@ def main ():
             tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
             font = pygame.font.SysFont(None, 22)        #* texte à afficher
             img = font.render(tourJoueurTexte, True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc offi
+            txt = font.render("Vous jouez les noirs", True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc office
             screen.blit(img, (20, 20))      #* pareil
+            screen.blit(txt, (390, 20))      #* pareil
             for event in pygame.event.get():    #* on récupère les events qui se passent
                 if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
                     windowStayOpened = False
+                    client.connected = False
             pygame.display.update() 
         client.close()
 main()
