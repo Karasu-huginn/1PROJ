@@ -85,7 +85,7 @@ def main ():
 
         receive_messages_thread = threading.Thread(target=client.receive_messages_thread, args=(queue,)) #* liaison du process à faire tourner sur le thread
         receive_messages_thread.start() #* démarrage du thread
-
+        
         pygame.init()
         windowWidth = 600       #* Largeur fenêtre (int)
         windowHeight = 600      #* Hauteur fenêtre (int)
@@ -148,6 +148,7 @@ def main ():
             screen.blit(txt, (390, 20))      #* pareil
             for event in pygame.event.get():    #* on récupère les events qui se passent
                 if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
+                    receive_messages_thread.join() #* fermeture du thread
                     windowStayOpened = False
                     client.connected = False
             pygame.display.update() 

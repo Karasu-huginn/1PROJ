@@ -211,6 +211,7 @@ def mainP2P ():
             screen.blit(txt, (375, 20))      #* pareil
             for event in pygame.event.get():    #* on récupère les events qui se passent
                 if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
+                    receive_position_thread.join()  #* fermeture du thread
                     windowStayOpened = False        #* on toggle la variable pour arrêter la boucle
                     server.connected = False
             pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
