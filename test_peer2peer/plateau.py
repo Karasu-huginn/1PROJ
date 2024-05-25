@@ -115,31 +115,64 @@ class Plateau:
                     elif self.plateau[1][loopX][loopY] == "M":
                         self.plateau[1][loopX][loopY] = "m"
 
-    def placementAnneaux(self, tourJoueur):     #* place un anneau où le joueur a cliqué
+
+
+    def retournerMarqueursP2P(self, positionAnneauX, positionAnneauY,x,y):     #* retourne tous les marqueurs sur le chemin prit par un anneau                                        #* récupère les coordonnées du curseur et les divise par la taille d'une case pour avoir les coordonnées sur le plateau
+        diffX = positionAnneauX-x                                       #* nombre de cases entre la position orginale et la nouvelle position de l'anneau
+        diffY = positionAnneauY-y
+        if abs(diffX) == abs(diffY):                                    #* vérifie que la case sélectionnée est une diagonale de la case originale
+            for i in range(1,abs(diffX)):
+                loopX = positionAnneauX-i*(diffX//abs(diffX))           #* définit les coordonnées d'une case où retourner le marqueur si présent
+                loopY = positionAnneauY-i*(diffY//abs(diffY))
+                if self.plateau[1][loopX][loopY] == "m":                #* retourne le marqueur
+                    self.plateau[1][loopX][loopY] = "M"
+                elif self.plateau[1][loopX][loopY] == "M":
+                    self.plateau[1][loopX][loopY] = "m"
+        elif abs(diffX)%2 == 0 and abs(diffY) == 0 or abs(diffY)%2 == 0 and abs(diffX) == 0:    #* vérifie que la case sélectionnée est une ligne horizontale ou verticale de la case originale
+            for i in range(1,(abs(diffX)+abs(diffY)+1)//2):
+                if abs(diffX) == 0:
+                    loopX = positionAnneauX
+                    loopY = positionAnneauY-i*(diffY//abs(diffY))*2
+                    if self.plateau[1][loopX][loopY] == "m":
+                        self.plateau[1][loopX][loopY] = "M"
+                    elif self.plateau[1][loopX][loopY] == "M":
+                        self.plateau[1][loopX][loopY] = "m"
+                else:
+                    loopX = positionAnneauX-i*(diffX//abs(diffX))*2
+                    loopY = positionAnneauY
+                    if self.plateau[1][loopX][loopY] == "m":
+                        self.plateau[1][loopX][loopY] = "M"
+                    elif self.plateau[1][loopX][loopY] == "M":
+                        self.plateau[1][loopX][loopY] = "m"
+                        
+
+    def placementAnneaux(self, tourJoueur):    #* place un anneau où le joueur a cliqué
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
         if self.plateau[0][x][y] == 1:          #* vérifie que la case sélectionnée est une intersection libre
-            if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
-                self.plateau[1][x][y] = "A"
-                tourJoueur+=1
-                self.anneauxPlaces+=1
-            else:
-                self.plateau[1][x][y] = "a"
-                tourJoueur+=1
-                self.anneauxPlaces+=1
+            if self.plateau[1][x][y] == 0:  #* vérifie que la case sélectionnée est vide
+                if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
+                    self.plateau[1][x][y] = "A"
+                    tourJoueur+=1
+                    self.anneauxPlaces+=1
+                else:
+                    self.plateau[1][x][y] = "a"
+                    tourJoueur+=1
+                    self.anneauxPlaces+=1
         return tourJoueur
     
     def placementAnneauxP2P(self, tourJoueur, x, y):
         if self.plateau[0][x][y] == 1:
-            if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
-                self.plateau[1][x][y] = "A"
-                tourJoueur+=1
-                self.anneauxPlaces+=1
-            else:
-                self.plateau[1][x][y] = "a"
-                tourJoueur+=1
-                self.anneauxPlaces+=1
-            return tourJoueur
+            if self.plateau[1][x][y] == 0:  #* vérifie que la case sélectionnée est vide
+                if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
+                    self.plateau[1][x][y] = "A"
+                    tourJoueur+=1
+                    self.anneauxPlaces+=1
+                else:
+                    self.plateau[1][x][y] = "a"
+                    tourJoueur+=1
+                    self.anneauxPlaces+=1
+        return tourJoueur
  
     def selectionAnneaux(self, tourJoueur):     #* sélectionne un anneau à déplacer
         x,y = pygame.mouse.get_pos()
@@ -152,6 +185,16 @@ class Plateau:
             return True, x, y
         else:
             return False, 0, 0    
+    
+    def selectionAnneauxP2P(self, tourJoueur, x, y):     #* sélectionne un anneau à déplacer
+        if self.plateau[1][x][y] == chr((tourJoueur%2)*32+65):  #* vérifie que le pion sélectionné correspond à un anneau de la couleur du joueur (si tourJoueur est pair, 32 n'est pas ajouté à 65 et reste "m", sinon le chr() le passe en majuscule selon son code ASCII)
+            if tourJoueur%2 == 0:
+                self.plateau[1][x][y] = "M"                     #* remplace l'anneau par un marqueur en vue de la suite du tour
+            else:
+                self.plateau[1][x][y] = "m"
+            return True, x, y
+        else:
+            return False, 0, 0 
         
     def checkCaseDeplacementAnneau(self, loopX, loopY):     #* vérifie si la case respecte les règles de déplacement de l'anneau
         coordsFinales = [0,0]
@@ -178,30 +221,67 @@ class Plateau:
         self.anneauSurChemin = False
         self.marqueurSurChemin = False
         coordsFinales = [0,0]
-        if self.plateau[0][x][y] == 1:                      #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
-            if abs(diffX) == abs(diffY):                    #* on définit si la case sélectionnée est sur une diagonale ou sur une ligne horizontale/verticale
-                for i in range(1,abs(diffX)+1):             #* on répète jusqu'à la case sélectionnée
-                    loopX = positionAnneauX-i*(diffX//abs(diffX))
-                    loopY = positionAnneauY-i*(diffY//abs(diffY))
-                    coordsFinales[0], coordsFinales[1], stop = self.checkCaseDeplacementAnneau(loopX, loopY)
-                    if stop:
-                        break
-                coordsFinales[0], coordsFinales[1] = loopX,loopY
-            elif abs(diffX)%2 == 0 and abs(diffY) == 0 or abs(diffY)%2 == 0 and abs(diffX) == 0:
-                for i in range(1,(abs(diffX)+abs(diffY)+3)//2):
-                    if abs(diffX) == 0:
-                        loopX = positionAnneauX
-                        loopY = positionAnneauY-i*(diffY//abs(diffY))*2
+        if self.plateau[0][x][y] == 1:                     #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
+            if self.plateau[1][x][y] == 0:                  #* vérifie que la case sélectionnée est vide
+                if abs(diffX) == abs(diffY):                    #* on définit si la case sélectionnée est sur une diagonale ou sur une ligne horizontale/verticale
+                    for i in range(1,abs(diffX)+1):             #* on répète jusqu'à la case sélectionnée
+                        loopX = positionAnneauX-i*(diffX//abs(diffX))
+                        loopY = positionAnneauY-i*(diffY//abs(diffY))
                         coordsFinales[0], coordsFinales[1], stop = self.checkCaseDeplacementAnneau(loopX, loopY)
                         if stop:
                             break
-                    else:
-                        loopX = positionAnneauX-i*(diffX//abs(diffX))*2
-                        loopY = positionAnneauY
+                    coordsFinales[0], coordsFinales[1] = loopX,loopY
+                elif abs(diffX)%2 == 0 and abs(diffY) == 0 or abs(diffY)%2 == 0 and abs(diffX) == 0:
+                    for i in range(1,(abs(diffX)+abs(diffY)+3)//2):
+                        if abs(diffX) == 0:
+                            loopX = positionAnneauX
+                            loopY = positionAnneauY-i*(diffY//abs(diffY))*2
+                            coordsFinales[0], coordsFinales[1], stop = self.checkCaseDeplacementAnneau(loopX, loopY)
+                            if stop:
+                                break
+                        else:
+                            loopX = positionAnneauX-i*(diffX//abs(diffX))*2
+                            loopY = positionAnneauY
+                            coordsFinales[0], coordsFinales[1], stop = self.checkCaseDeplacementAnneau(loopX, loopY)
+                            if stop:
+                                break
+                    coordsFinales[0], coordsFinales[1] = loopX,loopY
+        if coordsFinales[0] == x and coordsFinales[1] == y and self.anneauSurChemin == False:   #* si les coordonnées retenues par la méthode checkCaseDeplacementAnneau sont les mêmes que la case sélectionnée par l'utilisateur et qu'il n'y a pas d'anneau sur le chemin, alors on peut continuer
+            return False
+        else:
+            return True
+    
+    def checkLigneDeplacementAnneauP2P(self, positionAnneauX, positionAnneauY,x,y):
+        diffX = positionAnneauX-x
+        diffY = positionAnneauY-y
+        self.anneauSurChemin = False
+        self.marqueurSurChemin = False
+        coordsFinales = [0,0]
+        if self.plateau[0][x][y] == 1:                     #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
+            if self.plateau[1][x][y] == 0:                  #* vérifie que la case sélectionnée est vide
+                if abs(diffX) == abs(diffY):                    #* on définit si la case sélectionnée est sur une diagonale ou sur une ligne horizontale/verticale
+                    for i in range(1,abs(diffX)+1):             #* on répète jusqu'à la case sélectionnée
+                        loopX = positionAnneauX-i*(diffX//abs(diffX))
+                        loopY = positionAnneauY-i*(diffY//abs(diffY))
                         coordsFinales[0], coordsFinales[1], stop = self.checkCaseDeplacementAnneau(loopX, loopY)
                         if stop:
                             break
-                coordsFinales[0], coordsFinales[1] = loopX,loopY
+                    coordsFinales[0], coordsFinales[1] = loopX,loopY
+                elif abs(diffX)%2 == 0 and abs(diffY) == 0 or abs(diffY)%2 == 0 and abs(diffX) == 0:
+                    for i in range(1,(abs(diffX)+abs(diffY)+3)//2):
+                        if abs(diffX) == 0:
+                            loopX = positionAnneauX
+                            loopY = positionAnneauY-i*(diffY//abs(diffY))*2
+                            coordsFinales[0], coordsFinales[1], stop = self.checkCaseDeplacementAnneau(loopX, loopY)
+                            if stop:
+                                break
+                        else:
+                            loopX = positionAnneauX-i*(diffX//abs(diffX))*2
+                            loopY = positionAnneauY
+                            coordsFinales[0], coordsFinales[1], stop = self.checkCaseDeplacementAnneau(loopX, loopY)
+                            if stop:
+                                break
+                    coordsFinales[0], coordsFinales[1] = loopX,loopY
         if coordsFinales[0] == x and coordsFinales[1] == y and self.anneauSurChemin == False:   #* si les coordonnées retenues par la méthode checkCaseDeplacementAnneau sont les mêmes que la case sélectionnée par l'utilisateur et qu'il n'y a pas d'anneau sur le chemin, alors on peut continuer
             return False
         else:

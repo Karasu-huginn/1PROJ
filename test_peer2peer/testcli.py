@@ -126,7 +126,8 @@ def main ():
                         x,y = pygame.mouse.get_pos() #* obtention des valeur x et y
                         x,y = x//50, y//25 #* formatage par rapport au tableau
                         message = [x,y] #* on les ajoute à une liste pour les envoyer plus tard
-                        client.send_message(str(message))  #* Envoyer les positions x et y dans une liste
+                        if objetPlateau.plateau[0][x][y] == 1:
+                            client.send_message(str(message))  #* Envoyer les positions x et y dans une liste
                 while not queue.empty(): #* itère les éléments de la queue
                     element = queue.get() #* récupère les éléments de la queue
                     if element.startswith("plateau:"): #* check l'identificant pour savoir de quelle donnée il s'agit
