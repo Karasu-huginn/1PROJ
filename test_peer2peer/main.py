@@ -66,17 +66,20 @@ def main():
 
         estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
         if estClique:
+            debugCasePos()
             if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
                 tourJoueur = objetPlateau.placementAnneaux(tourJoueur)     #* placement des anneaux
             else:
-                #$debugCasePos()
+                #debugCasePos()
                 if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en marqueur et qu'on attend la position finale de l'anneau pour le replacer
                     anneauEnDeplacement = objetPlateau.checkLigneDeplacementAnneau(positionAnneauX, positionAnneauY)    #* on vérifie que l'anneau puisse être placé aux nouvelles coordonnées selon les règles du jeu
                     if not anneauEnDeplacement:     #* si anneauEnDeplacement est false c'est que la vérification d'avant est validée, donc on continue, sinon on ne fait rien
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur)      #* on place l'anneau
                         objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY)   #* on retourne les marqueurs du chemin s'il y en a
+                        objetPlateau.del_possibles_moves()
                 else:
-                    anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante
+                    anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante    
+                    #objetPlateau.mouvements_possibles(positionAnneauX,positionAnneauY)
 
         #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
@@ -88,9 +91,6 @@ def main():
             if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
                 windowStayOpened = False        #* on toggle la variable pour arrêter la boucle
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
-        if estClique: 
-            print("\n\n\ntest1_get_plateau")
-            print (objetPlateau.get_plateau())
     pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
 
@@ -222,7 +222,7 @@ def mainP2P ():
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
 try:
-    input = 1
+    input = 2
     #input = int(input("Enter 1-réseau or 2-local: "))
     if input == 1:
         mainP2P()

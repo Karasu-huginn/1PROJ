@@ -84,6 +84,10 @@ class Plateau:
                 elif self.plateau[1][i][u] == "A":
                     pygame.draw.circle(screen, (255,255,255),(i*50+25,u*25+12), 12)
                     pygame.draw.circle(screen, (200,200,200),(i*50+25,u*25+12), 8)
+                elif self.plateau[1][i][u] == "P":
+                    pygame.draw.circle(screen, (255,165,0,128),(i*50+25,u*25+12), 12)
+                    pygame.draw.circle(screen, (255,140,0,128),(i*50+25,u*25+12), 8) 
+
                         
     def retournerMarqueurs(self, positionAnneauX, positionAnneauY):     #* retourne tous les marqueurs sur le chemin prit par un anneau
         x,y = pygame.mouse.get_pos()
@@ -150,7 +154,7 @@ class Plateau:
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
         if self.plateau[0][x][y] == 1:          #* vérifie que la case sélectionnée est une intersection libre
-            if self.plateau[1][x][y] == 0:  #* vérifie que la case sélectionnée est vide
+            if self.plateau[1][x][y] == 0 or self.plateau[1][x][y] == "P":  #* vérifie que la case sélectionnée est vide
                 if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
                     self.plateau[1][x][y] = "A"
                     tourJoueur+=1
@@ -222,7 +226,7 @@ class Plateau:
         self.marqueurSurChemin = False
         coordsFinales = [0,0]
         if self.plateau[0][x][y] == 1:                     #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
-            if self.plateau[1][x][y] == 0:                  #* vérifie que la case sélectionnée est vide
+            if self.plateau[1][x][y] == 0 or self.plateau[1][x][y] == "P":  #* vérifie que la case sélectionnée est vide
                 if abs(diffX) == abs(diffY):                    #* on définit si la case sélectionnée est sur une diagonale ou sur une ligne horizontale/verticale
                     for i in range(1,abs(diffX)+1):             #* on répète jusqu'à la case sélectionnée
                         loopX = positionAnneauX-i*(diffX//abs(diffX))
@@ -290,3 +294,161 @@ class Plateau:
     def update_display(self,screen):
         self.affichagePlateau(screen)  #* affiche le plateau
         self.affichagePions(screen) #* affiche les pions si ils sont présent
+
+
+    #def possibles_moves (self,x,y):
+    #    prevuX = x
+    #    prevuY = y
+    #    i = 0
+    #    #for i in range (7):
+    #    i = 1
+    #    u = 2
+    #    while self.plateau [0][prevuX][prevuY] == 1:
+#
+    #        if i == 1:
+    #            while self.plateau[0][prevuX][prevuY] == 1:
+    #                prevuY -= 2
+    #                if self.plateau[1][prevuX][prevuY] == 0:
+    #                    self.plateau[1][prevuX][prevuY] = "P"
+    #                    print("test prévu 0")
+    #                    if prevuY < 0:
+    #                        break
+    #        if u == 2:
+    #            print("test2")
+    #            print(x,y)
+    #            while self.plateau[0][prevuX][prevuY] == 1:
+    #                prevuX += 1
+    #                prevuY -= 1
+    #                if self.plateau[0][prevuX][prevuY] == 1 and self.plateau[1][prevuX][prevuY] == 0:
+    #                    self.plateau[1][prevuX][prevuY] = "P"
+    #                    print("test prévu 1")
+    #                    if prevuY < 0:
+    #                        break
+#
+#
+    #        #if i == 3:
+    #        #    while self.plateau[0][prevuX][prevuY] == 1 or prevuX < 9:
+    #        #        prevuX += 2
+    #        #        print("x = ",prevuX,"y = ",prevuY)
+    #        #        if self.plateau[0][prevuX][prevuY] == 1 and self.plateau[1][prevuX][prevuY] == 0:
+    #        #            self.plateau[1][prevuX][prevuY] = "P"
+    #        #if i == 4:
+    #        #    while self.plateau[0][prevuX][prevuY] == 1:
+    #        #        prevuX += 1
+    #        #        prevuY += 1
+    #        #        if self.plateau[0][prevuX][prevuY] == 1 and self.plateau[1][prevuX][prevuY] == 0:
+    #        #            self.plateau[1][prevuX][prevuY] = "P"
+    #        #            print("test prévu 3")
+    #        #if i == 5:
+    #        #    while self.plateau[0][prevuX][prevuY] == 1:
+    #        #        prevuY += 2
+    #        #        if self.plateau[0][prevuX][prevuY] == 1 and self.plateau[1][prevuX][prevuY] == 0:
+    #        #            self.plateau[1][prevuX][prevuY] = "P"
+    #        #            print("test prévu 4")
+    #        #if i == 6:
+    #        #    while self.plateau[0][prevuX][prevuY] == 1:
+    #        #        prevuX -= 1
+    #        #        prevuY += 1
+    #        #        if self.plateau[0][prevuX][prevuY] == 1 and self.plateau[1][prevuX][prevuY] == 0:
+    #        #            self.plateau[1][prevuX][prevuY] = "P"
+    #        #            print("test prévu 5")
+    #        #if i == 7:
+    #        #    while self.plateau[0][prevuX][prevuY] == 1:
+    #        #        prevuX -= 2
+    #        #        if self.plateau[0][prevuX][prevuY] == 1 and self.plateau[1][prevuX][prevuY] == 0:
+    #        #            self.plateau[1][prevuX][prevuY] = "P"
+    #        #            print("test prévu 6")
+    #        #if i == 8:
+    #        #    while self.plateau[0][prevuX][prevuY] == 1:
+    #        #        prevuX -= 1
+    #        #        prevuY -= 1
+    #        #        if self.plateau[0][prevuX][prevuY] == 1 and self.plateau[1][prevuX][prevuY] == 0:
+    #        #            self.plateau[1][prevuX][prevuY] = "P"
+    #        #            print("test prévu 7")
+    #        #            i = 9
+
+    def mouvements_possibles(self, x, y):
+        # Vérifiez les mouvements horizontaux
+        i = 2
+        print("entrer dans la fonction")
+        while True:
+            if 0 <= x + i < self.taillePlateauX:
+                if len(self.plateau[0]) > x + i and len(self.plateau[1]) > x + i:
+                    if self.plateau[0][x + i][y] == 1 and self.plateau[1][x + i][y] == 0:
+                        self.plateau[1][x + i][y] = "P"
+                        #print("first",i)
+                        i += 2
+                    else:
+                        break
+                else:
+                    break
+        i = 2
+        while True:
+            if 0 <= x + i < self.taillePlateauX:
+                if len(self.plateau[0]) > x - i and len(self.plateau[1]) > x - i:
+                    if self.plateau[0][x - i][y] == 1 and self.plateau[1][x - i][y] == 0:
+                        self.plateau[1][x - i][y] = "P"
+                        #print("first",i)
+                        i += 2
+                    else:
+                        break
+                else:
+                    break
+
+        # Vérifiez les mouvements verticaux
+        #i = 2
+        #print("entrer dans la fonction")
+        #while True:
+        #    if 0 <= x - i < self.taillePlateauX:
+        #        if len(self.plateau[0]) > y + i and len(self.plateau[1]) > y + i:
+        #            if self.plateau[0][x][y + i] == 1 and self.plateau[1][x][y + i] == 0:
+        #                self.plateau[1][x][y + i] = "P"
+        #                #print("first",i)
+        #                i += 2
+        #            else:
+        #                break
+        #        else:
+        #            break
+        i = 2
+        while True:
+            if 0 <= x + i < self.taillePlateauX:
+                if len(self.plateau[0]) > y - i and len(self.plateau[1]) > y - i:
+                    if self.plateau[0][x][y - i] == 1 and self.plateau[1][x][y - i] == 0:
+                        self.plateau[1][x][y - i] = "P"
+                        #print("first",i)
+                        i += 2
+                    else:
+                        break
+                else:
+                    break
+
+        # Vérifiez les mouvements diagonaux
+        #for i in range(1, 10):
+        #    if 0 <= x + i < self.taillePlateauX and 0 <= y + i < self.taillePlateauY:
+        #        if self.plateau[0][x + i][y + i] == 1 and self.plateau[1][x + i][y + i] == 0:
+        #            self.plateau[1][x + i][y + i] = "P"
+        #        else:
+        #            break
+        #for i in range(1, 10):
+        #    if 0 <= x - i < self.taillePlateauX and 0 <= y + i < self.taillePlateauY:
+        #        if self.plateau[0][x - i][y + i] == 1 and self.plateau[1][x - i][y + i] == 0:
+        #            self.plateau[1][x - i][y + i] = "P"
+        #        else:
+        #            break
+        #for i in range(1, 10):
+        #    if 0 <= x + i < self.taillePlateauX and 0 <= y - i < self.taillePlateauY:
+        #        if self.plateau[0][x + i][y - i] == 1 and self.plateau[1][x + i][y - i] == 0:
+        #            self.plateau[1][x + i][y - i] = "P"
+        #        else:
+        #            break
+        #for i in range(1, 10):
+        #    if 0 <= x - i < self.taillePlateauX and 0 <= y - i < self.taillePlateauY:
+        #        if self.plateau[0][x - i][y - i] == 1 and self.plateau[1][x - i][y - i] == 0:
+        #            self.plateau[1][x - i][y - i] = "P"
+        #        else:
+        #            break
+    def del_possibles_moves(self):
+        for i in range(len(self.plateau[1])):
+            for u in range(len(self.plateau[1][i])):
+                if self.plateau[1][i][u] == "P":
+                    self.plateau [1][i][u] = 0
