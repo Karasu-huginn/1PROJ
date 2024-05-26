@@ -302,137 +302,131 @@ class Plateau:
                     self.plateau [1][i][u] = 0
 
     def case_suivant_horizontale(self, i, x, y, direction):
-        for u in range(2, 19, 2):
-            print(i, x, y)
-            if 0 <= x + i < self.taillePlateauY:
-                if 0 <= x + i < len(self.plateau[0]) and 0 <= y < len(self.plateau[0][0]):
-                    if self.plateau[0][x + i][y] == 1 and (self.plateau[1][x + i][y] == "m" or self.plateau[1][x + i][y] == "M"):
+        if direction == "right":
+            if 0 <= x + i <= self.taillePlateauX:
+                if len(self.plateau[0]) > x + i and len(self.plateau[0][0]) > x + i:
+                    if self.plateau[1][x + i][y] == "m" or self.plateau[1][x + i][y] == "M":
+                        return True
+        elif direction == "left":
+            if 0 <= x - i <= self.taillePlateauX:
+                if len(self.plateau[0]) > x - i and len(self.plateau[0][0]) > x - i:
+                    if self.plateau[1][x - i][y] == "m" or self.plateau[1][x - i][y] == "M":
+                        return True
+        return False
 
-                        if direction == "right":
-                            if 0 <= x + i + u < self.taillePlateauY:
-                                if 0 <= x + i + u < len(self.plateau[1]) and 0 <= y < len(self.plateau[1][0]):
-                                    if self.plateau[1][x + i + u][y] == 0:
-                                        self.plateau[1][x + i + u][y] = "P"
-                                    else:
-                                        if 0 <= x + i + 2 < self.taillePlateauY:
-                                            if 0 <= x + i + 2 < len(self.plateau[1]) and 0 <= y < len(self.plateau[1][0]):
-                                                if self.plateau[1][x + i + 2][y] == "m" or self.plateau[1][x + i + 2][y] == "M":
-                                                    if 0 <= x + i + u + 2 < self.taillePlateauY:
-                                                        if 0 <= x + i + u + 2 < len(self.plateau[1]) and 0 <= y < len(self.plateau[1][0]):
-                                                            if self.plateau[1][x + i + u + 2][y] == 0:
-                                                                self.plateau[1][x + i + u + 2][y] = "P"
-                                                            else:
-                                                                break
-                        elif direction == "left":
-                            if 0 <= x - i - u >= 0:
-                                if 0 <= x - i - u < len(self.plateau[1]) and 0 <= y < len(self.plateau[1][0]):
-                                    if self.plateau[1][x - i - u][y] == 0:
-                                        self.plateau[1][x - i - u][y] = "P"
-                                    else:
-                                        if 0 <= x - i - 2 >= 0:
-                                            if 0 <= x - i - 2 < len(self.plateau[1]) and 0 <= y < len(self.plateau[1][0]):
-                                                if self.plateau[1][x - i - 2][y] == "m" or self.plateau[1][x - i - 2][y] == "M":
-                                                    if 0 <= x - i - u - 2 >= 0:
-                                                        if 0 <= x - i - u - 2 < len(self.plateau[1]) and 0 <= y < len(self.plateau[1][0]):
-                                                            if self.plateau[1][x - i - u - 2][y] == 0:
-                                                                self.plateau[1][x - i - u - 2][y] = "P"
-                                                            else:
-                                                                break
-            else:
-                break
-    def mouvements_possibles(self, x, y):
-        #Vérifiez les mouvements horizontaux
+    def case_suivant_verticale(self, i, x, y, direction):
+        if direction == "down":
+            if 0 <= y + i <= self.taillePlateauX:
+                if len(self.plateau[0]) > y + i and len(self.plateau[0][0]) > y + i:
+                    if self.plateau[1][x][y + i] == "m" or self.plateau[1][x][y + i] == "M":
+                        return True
+        elif direction == "up":
+            if 0 <= y - i <= self.taillePlateauX:
+                if len(self.plateau[0]) > y - i and len(self.plateau[0][0]) > y - i:
+                    if self.plateau[1][x][y - i] == "m" or self.plateau[1][x][y - i] == "M":
+                        return True
+        return False
+
+    def previsualisation_horizontale(self, x, y):
         i = 2
         while True:
-            if 0 <= x + i <= self.taillePlateauX:
-                if len(self.plateau[0]) > x + i and len(self.plateau[1]) > x + i: #* check pour eviter out of range
-                    self.case_suivant_horizontale(i,x,y,"right") #* check si la case suivant est un marqueur
-                    if self.plateau[0][x + i][y] == 1 and self.plateau[1][x + i][y] == 0: #* on vérifie que la case est jouable et qu'elle est vide
-                        self.plateau[1][x + i][y] = "P" #* on place un prévisu
-                        #print("first",i)
-                        # Nouvelle condition
-                        if x + i + 2 < len(self.plateau[1]) and y < len(self.plateau[1][0]): 
-                            if self.plateau[1][x + i + 2][y] == "m" or self.plateau[1][x + i + 2][y] == "M":
-                                if 0 <= x + i + 4 <= self.taillePlateauX:
-                                    if x + i + 4 < len(self.plateau[1]) and y < len(self.plateau[1][0]):
-                                        if self.plateau[0][x + i + 4][y] == 1 and self.plateau[1][x + i + 4][y] == 0:
-                                            self.plateau[1][x + i + 4][y] = "P"
+            if 0 <= x + i < self.taillePlateauX:
+                if len(self.plateau[0]) > x + i and len(self.plateau[1]) > x + i:
+                    if self.case_suivant_horizontale(i, x, y, "right"):  #* Vérifiez si la case suivante est un marqueur
+                        j = i + 2
+                        valid = False
+                        while not valid:  #* Trouvez la fin de l'enfillement de marqueurs
+                            if 0 <= x + j < self.taillePlateauX:
+                                if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
+                                    if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
+                                        self.plateau[1][x + j][y] = "P"
+                                        print("here1")
+                                    else:                                        
+                                        valid = True
+                                        if self.plateau[1][x + j][y] == "m" or self.plateau[1][x + j][y] == "M":
+                                            j += 2
+                                            if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
+                                                if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
+                                                    self.plateau[1][x + j][y] = "P"
+                                                else:
+                                                    j += 2
+                                                    if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
+                                                        if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
+                                                            self.plateau[1][x + j][y] = "P"
+                                                        else:
+                                                            j += 2
+                                                            if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
+                                                                if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
+                                                                    self.plateau[1][x + j][y] = "P"
+                                            continue
+                                        if self.plateau[1][x + j][y] == "a" or self.plateau[1][x + j][y] == "A":                                                    
+                                            break
+                                else: break                                        
+                            else: break                                    
+                        break  #* Sortie de la boucle while si un marqueur est rencontré
+                    elif self.plateau[0][x + i][y] == "a" and self.plateau[1][x + i][y] == "A":
+                        break                        
+                    elif self.plateau[0][x + i][y] == 1 and self.plateau[1][x + i][y] == 0:
+                        if self.plateau[1][x + i - 2][y] == "a" or self.plateau[1][x + i - 2][y] == "A":
+                            break
+                        else:
+                            self.plateau[1][x + i][y] = "P"
+                            print("here3")
                         i += 2
+                        continue
                     else:
-                        break
-                else:
-                    break
+                        i += 2
+                        continue
+                else: break                    
+            else: break  
         i = 2
         while True:
             if 0 <= x - i <= self.taillePlateauX:
                 if len(self.plateau[0]) > x - i and len(self.plateau[1]) > x - i:
-                    self.case_suivant_horizontale(i,x,y,"left")
-                    if self.plateau[0][x - i][y] == 1 and self.plateau[1][x - i][y] == 0:
-                        self.plateau[1][x - i][y] = "P"
-                        #print("first",i)
-                        # Nouvelle condition
-                        if x - i - 2 < len(self.plateau[1]) and y < len(self.plateau[1][0]):
-                            if self.plateau[1][x - i - 2][y] == "m" or self.plateau[1][x - i - 2][y] == "M":
-                                if 0 <= x - i - 4 <= self.taillePlateauX:
-                                    if x - i - 4 < len(self.plateau[1]) and y < len(self.plateau[1][0]):
-                                        if self.plateau[0][x - i - 4][y] == 1 and self.plateau[1][x - i - 4][y] == 0:
-                                            self.plateau[1][x - i - 4][y] = "P"
+                    if self.case_suivant_horizontale(i, x, y, "left"): #* Vérifiez si la case suivante est un marqueur
+                            j = i + 2
+                            valid = False
+                            while not valid: #* Trouvez la fin de l'enfillement de marqueurs
+                                if 0 <= x - j <= self.taillePlateauX:
+                                    if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
+                                        if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
+                                            self.plateau[1][x - j][y] = "P"
+                                            print("here1")
+                                        else:                                        
+                                            valid = True
+                                            if self.plateau[1][x - j][y] == "m" or self.plateau[1][x - j][y] == "M":
+                                                j += 2
+                                                if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
+                                                    if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
+                                                        self.plateau[1][x - j][y] = "P"
+                                                    else:
+                                                        j += 2
+                                                        if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
+                                                            if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
+                                                                self.plateau[1][x - j][y] = "P"
+                                                            else:
+                                                                j += 2
+                                                                if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
+                                                                    if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
+                                                                        self.plateau[1][x - j][y] = "P"
+                                                continue
+                                            if self.plateau[1][x - j][y] == "a" or self.plateau[1][x - j][y] == "A":                                                    
+                                                break
+                                    else: break                                        
+                                else: break                                    
+                            break  #* Sortie de la boucle while si un marqueur est rencontré
+                    elif self.plateau[0][x - i][y] == "a" and self.plateau[1][x - i][y] == "A":
+                        break                        
+                    elif self.plateau[0][x - i][y] == 1 and self.plateau[1][x - i][y] == 0:
+                        if self.plateau[1][x - i + 2][y] == "a" or self.plateau[1][x - i + 2][y] == "A":
+                            break
+                        else:
+                            self.plateau[1][x - i][y] = "P"
+                            print("here3")
                         i += 2
+                        continue
                     else:
-                        break
-                else:
-                    break
-            else:
-                break
-        #
-        ### Vérifiez les mouvements verticaux
-        ##i = 2
-        #while True:
-        #    if 0 <= x - i < self.taillePlateauY:
-        #        if len(self.plateau[0]) > y + i and len(self.plateau[1]) > y + i:
-        #            if self.plateau[0][x][y + i] == 1 and self.plateau[1][x][y + i] == 0:
-        #                self.plateau[1][x][y + i] = "P"
-        #                #print("first",i)
-        #                i += 2
-        #            else:
-        #                break
-        #        else:
-        #            break
-        #i = 2
-        #while True:
-        #    if 0 <= x + i < self.taillePlateauX:
-        #        if len(self.plateau[0]) > y - i and len(self.plateau[1]) > y - i:
-        #            if self.plateau[0][x][y - i] == 1 and self.plateau[1][x][y - i] == 0:
-        #                self.plateau[1][x][y - i] = "P"
-        #                #print("first",i)
-        #                i += 2
-        #            else:
-        #                break
-        #        else:
-        #            break
-#
-        # Vérifiez les mouvements diagonaux
-        #for i in range(1, 10):
-        #    if 0 <= x + i < self.taillePlateauX and 0 <= y + i < self.taillePlateauY:
-        #        if self.plateau[0][x + i][y + i] == 1 and self.plateau[1][x + i][y + i] == 0:
-        #            self.plateau[1][x + i][y + i] = "P"
-        #        else:
-        #            break
-        #for i in range(1, 10):
-        #    if 0 <= x - i < self.taillePlateauX and 0 <= y + i < self.taillePlateauY:
-        #        if self.plateau[0][x - i][y + i] == 1 and self.plateau[1][x - i][y + i] == 0:
-        #            self.plateau[1][x - i][y + i] = "P"
-        #        else:
-        #            break
-        #for i in range(1, 10):
-        #    if 0 <= x + i < self.taillePlateauX and 0 <= y - i < self.taillePlateauY:
-        #        if self.plateau[0][x + i][y - i] == 1 and self.plateau[1][x + i][y - i] == 0:
-        #            self.plateau[1][x + i][y - i] = "P"
-        #        else:
-        #            break
-        #for i in range(1, 10):
-        #    if 0 <= x - i < self.taillePlateauX and 0 <= y - i < self.taillePlateauY:
-        #        if self.plateau[0][x - i][y - i] == 1 and self.plateau[1][x - i][y - i] == 0:
-        #            self.plateau[1][x - i][y - i] = "P"
-        #        else:
-        #            break
+                        i += 2
+                        continue
+                else: break                    
+            else: break                
