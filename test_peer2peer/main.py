@@ -76,10 +76,10 @@ def main():
                     if not anneauEnDeplacement:     #* si anneauEnDeplacement est false c'est que la vérification d'avant est validée, donc on continue, sinon on ne fait rien
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur)      #* on place l'anneau
                         objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY)   #* on retourne les marqueurs du chemin s'il y en a
-                        objetPlateau.del_possibles_moves()
+                        #objetPlateau.del_possibles_moves()
                 else:
                     anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante    
-                    #objetPlateau.mouvements_possibles(positionAnneauX,positionAnneauY)
+                    objetPlateau.mouvements_possibles(positionAnneauX,positionAnneauY)
 
         #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
