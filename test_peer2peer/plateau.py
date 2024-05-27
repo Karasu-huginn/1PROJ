@@ -327,245 +327,525 @@ class Plateau:
                         return True
         return False
     
+    def case_suivant_diagonal(self, i, x, y, direction):
+        if direction == "upright":
+            if 0 <= y - i <= self.taillePlateauX and 0 <= x + i <= self.taillePlateauY:
+                if len(self.plateau[0][0]) > y - i and len(self.plateau[0]) >= x + i:
+                    if self.plateau[1][x + i][y - i] == "m" or self.plateau[1][x + i][y - i] == "M":
+                        print("ça marche")
+                        return True
+        elif direction == "downleft":
+            if 0 <= y + i <= self.taillePlateauX and 0 <= x - i <= self.taillePlateauY:
+                if len(self.plateau[0][0]) > y + i and len(self.plateau[0]) >= x - i:
+                    if self.plateau[1][x - i][y + i] == "m" or self.plateau[1][x - i][y + i] == "M":
+                        return True
+        return False
+    
     def previsualisation_horizontale(self, x, y):
-        i = 2
+        #i = 2
+        #while True:
+        #    if 0 <= x + i < self.taillePlateauX:
+        #        if len(self.plateau[0]) > x + i and len(self.plateau[1]) > x + i:
+        #            if self.case_suivant_horizontale(i, x, y, "right"):  #* Vérifiez si la case suivante est un marqueur
+        #                j = i + 2
+        #                valid = False
+        #                while not valid:  #* Trouvez la fin de l'enfillement de marqueurs
+        #                    if 0 <= x + j < self.taillePlateauX:
+        #                        if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
+        #                            if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
+        #                                if self.plateau[1][x + j - 2][y] == "a" or self.plateau[1][x + j - 2][y] == "A":
+        #                                    break
+        #                                else:
+        #                                    self.plateau[1][x + j][y] = "P"
+        #                            else:                                        
+        #                                valid = True
+        #                                if self.plateau[1][x + j][y] == "m" or self.plateau[1][x + j][y] == "M":
+        #                                    j += 2
+        #                                    if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
+        #                                        if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
+        #                                            if self.plateau[1][x + j - 2][y] == "a" or self.plateau[1][x + j - 2][y] == "A":
+        #                                                break
+        #                                            else:
+        #                                                self.plateau[1][x + j][y] = "P"
+        #                                        else:
+        #                                            j += 2
+        #                                            if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
+        #                                                if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
+        #                                                    if self.plateau[1][x + j - 2][y] == "a" or self.plateau[1][x + j - 2][y] == "A":
+        #                                                        break
+        #                                                    else:
+        #                                                        self.plateau[1][x + j][y] = "P"
+        #                                                else:
+        #                                                    j += 2
+        #                                                    if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
+        #                                                        if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
+        #                                                            if self.plateau[1][x + j - 2][y] == "a" or self.plateau[1][x + j - 2][y] == "A":
+        #                                                                break
+        #                                                            else:
+        #                                                                self.plateau[1][x + j][y] = "P"
+        #                                    continue
+        #                                if self.plateau[1][x + j][y] == "a" or self.plateau[1][x + j][y] == "A":                                                    
+        #                                    break
+        #                        else: break                                        
+        #                    else: break                                    
+        #                break  #* Sortie de la boucle while si un marqueur est rencontré
+        #            elif self.plateau[0][x + i][y] == "a" and self.plateau[1][x + i][y] == "A":
+        #                break                        
+        #            elif self.plateau[0][x + i][y] == 1 and self.plateau[1][x + i][y] == 0:
+        #                if self.plateau[1][x + i - 2][y] == "a" or self.plateau[1][x + i - 2][y] == "A":
+        #                    break
+        #                else:
+        #                    self.plateau[1][x + i][y] = "P"
+        #                i += 2
+        #                continue
+        #            else:
+        #                i += 2
+        #                continue
+        #        else: break                    
+        #    else: break  
+        #i = 2
+        #while True:
+        #    if 0 <= x - i <= self.taillePlateauX:
+        #        if len(self.plateau[0]) > x - i and len(self.plateau[1]) > x - i:
+        #            if self.case_suivant_horizontale(i, x, y, "left"): #* Vérifiez si la case suivante est un marqueur
+        #                    j = i + 2
+        #                    valid = False
+        #                    while not valid: #* Trouvez la fin de l'enfillement de marqueurs
+        #                        if 0 <= x - j <= self.taillePlateauX:
+        #                            if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
+        #                                if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
+        #                                    if self.plateau[1][x - j + 2][y] == "a" or self.plateau[1][x - j + 2][y] == "A":
+        #                                        break
+        #                                    else:
+        #                                        self.plateau[1][x - j][y] = "P"
+        #                                else:                                        
+        #                                    valid = True
+        #                                    if self.plateau[1][x - j][y] == "m" or self.plateau[1][x - j][y] == "M":
+        #                                        j += 2
+        #                                        if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
+        #                                            if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
+        #                                                if self.plateau[1][x - j + 2][y] == "a" or self.plateau[1][x - j + 2][y] == "A":
+        #                                                    break
+        #                                                else:
+        #                                                    self.plateau[1][x - j][y] = "P"
+        #                                            else:
+        #                                                j += 2
+        #                                                if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
+        #                                                    if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
+        #                                                        if self.plateau[1][x - j + 2][y] == "a" or self.plateau[1][x - j + 2][y] == "A":
+        #                                                            break
+        #                                                        else:
+        #                                                            self.plateau[1][x - j][y] = "P"
+        #                                                    else:
+        #                                                        j += 2
+        #                                                        if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
+        #                                                            if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
+        #                                                                if self.plateau[1][x - j + 2][y] == "a" or self.plateau[1][x - j + 2][y] == "A":
+        #                                                                    break
+        #                                                                else:
+        #                                                                    self.plateau[1][x - j][y] = "P"
+        #                                        continue
+        #                                    if self.plateau[1][x - j][y] == "a" or self.plateau[1][x - j][y] == "A":                                                    
+        #                                        break
+        #                            else: break                                        
+        #                        else: break                                    
+        #                    break  #* Sortie de la boucle while si un marqueur est rencontré
+        #            elif self.plateau[0][x - i][y] == "a" and self.plateau[1][x - i][y] == "A":
+        #                break                        
+        #            elif self.plateau[0][x - i][y] == 1 and self.plateau[1][x - i][y] == 0:
+        #                if self.plateau[1][x - i + 2][y] == "a" or self.plateau[1][x - i + 2][y] == "A":
+        #                    break
+        #                else:
+        #                    self.plateau[1][x - i][y] = "P"
+        #                i += 2
+        #                continue
+        #            else:
+        #                i += 2
+        #                continue
+        #        else: break                    
+        #    else: break           
+        ##* vertical
+        #i = 2
+        #while True:
+        #    if 0 <= y - i < self.taillePlateauX:
+        #        if len(self.plateau[0][0]) > y - i and len(self.plateau[1][0]) > y - i:
+        #            if self.case_suivant_verticale(i, x, y, "up"):  #* Vérifiez si la case suivante est un marqueur
+        #                j = i + 2
+        #                valid = False
+        #                while not valid:  #* Trouvez la fin de l'enfillement de marqueurs
+        #                    if 0 <= y - j < self.taillePlateauX:
+        #                        if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+        #                            if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+        #                                if self.plateau[1][x][y - j + 2] == "a" or self.plateau[1][x][y - j + 2] == "A":
+        #                                    break
+        #                                else:
+        #                                    self.plateau[1][x][y - j] = "P"
+        #                            else:                                        
+        #                                valid = True
+        #                                if self.plateau[1][x][y - j] == "m" or self.plateau[1][x][y - j] == "M":
+        #                                    j += 2
+        #                                    if len(self.plateau[0][0])> y - j and len(self.plateau[1][0]) > y - j:
+        #                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+        #                                            if self.plateau[1][x][y - j + 2] == "a" or self.plateau[1][x][y - j + 2] == "A":
+        #                                                break
+        #                                            else:
+        #                                                self.plateau[1][x][y - j] = "P"
+        #                                        else:
+        #                                            j += 2
+        #                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+        #                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+        #                                                    if self.plateau[1][x][y - j + 2] == "a" or self.plateau[1][x][y - j + 2] == "A":
+        #                                                        break
+        #                                                    else:
+        #                                                        self.plateau[1][x][y - j] = "P"
+        #                                                else:
+        #                                                    j += 2
+        #                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+        #                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+        #                                                            if self.plateau[1][x][y - j + 2] == "a" or self.plateau[1][x][y - j + 2] == "A":
+        #                                                                break
+        #                                                            else:
+        #                                                                self.plateau[1][x][y - j] = "P"
+        #                                                        else:
+        #                                                            j += 2
+        #                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+        #                                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+        #                                                                    if self.plateau[1][x][y - j + 2] == "a" or self.plateau[1][x][y - j + 2] == "A":
+        #                                                                        break
+        #                                                                    else:
+        #                                                                        self.plateau[1][x][y - j] = "P"
+        #                                                                else:
+        #                                                                    j += 2
+        #                                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+        #                                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+        #                                                                            if self.plateau[1][x][y - j + 2] == "a" or self.plateau[1][x][y - j + 2] == "A":
+        #                                                                                break
+        #                                                                            else:
+        #                                                                                self.plateau[1][x][y - j] = "P"
+        #                                                                        else:
+        #                                                                            j += 2
+        #                                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+        #                                                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+        #                                                                                    if self.plateau[1][x][y - j + 2] == "a" or self.plateau[1][x][y - j + 2] == "A":
+        #                                                                                        break
+        #                                                                                    else:
+        #                                                                                        self.plateau[1][x][y - j] = "P"
+        #                                                                                else:
+        #                                                                                    j += 2
+        #                                                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+        #                                                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+        #                                                                                            if self.plateau[1][x][y - j + 2] == "a" or self.plateau[1][x][y - j + 2] == "A":
+        #                                                                                                break
+        #                                                                                            else:
+        #                                                                                                self.plateau[1][x][y - j] = "P"
+        #                                    continue
+        #                                if self.plateau[1][x][y - j] == "a" or self.plateau[1][x][y - j] == "A":                                                    
+        #                                        break
+        #                        else: break                                        
+        #                    else: break                                    
+        #                break  #* Sortie de la boucle while si un marqueur est rencontré
+        #            else:
+        #                if self.plateau[0][x][y - i] == "a" and self.plateau[1][x][y - i] == "A":
+        #                    break
+        #                elif self.plateau[0][x][y - i] == 1 and self.plateau[1][x][y - i] == 0:
+        #                    if self.plateau[1][x][y - i + 2] == "a" or self.plateau[1][x][y - i + 2] == "A":
+        #                        break
+        #                    else:
+        #                        self.plateau[1][x][y - i] = "P"
+        #                    i += 2
+        #                    continue
+        #                else:
+        #                    i += 2
+        #                    continue
+        #        else: break                    
+        #    else: break
+#
+#
+        #i = 2
+        #while True:
+        #    if 0 <= y + i < self.taillePlateauX:
+        #        if len(self.plateau[0][0]) > y + i and len(self.plateau[1][0]) > y + i:
+        #            if self.case_suivant_verticale(i, x, y, "down"):  #* Vérifiez si la case suivante est un marqueur
+        #                j = i + 2
+        #                valid = False
+        #                while not valid:  #* Trouvez la fin de l'enfillement de marqueurs
+        #                    if 0 <= y + j < self.taillePlateauX:
+        #                        if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+        #                            if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+        #                                if self.plateau[1][x][y + j - 2] == "a" or self.plateau[1][x][y + j - 2] == "A":
+        #                                    break
+        #                                else:
+        #                                    self.plateau[1][x][y + j] = "P"                                        
+        #                            else:                                        
+        #                                valid = True
+        #                                if self.plateau[1][x][y + j] == "m" or self.plateau[1][x][y + j] == "M":
+        #                                    j += 2
+        #                                    if len(self.plateau[0][0])> y + j and len(self.plateau[1][0]) > y + j:
+        #                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+        #                                            if self.plateau[1][x][y + j - 2] == "a" or self.plateau[1][x][y + j - 2] == "A":
+        #                                                break
+        #                                            else:
+        #                                                self.plateau[1][x][y + j] = "P"                                                                                                            
+        #                                        else:
+        #                                            j += 2
+        #                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+        #                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+        #                                                    if self.plateau[1][x][y + j - 2] == "a" or self.plateau[1][x][y + j - 2] == "A":
+        #                                                        break
+        #                                                    else:
+        #                                                        self.plateau[1][x][y + j] = "P"                                                            
+        #                                                else:
+        #                                                    j += 2
+        #                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+        #                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+        #                                                             if self.plateau[1][x][y + j - 2] == "a" or self.plateau[1][x][y + j - 2] == "A":
+        #                                                                 break
+        #                                                             else:
+        #                                                                self.plateau[1][x][y + j] = "P"                                                                         
+        #                                                        else:
+        #                                                            j += 2
+        #                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+        #                                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+        #                                                                    if self.plateau[1][x][y + j - 2] == "a" or self.plateau[1][x][y + j - 2] == "A":
+        #                                                                        break
+        #                                                                    else:
+        #                                                                        self.plateau[1][x][y + j] = "P"                                                                            
+        #                                                                else:
+        #                                                                    j += 2
+        #                                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+        #                                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+        #                                                                            if self.plateau[1][x][y + j - 2] == "a" or self.plateau[1][x][y + j - 2] == "A":
+        #                                                                                break
+        #                                                                            else:
+        #                                                                                self.plateau[1][x][y + j] = "P"                                                                                    
+        #                                                                        else:
+        #                                                                            j += 2
+        #                                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+        #                                                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+        #                                                                                    if self.plateau[1][x][y + j - 2] == "a" or self.plateau[1][x][y + j - 2] == "A":
+        #                                                                                        break
+        #                                                                                    else:
+        #                                                                                        self.plateau[1][x][y + j] = "P"                                                                                            
+        #                                                                                else:
+        #                                                                                    j += 2
+        #                                                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+        #                                                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+        #                                                                                            if self.plateau[1][x][y + j - 2] == "a" or self.plateau[1][x][y + j - 2] == "A":
+        #                                                                                                break
+        #                                                                                        else:
+        #                                                                                            self.plateau[1][x][y + j] = "P"                                                                                                    
+        #                                    continue
+        #                                if self.plateau[1][x][y + j] == "a" or self.plateau[1][x][y + j] == "A":                                                    
+        #                                        break
+        #                        else: break                                        
+        #                    else: break                                    
+        #                break  #* Sortie de la boucle while si un marqueur est rencontré
+        #            else:
+        #                if self.plateau[0][x][y + i] == "a" and self.plateau[1][x][y + i] == "A":
+        #                    break
+        #                elif self.plateau[0][x][y + i] == 1 and self.plateau[1][x][y + i] == 0:
+        #                    if self.plateau[1][x][y + i - 2] == "a" or self.plateau[1][x][y + i - 2] == "A":
+        #                        break
+        #                    else:
+        #                        self.plateau[1][x][y + i] = "P"
+        #                    i += 2
+        #                    continue
+        #                else:
+        #                    i += 2
+        #                    continue
+        #        else: break                    
+        #    else: break  
+        #* diagonale : bas gauche | haut droite
+        i = 1
         while True:
-            if 0 <= x + i < self.taillePlateauX:
-                if len(self.plateau[0]) > x + i and len(self.plateau[1]) > x + i:
-                    if self.case_suivant_horizontale(i, x, y, "right"):  #* Vérifiez si la case suivante est un marqueur
-                        j = i + 2
+            if 0 <= y - i < self.taillePlateauX and x + i < self.taillePlateauY:
+                if len(self.plateau[0][0]) > y - i and self.taillePlateauY > x + i:
+                    if self.case_suivant_diagonal(i, x, y, "upright"):  #* Vérifiez si la case suivante est un marqueur
+                        j = i + 1
                         valid = False
                         while not valid:  #* Trouvez la fin de l'enfillement de marqueurs
-                            if 0 <= x + j < self.taillePlateauX:
-                                if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
-                                    if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
-                                        self.plateau[1][x + j][y] = "P"
-                                    else:                                        
-                                        valid = True
-                                        if self.plateau[1][x + j][y] == "m" or self.plateau[1][x + j][y] == "M":
-                                            j += 2
-                                            if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
-                                                if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
-                                                    self.plateau[1][x + j][y] = "P"
-                                                else:
-                                                    j += 2
-                                                    if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
-                                                        if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
-                                                            self.plateau[1][x + j][y] = "P"
-                                                        else:
-                                                            j += 2
-                                                            if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
-                                                                if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
-                                                                    self.plateau[1][x + j][y] = "P"
-                                            continue
-                                        if self.plateau[1][x + j][y] == "a" or self.plateau[1][x + j][y] == "A":                                                    
+                            if 0 <= y - j < self.taillePlateauX and 0 <= x + j < self.taillePlateauY: #* si ça correspond à la taille du plateau
+                                if len(self.plateau[0][0]) > y - j and len(self.plateau[0]) >= x + j: #* si ça correspond à la taille du plateau
+                                    if self.plateau[0][x + j][y - j] == 1 and self.plateau[1][x + j][y - j] == 0: #* vérifie si la case +2 est jouable et vite
+                                        if self.plateau[1][x + j][y - j] == "a" and self.plateau[1][x + j][y - j] == "A": #* si la case +2 est un anneau on break
                                             break
-                                else: break                                        
-                            else: break                                    
-                        break  #* Sortie de la boucle while si un marqueur est rencontré
-                    elif self.plateau[0][x + i][y] == "a" and self.plateau[1][x + i][y] == "A":
-                        break                        
-                    elif self.plateau[0][x + i][y] == 1 and self.plateau[1][x + i][y] == 0:
-                        if self.plateau[1][x + i - 2][y] == "a" or self.plateau[1][x + i - 2][y] == "A":
-                            break
-                        else:
-                            self.plateau[1][x + i][y] = "P"
-                        i += 2
-                        continue
-                    else:
-                        i += 2
-                        continue
-                else: break                    
-            else: break  
-        i = 2
-        while True:
-            if 0 <= x - i <= self.taillePlateauX:
-                if len(self.plateau[0]) > x - i and len(self.plateau[1]) > x - i:
-                    if self.case_suivant_horizontale(i, x, y, "left"): #* Vérifiez si la case suivante est un marqueur
-                            j = i + 2
-                            valid = False
-                            while not valid: #* Trouvez la fin de l'enfillement de marqueurs
-                                if 0 <= x - j <= self.taillePlateauX:
-                                    if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
-                                        if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
-                                            self.plateau[1][x - j][y] = "P"
-                                        else:                                        
-                                            valid = True
-                                            if self.plateau[1][x - j][y] == "m" or self.plateau[1][x - j][y] == "M":
-                                                j += 2
-                                                if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
-                                                    if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
-                                                        self.plateau[1][x - j][y] = "P"
-                                                    else:
-                                                        j += 2
-                                                        if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
-                                                            if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
-                                                                self.plateau[1][x - j][y] = "P"
-                                                            else:
-                                                                j += 2
-                                                                if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
-                                                                    if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
-                                                                        self.plateau[1][x - j][y] = "P"
-                                                continue
-                                            if self.plateau[1][x - j][y] == "a" or self.plateau[1][x - j][y] == "A":                                                    
-                                                break
-                                    else: break                                        
-                                else: break                                    
-                            break  #* Sortie de la boucle while si un marqueur est rencontré
-                    elif self.plateau[0][x - i][y] == "a" and self.plateau[1][x - i][y] == "A":
-                        break                        
-                    elif self.plateau[0][x - i][y] == 1 and self.plateau[1][x - i][y] == 0:
-                        if self.plateau[1][x - i + 2][y] == "a" or self.plateau[1][x - i + 2][y] == "A":
-                            break
-                        else:
-                            self.plateau[1][x - i][y] = "P"
-                        i += 2
-                        continue
-                    else:
-                        i += 2
-                        continue
-                else: break                    
-            else: break           
-        #* vertical
-        i = 2
-        while True:
-            if 0 <= y - i < self.taillePlateauX:
-                if len(self.plateau[0][0]) > y - i and len(self.plateau[1][0]) > y - i:
-                    if self.case_suivant_verticale(i, x, y, "up"):  #* Vérifiez si la case suivante est un marqueur
-                        j = i + 2
-                        valid = False
-                        while not valid:  #* Trouvez la fin de l'enfillement de marqueurs
-                            if 0 <= y - j < self.taillePlateauX:
-                                if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                    if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                        self.plateau[1][x][y - j] = "P"
+                                        else:
+                                            self.plateau[1][x + j][y - j] = "P" #* on place une prévisu
+                                            print("here")
                                     else:                                        
                                         valid = True
-                                        if self.plateau[1][x][y - j] == "m" or self.plateau[1][x][y - j] == "M":
-                                            j += 2
-                                            if len(self.plateau[0][0])> y - j and len(self.plateau[1][0]) > y - j:
-                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                    self.plateau[1][x][y - j] = "P"
+                                        j += 1
+                                        if self.plateau[1][x + j][y - j] == "m" or self.plateau[1][x + j][y - j] == "M": #* si case +2 == marqueur
+                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[0]) >= x + j: #* si ça correspond à la taille du plateau
+                                                if self.plateau[0][x + j][y - j] == 1 and self.plateau[1][x + j][y - j] == 0:
+                                                    if self.plateau[1][x + j + 1][y - j - 1] == "a" and self.plateau[1][x + j + 1][y - j - 1] == "A": #* si la case +3 est un anneau on break
+                                                        break
+                                                    else:
+                                                        self.plateau[1][x + j][y - j] = "P" #* on place une prévisu
                                                 else:
-                                                    j += 2
-                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                            self.plateau[1][x][y - j] = "P"
+                                                    j += 1
+                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[0]) >= x + j: #* si ça correspond à la taille du plateau
+                                                        if self.plateau[0][x + j][y - j] == 1 and self.plateau[1][x + j][y - j] == 0: #* si ça correspond à la taille du plateau
+                                                            if self.plateau[1][x + j][y - j] == "a" and self.plateau[1][x + j][y - j] == "A": #* si la case +4 est un anneau on break
+                                                                break
+                                                            else:
+                                                                self.plateau[1][x + j][y - j] = "P" #* on place une prévisu
                                                         else:
-                                                            j += 2
-                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                                    self.plateau[1][x][y - j] = "P"
+                                                            j += 1
+                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[0]) >= x + j:
+                                                                if self.plateau[0][x + j][y - j] == 1 and self.plateau[1][x + j][y - j] == 0:
+                                                                    if self.plateau[1][x + j][y - j] == "a" and self.plateau[1][x + j][y - j] == "A":
+                                                                        break
+                                                                    else:
+                                                                        self.plateau[1][x + j][y - j] = "P"                                                                        
                                                                 else:
-                                                                    j += 2
-                                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                                            self.plateau[1][x][y - j] = "P"
+                                                                    j += 1
+                                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[0]) >= x + j:
+                                                                        if self.plateau[0][x + j][y - j] == 1 and self.plateau[1][x + j][y - j] == 0:
+                                                                            if self.plateau[1][x + j][y - j] == "a" and self.plateau[1][x + j][y - j] == "A":
+                                                                                break
+                                                                            else:
+                                                                                self.plateau[1][x + j][y - j] = "P"                                                                                
                                                                         else:
-                                                                            j += 2
-                                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                                                    self.plateau[1][x][y - j] = "P"
+                                                                            j += 1  
+                                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[0]) >= x + j:
+                                                                                if self.plateau[0][x + j][y - j] == 1 and self.plateau[1][x + j][y - j] == 0:
+                                                                                    if self.plateau[1][x + j][y - j] == "a" and self.plateau[1][x + j][y - j] == "A":
+                                                                                        break
+                                                                                    else:
+                                                                                        self.plateau[1][x + j][y - j] = "P"                                                                                        
                                                                                 else:
-                                                                                    j += 2
-                                                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                                                            self.plateau[1][x][y - j] = "P"
+                                                                                    j += 1
+                                                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[0]) >= x + j:
+                                                                                        if self.plateau[0][x + j][y - j] == 1 and self.plateau[1][x + j][y - j] == 0:
+                                                                                            if self.plateau[1][x + j][y - j] == "a" and self.plateau[1][x + j][y - j] == "A":
+                                                                                                break
+                                                                                            else:
+                                                                                                self.plateau[1][x + j][y - j] = "P"                                                                                                
                                                                                         else:
-                                                                                            j += 2
-                                                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                                                                    self.plateau[1][x][y - j] = "P"
+                                                                                            j += 1
+                                                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[0]) >= x + j:
+                                                                                                if self.plateau[0][x + j][y - j] == 1 and self.plateau[1][x + j][y - j] == 0:
+                                                                                                    if self.plateau[1][x + j][y - j] == "a" and self.plateau[1][x + j][y - j] == "A":
+                                                                                                        break
+                                                                                                    else:
+                                                                                                        self.plateau[1][x + j][y - j] = "P"                                                                                                        
                                             continue
-                                        if self.plateau[1][x][y - j] == "a" or self.plateau[1][x][y - j] == "A":                                                    
+                                        elif self.plateau[1][x + j][y - j] == "a" or self.plateau[1][x + j][y - j] == "A":                                                    
                                                 break
+                                        #else:
+                                        #   self.plateau[1][x + j][y - j] = "P"  
                                 else: break                                        
                             else: break                                    
                         break  #* Sortie de la boucle while si un marqueur est rencontré
                     else:
-                        if self.plateau[0][x][y - i] == "a" and self.plateau[1][x][y - i] == "A":
+                        if self.plateau[1][x + i][y - i] == "a" and self.plateau[1][x + i][y - i] == "A":
                             break
-                        elif self.plateau[0][x][y - i] == 1 and self.plateau[1][x][y - i] == 0:
-                            if self.plateau[1][x][y - i + 2] == "a" or self.plateau[1][x][y - i + 2] == "A":
+                        elif self.plateau[0][x + i][y - i] == 1 and self.plateau[1][x + i][y - i] == 0:
+                            if self.plateau[1][x + i - 1][y - i + 1] == "a" or self.plateau[1][x + i - 1][y - i + 1] == "A":
                                 break
                             else:
-                                self.plateau[1][x][y - i] = "P"
-                            i += 2
-                            continue
+                                self.plateau[1][x + i][y - i] = "P"
+                            i += 1
                         else:
-                            i += 2
+                            i += 1
                             continue
                 else: break                    
             else: break
-
-
-        i = 2
-        while True:
-            if 0 <= y + i < self.taillePlateauX:
-                if len(self.plateau[0][0]) > y + i and len(self.plateau[1][0]) > y + i:
-                    if self.case_suivant_verticale(i, x, y, "down"):  #* Vérifiez si la case suivante est un marqueur
-                        j = i + 2
-                        valid = False
-                        while not valid:  #* Trouvez la fin de l'enfillement de marqueurs
-                            if 0 <= y + j < self.taillePlateauX:
-                                if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                    if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                        self.plateau[1][x][y + j] = "P"
-                                    else:                                        
-                                        valid = True
-                                        if self.plateau[1][x][y + j] == "m" or self.plateau[1][x][y + j] == "M":
-                                            j += 2
-                                            if len(self.plateau[0][0])> y + j and len(self.plateau[1][0]) > y + j:
-                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                    self.plateau[1][x][y + j] = "P"
-                                                else:
-                                                    j += 2
-                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                            self.plateau[1][x][y + j] = "P"
-                                                        else:
-                                                            j += 2
-                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                                    self.plateau[1][x][y + j] = "P"
-                                                                else:
-                                                                    j += 2
-                                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                                            self.plateau[1][x][y + j] = "P"
-                                                                        else:
-                                                                            j += 2
-                                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                                                    self.plateau[1][x][y + j] = "P"
-                                                                                else:
-                                                                                    j += 2
-                                                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                                                            self.plateau[1][x][y + j] = "P"
-                                                                                        else:
-                                                                                            j += 2
-                                                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                                                                    self.plateau[1][x][y + j] = "P"
-                                            continue
-                                        if self.plateau[1][x][y + j] == "a" or self.plateau[1][x][y + j] == "A":                                                    
-                                                break
-                                else: break                                        
-                            else: break                                    
-                        break  #* Sortie de la boucle while si un marqueur est rencontré
-                    else:
-                        if self.plateau[0][x][y + i] == "a" and self.plateau[1][x][y + i] == "A":
-                            break
-                        elif self.plateau[0][x][y + i] == 1 and self.plateau[1][x][y + i] == 0:
-                            if self.plateau[1][x][y + i - 2] == "a" or self.plateau[1][x][y + i - 2] == "A":
-                                break
-                            else:
-                                self.plateau[1][x][y + i] = "P"
-                            i += 2
-                            continue
-                        else:
-                            i += 2
-                            continue
-                else: break                    
-            else: break  
+        #i = 1
+        #while True:
+        #    if 0 <= y + i < self.taillePlateauX and 0 <= x - i < self.taillePlateauY:
+        #        if len(self.plateau[0][0]) > y + i and self.taillePlateauY > x - i:
+        #            if self.case_suivant_diagonal(i, x, y, "downleft"):  #* Vérifiez si la case suivante est un marqueur
+        #                j = i + 1
+        #                valid = False
+        #                while not valid:  #* Trouvez la fin de l'enfillement de marqueurs
+        #                    if 0 <= y + j < self.taillePlateauX and 0 <= x - j < self.taillePlateauY: #* si ça correspond à la taille du plateau
+        #                        if len(self.plateau[0][0]) > y + j and len(self.plateau[0]) >= x - j: #* si ça correspond à la taille du plateau
+        #                            if self.plateau[0][x - j][y + j] == 1 and self.plateau[1][x - j][y + j] == 0: #* vérifie si la case +2 est jouable et vite
+        #                                if self.plateau[1][x - j][y + j] == "a" and self.plateau[1][x - j][y + j] == "A": #* si la case +2 est un anneau on break
+        #                                    break
+        #                                else:
+        #                                    self.plateau[1][x - j][y + j] = "P" #* on place une prévisu
+        #                            else:                                        
+        #                                valid = True
+        #                                j += 1
+        #                                if self.plateau[1][x - j + 1][y + j - 1] == "m" or self.plateau[1][x - j + 1][y + j - 1] == "M": #* si case +2 == marqueur
+        #                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[0]) >= x - j: #* si ça correspond à la taille du plateau
+        #                                        if self.plateau[0][x - j][y + j] == 1 and self.plateau[1][x - j][y + j] == 0:
+        #                                            if self.plateau[1][x - j - 1][y + j + 1] == "a" and self.plateau[1][x - j - 1][y + j + 1] == "A": #* si la case +3 est un anneau on break
+        #                                                break
+        #                                            else:
+        #                                                self.plateau[1][x - j][y + j] = "P" #* on place une prévisu
+        #                                        else:
+        #                                            j += 1
+        #                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[0]) >= x - j: #* si ça correspond à la taille du plateau
+        #                                                if self.plateau[0][x - j][y + j] == 1 and self.plateau[1][x - j][y + j] == 0: #* si ça correspond à la taille du plateau
+        #                                                    if self.plateau[1][x - j][y + j] == "a" and self.plateau[1][x - j][y + j] == "A": #* si la case +4 est un anneau on break
+        #                                                        break
+        #                                                    else:
+        #                                                        self.plateau[1][x - j][y + j] = "P" #* on place une prévisu
+        #                                                else:
+        #                                                    j += 1
+        #                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[0]) >= x - j:
+        #                                                        if self.plateau[0][x - j][y + j] == 1 and self.plateau[1][x - j][y + j] == 0:
+        #                                                            if self.plateau[1][x - j][y + j] == "a" and self.plateau[1][x - j][y + j] == "A":
+        #                                                                break
+        #                                                            else:
+        #                                                                self.plateau[1][x - j][y + j] = "P"                                                                        
+        #                                                        else:
+        #                                                            j += 1
+        #                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[0]) >= x - j:
+        #                                                                if self.plateau[0][x - j][y + j] == 1 and self.plateau[1][x - j][y + j] == 0:
+        #                                                                    if self.plateau[1][x - j][y + j] == "a" and self.plateau[1][x - j][y + j] == "A":
+        #                                                                        break
+        #                                                                    else:
+        #                                                                        self.plateau[1][x - j][y + j] = "P"                                                                                
+        #                                                                else:
+        #                                                                    j += 1  
+        #                                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[0]) >= x - j:
+        #                                                                        if self.plateau[0][x - j][y + j] == 1 and self.plateau[1][x - j][y + j] == 0:
+        #                                                                            if self.plateau[1][x - j][y + j] == "a" and self.plateau[1][x - j][y + j] == "A":
+        #                                                                                break
+        #                                                                            else:
+        #                                                                                self.plateau[1][x - j][y + j] = "P"                                                                                        
+        #                                                                        else:
+        #                                                                            j += 1
+        #                                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[0]) >= x - j:
+        #                                                                                if self.plateau[0][x - j][y + j] == 1 and self.plateau[1][x - j][y + j] == 0:
+        #                                                                                    if self.plateau[1][x - j][y + j] == "a" and self.plateau[1][x - j][y + j] == "A":
+        #                                                                                        break
+        #                                                                                    else:
+        #                                                                                        self.plateau[1][x - j][y + j] = "P"                                                                                                
+        #                                                                                else:
+        #                                                                                    j += 1
+        #                                                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[0]) >= x - j:
+        #                                                                                        if self.plateau[0][x - j][y + j] == 1 and self.plateau[1][x - j][y + j] == 0:
+        #                                                                                            if self.plateau[1][x - j][y + j] == "a" and self.plateau[1][x - j][y + j] == "A":
+        #                                                                                                break
+        #                                                                                            else:
+        #                                                                                                self.plateau[1][x - j][y + j] = "P"                                                                                                        
+        #                                    continue
+        #                                if self.plateau[1][x - j][y + j] == "a" or self.plateau[1][x - j][y + j] == "A":                                                    
+        #                                        break
+        #                        else: break                                        
+        #                    else: break                                    
+        #                break  #* Sortie de la boucle while si un marqueur est rencontré
+        #            else:
+        #                print("\n")
+        #                print("i = ",i)
+        #                print ("x - i =",x-i)
+        #                print ("y + i =",y+i)
+        #                if self.plateau[1][x - i][y + i] == "a" and self.plateau[1][x - i][y + i] == "A":
+        #                    break
+        #                elif self.plateau[0][x - i][y + i] == 1 and self.plateau[1][x - i][y + i] == 0:
+        #                    if self.plateau[1][x - i + 1][y + i - 1] == "a" or self.plateau[1][x - i + 1][y + i - 1] == "A":
+        #                        break
+        #                    else:
+        #                        self.plateau[1][x - i][y + i] = "P"
+        #                    i += 1
+        #                else:
+        #                    i += 1
+        #                    continue
+        #        else: break                    
+        #    else: break

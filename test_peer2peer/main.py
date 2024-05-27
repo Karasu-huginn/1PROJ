@@ -70,8 +70,7 @@ def main():
             if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
                 tourJoueur = objetPlateau.placementAnneaux(tourJoueur)     #* placement des anneaux
             else:
-                debugCasePos()
-                if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en marqueur et qu'on attend la position finale de l'anneau pour le replacer
+                if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en m arqueur et qu'on attend la position finale de l'anneau pour le replacer
                     anneauEnDeplacement = objetPlateau.checkLigneDeplacementAnneau(positionAnneauX, positionAnneauY)    #* on vérifie que l'anneau puisse être placé aux nouvelles coordonnées selon les règles du jeu
                     if not anneauEnDeplacement:     #* si anneauEnDeplacement est false c'est que la vérification d'avant est validée, donc on continue, sinon on ne fait rien
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur)      #* on place l'anneau
@@ -79,7 +78,8 @@ def main():
                         objetPlateau.del_possibles_moves()
                 else:
                     anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante    
-                    objetPlateau.previsualisation_horizontale(positionAnneauX,positionAnneauY)
+                    #objetPlateau.previsualisation_horizontale(positionAnneauX,positionAnneauY)
+                    objetPlateau.generer_coups_possibles(positionAnneauX,positionAnneauY)
 
         #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
