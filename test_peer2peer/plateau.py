@@ -326,7 +326,7 @@ class Plateau:
                     if self.plateau[1][x][y - i] == "m" or self.plateau[1][x][y - i] == "M":
                         return True
         return False
-
+    
     def previsualisation_horizontale(self, x, y):
         i = 2
         while True:
@@ -340,7 +340,6 @@ class Plateau:
                                 if len(self.plateau[0]) > x + j and len(self.plateau[1]) > x + j:
                                     if self.plateau[0][x + j][y] == 1 and self.plateau[1][x + j][y] == 0:
                                         self.plateau[1][x + j][y] = "P"
-                                        print("here1")
                                     else:                                        
                                         valid = True
                                         if self.plateau[1][x + j][y] == "m" or self.plateau[1][x + j][y] == "M":
@@ -371,7 +370,6 @@ class Plateau:
                             break
                         else:
                             self.plateau[1][x + i][y] = "P"
-                            print("here3")
                         i += 2
                         continue
                     else:
@@ -391,7 +389,6 @@ class Plateau:
                                     if len(self.plateau[0]) > x - j and len(self.plateau[1][0]) > x - j:
                                         if self.plateau[0][x - j][y] == 1 and self.plateau[1][x - j][y] == 0:
                                             self.plateau[1][x - j][y] = "P"
-                                            print("here1")
                                         else:                                        
                                             valid = True
                                             if self.plateau[1][x - j][y] == "m" or self.plateau[1][x - j][y] == "M":
@@ -422,7 +419,6 @@ class Plateau:
                             break
                         else:
                             self.plateau[1][x - i][y] = "P"
-                            print("here3")
                         i += 2
                         continue
                     else:
@@ -430,12 +426,10 @@ class Plateau:
                         continue
                 else: break                    
             else: break           
-
         #* vertical
-
         i = 2
         while True:
-            if 0 <= y + i < self.taillePlateauX:
+            if 0 <= y - i < self.taillePlateauX:
                 if len(self.plateau[0][0]) > y - i and len(self.plateau[1][0]) > y - i:
                     if self.case_suivant_verticale(i, x, y, "up"):  #* Vérifiez si la case suivante est un marqueur
                         j = i + 2
@@ -445,7 +439,6 @@ class Plateau:
                                 if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
                                     if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
                                         self.plateau[1][x][y - j] = "P"
-                                        print("here1")
                                     else:                                        
                                         valid = True
                                         if self.plateau[1][x][y - j] == "m" or self.plateau[1][x][y - j] == "M":
@@ -453,52 +446,58 @@ class Plateau:
                                             if len(self.plateau[0][0])> y - j and len(self.plateau[1][0]) > y - j:
                                                 if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
                                                     self.plateau[1][x][y - j] = "P"
-                                                #else:
-                                                #    j += 2
-                                                #    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                #        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                #            self.plateau[1][x][y - j] = "P"
-                                                #        else:
-                                                #            j += 2
-                                                #            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                #                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                #                    self.plateau[1][x][y - j] = "P"
-                                                #                else:
-                                                #                    j += 2
-                                                #                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                #                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                #                            self.plateau[1][x][y - j] = "P"
-                                                #                        else:
-                                                #                            j += 2
-                                                #                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                #                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                #                                    self.plateau[1][x][y - j] = "P"
-                                                #                                else:
-                                                #                                    j += 2
-                                                #                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
-                                                #                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
-                                                #                                            self.plateau[1][x][y - j] = "P"
+                                                else:
+                                                    j += 2
+                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+                                                            self.plateau[1][x][y - j] = "P"
+                                                        else:
+                                                            j += 2
+                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+                                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+                                                                    self.plateau[1][x][y - j] = "P"
+                                                                else:
+                                                                    j += 2
+                                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+                                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+                                                                            self.plateau[1][x][y - j] = "P"
+                                                                        else:
+                                                                            j += 2
+                                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+                                                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+                                                                                    self.plateau[1][x][y - j] = "P"
+                                                                                else:
+                                                                                    j += 2
+                                                                                    if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+                                                                                        if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+                                                                                            self.plateau[1][x][y - j] = "P"
+                                                                                        else:
+                                                                                            j += 2
+                                                                                            if len(self.plateau[0][0]) > y - j and len(self.plateau[1][0]) > y - j:
+                                                                                                if self.plateau[0][x][y - j] == 1 and self.plateau[1][x][y - j] == 0:
+                                                                                                    self.plateau[1][x][y - j] = "P"
                                             continue
                                         if self.plateau[1][x][y - j] == "a" or self.plateau[1][x][y - j] == "A":                                                    
                                                 break
                                 else: break                                        
                             else: break                                    
                         break  #* Sortie de la boucle while si un marqueur est rencontré
-                    elif self.plateau[0][x][y - i] == "a" and self.plateau[1][x][y - i] == "A":
-                        break                        
-                    elif self.plateau[0][x][y - i] == 1 and self.plateau[1][x][y - i] == 0:
-                        if self.plateau[1][x][y - i + 2] == "a" or self.plateau[1][x][y - i + 2] == "A":
-                            break
-                        else:
-                            self.plateau[1][x][y - i] = "P"
-                            print("here3")
-                        i += 2
-                        continue
                     else:
-                        i += 2
-                        continue
+                        if self.plateau[0][x][y - i] == "a" and self.plateau[1][x][y - i] == "A":
+                            break
+                        elif self.plateau[0][x][y - i] == 1 and self.plateau[1][x][y - i] == 0:
+                            if self.plateau[1][x][y - i + 2] == "a" or self.plateau[1][x][y - i + 2] == "A":
+                                break
+                            else:
+                                self.plateau[1][x][y - i] = "P"
+                            i += 2
+                            continue
+                        else:
+                            i += 2
+                            continue
                 else: break                    
             else: break
+
 
         i = 2
         while True:
@@ -512,7 +511,6 @@ class Plateau:
                                 if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
                                     if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
                                         self.plateau[1][x][y + j] = "P"
-                                        print("here1")
                                     else:                                        
                                         valid = True
                                         if self.plateau[1][x][y + j] == "m" or self.plateau[1][x][y + j] == "M":
@@ -520,51 +518,54 @@ class Plateau:
                                             if len(self.plateau[0][0])> y + j and len(self.plateau[1][0]) > y + j:
                                                 if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
                                                     self.plateau[1][x][y + j] = "P"
-                                                #else:
-                                                #    j += 2
-                                                #    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                #        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                #            self.plateau[1][x][y + j] = "P"
-                                                #        else:
-                                                #            j += 2
-                                                #            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                #                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                #                    self.plateau[1][x][y + j] = "P"
-                                                #                else:
-                                                #                    j += 2
-                                                #                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                #                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                #                            self.plateau[1][x][y + j] = "P"
-                                                #                        else:
-                                                #                            j += 2
-                                                #                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                #                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                #                                    self.plateau[1][x][y + j] = "P"
-                                                #                                else:
-                                                #                                    j += 2
-                                                #                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
-                                                #                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
-                                                #                                            self.plateau[1][x][y + j] = "P"
+                                                else:
+                                                    j += 2
+                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+                                                            self.plateau[1][x][y + j] = "P"
+                                                        else:
+                                                            j += 2
+                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+                                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+                                                                    self.plateau[1][x][y + j] = "P"
+                                                                else:
+                                                                    j += 2
+                                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+                                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+                                                                            self.plateau[1][x][y + j] = "P"
+                                                                        else:
+                                                                            j += 2
+                                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+                                                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+                                                                                    self.plateau[1][x][y + j] = "P"
+                                                                                else:
+                                                                                    j += 2
+                                                                                    if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+                                                                                        if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+                                                                                            self.plateau[1][x][y + j] = "P"
+                                                                                        else:
+                                                                                            j += 2
+                                                                                            if len(self.plateau[0][0]) > y + j and len(self.plateau[1][0]) > y + j:
+                                                                                                if self.plateau[0][x][y + j] == 1 and self.plateau[1][x][y + j] == 0:
+                                                                                                    self.plateau[1][x][y + j] = "P"
                                             continue
                                         if self.plateau[1][x][y + j] == "a" or self.plateau[1][x][y + j] == "A":                                                    
                                                 break
                                 else: break                                        
                             else: break                                    
                         break  #* Sortie de la boucle while si un marqueur est rencontré
-                    elif self.plateau[0][x][y + i] == "a" and self.plateau[1][x][y + i] == "A":
-                        print("je marche pas")
-                        break
-                    elif self.plateau[0][x][y + i] == 1 and self.plateau[1][x][y + i] == 0:
-                        if self.plateau[1][x][y + i - 2] == "a" or self.plateau[1][x][y + i - 2] == "A":
-                            break
-                        else:
-                            self.plateau[1][x][y + i] = "P"
-                            print("here3")
-                        i += 2
-                        continue
                     else:
-                        i += 2
-                        continue
+                        if self.plateau[0][x][y + i] == "a" and self.plateau[1][x][y + i] == "A":
+                            break
+                        elif self.plateau[0][x][y + i] == 1 and self.plateau[1][x][y + i] == 0:
+                            if self.plateau[1][x][y + i - 2] == "a" or self.plateau[1][x][y + i - 2] == "A":
+                                break
+                            else:
+                                self.plateau[1][x][y + i] = "P"
+                            i += 2
+                            continue
+                        else:
+                            i += 2
+                            continue
                 else: break                    
             else: break  
-               
