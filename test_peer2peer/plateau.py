@@ -302,6 +302,13 @@ class Plateau:
             for u in range(len(self.plateau[1][i])):
                 if self.plateau[1][i][u] == "P":
                     self.plateau [1][i][u] = 0
+    
+    def has_possibles_moves(self):
+        for i in range(len(self.plateau[1])):
+            for u in range(len(self.plateau[1][i])):
+                if self.plateau[1][i][u] == "P":
+                    return True
+        return False
 
     def gen_all_previews(self, x, y):
 #todo        liste = ["up", "down", "left", "right"]

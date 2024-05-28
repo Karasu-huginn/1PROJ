@@ -78,10 +78,17 @@ def main():
                             objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY)   #* on retourne les marqueurs du chemin s'il y en a
                             objetPlateau.del_possibles_moves()
                 else:
-                    anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante    
-                    objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
-                    if not anneauEnDeplacement:
-                        objetPlateau.del_possibles_moves()
+                    ###
+                    x,y = pygame.mouse.get_pos()
+                    x,y = x//50, y//25
+                    if objetPlateau.plateau[1][x][y] == "a" or objetPlateau.plateau[1][x][y] == "A":
+                        objetPlateau.gen_all_previews(x,y)
+                        if objetPlateau.has_possibles_moves():
+                    ###
+                            anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante    
+                            objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
+                            if not anneauEnDeplacement:
+                                objetPlateau.del_possibles_moves()
 
         #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
