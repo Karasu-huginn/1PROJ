@@ -74,7 +74,7 @@ def main():
 
         estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
         if not marqueursAlignes:
-            if estClique:
+            if estClique:                       #! valeur à changer avant rendu final !
                 if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
                     tourJoueur = objetPlateau.placementAnneaux(tourJoueur)     #* placement des anneaux
                 else:
@@ -103,15 +103,16 @@ def main():
                                     objetPlateau.del_possibles_moves()
         else:
             if estClique:
-                #$ tourJoueur+tourJoueurAlignement
-                if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:  #! en fonction de la couleur du joueur
+                if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:
+                    if objetPlateau.get_case_pion() == "A":
+                        pointsBlancs += 1
+                    if objetPlateau.get_case_pion() == "a":
+                        pointsNoirs += 1
                     objetPlateau.set_case_pion(0)
                     objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
                     marqueursAlignes = False
                     tourJoueurAlignement = 0
-                #todo ajout d'un point au score
 
-        #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur+tourJoueurAlignement)  #* texte à afficher selon le tour du joueur
         font = pygame.font.SysFont(None, 22)        #* texte à afficher
         img = font.render(tourJoueurTexte, True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc offi
@@ -121,7 +122,10 @@ def main():
             if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
                 windowStayOpened = False        #* on toggle la variable pour arrêter la boucle
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
-    #todo affichage du gagnant
+    if pointsNoirs > pointsBlancs:
+        print("Les noirs remportent la victoire !")
+    else:
+        print("Les blancs remportent la victoire !")
     #todo proposition recommencer partie
     pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
