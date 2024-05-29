@@ -45,6 +45,7 @@ class Server:
             message_recu = self.receive_message(connection)
             queue.put(message_recu)
             print("une pos x et y à été ajouté à la queue")
+
     def data_sending (self,plateau,connection,tourJoueur):
         message_plateau = "plateau:" + str(plateau) #* ajout de l'identifiant de la donnée
         self.send_message(connection, message_plateau)#* envoie du tableau après mouvements

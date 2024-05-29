@@ -310,16 +310,19 @@ class Plateau:
                     return True
         return False
 
+    def checkifpossibles_moves(self,x,y):
+        if self.plateau[1][x][y] == "a" or self.plateau[1][x][y] == "A":
+            self.gen_all_previews(x,y)
+            if self.has_possibles_moves():
+                self.del_possibles_moves()
+                return True
+            else: return False
+        else: return True
+
     def gen_all_previews(self, x, y):
-#todo        liste = ["up", "down", "left", "right"]
-        self.gen_preview(x, y, "up")
-        self.gen_preview(x, y, "down")
-        self.gen_preview(x, y, "right")
-        self.gen_preview(x, y, "left")
-        self.gen_preview(x, y, "upright")
-        self.gen_preview(x, y, "downleft")
-        self.gen_preview(x, y, "upleft")
-        self.gen_preview(x, y, "downright")
+        liste = ["up", "down", "left", "right", "upright", "downleft", "upleft", "downright"]
+        for i in range(len(liste)):
+            self.gen_preview(x, y, liste[i])
 
     def gen_preview(self, x, y, direction):
         no_more_moves = False
