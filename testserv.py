@@ -39,15 +39,22 @@ class Server:
         host_name = socket.gethostname()
         local_ip = socket.gethostbyname(host_name)
         return local_ip
-                
-    def receive_position_thread(self, queue, connection): #* ajoute x et y à la queue (utilise dans le thread)
+            
+
+    def receive_messages_thread(self, queue,connection): #* ajoute le plateau et le tourjoueur à la queue (utilise dans le thread)
         while self.connected:
             message_recu = self.receive_message(connection)
-            queue.put(message_recu)
-            print("une pos x et y à été ajouté à la queue")
+            if message_recu.startswith("plateau:"):
+                #plateau_recu = ast.literal_eval(message_recu[8:])
+                queue.put(str(message_recu))
+                print("un plateau à été ajouté à la queue")
+            elif message_recu.startswith("tour:"):
+                #tourJoueur = int(message_recu[5:])
+                queue.put(str(message_recu))
+                print("un tour à été ajouté à la queue")
 
-    def data_sending (self,plateau,connection,tourJoueur):
-        message_plateau = "plateau:" + str(plateau) #* ajout de l'identifiant de la donnée
-        self.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-        message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-        self.send_message(connection, message_tour)#* envoie du tourn après mouvements
+    #def data_sending (self,plateau,connection,tourJoueur):
+    #    message_plateau = "plateau:" + str(plateau) #* ajout de l'identifiant de la donnée
+    #    self.send_message(connection, message_plateau)#* envoie du tableau après mouvements
+    #    message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
+    #    self.send_message(connection, message_tour)#* envoie du tourn après mouvements

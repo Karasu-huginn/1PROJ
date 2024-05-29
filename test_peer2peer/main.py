@@ -199,7 +199,6 @@ def mainP2P ():
                     else:
                         #$debugCasePos()
                         if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en marqueur et qu'on attend la position finale de l'anneau pour le replacer
-                            
                             ### début zone test
                             movepossible = objetPlateau.checkifpossibles_moves(positionAnneauX,positionAnneauY)
                             if not movepossible:
@@ -212,7 +211,6 @@ def mainP2P ():
                                 pygame.display.update()  
                                 continue
                             ### fin zone test
-                            
                             anneauEnDeplacement = objetPlateau.checkLigneDeplacementAnneauP2P(positionAnneauX, positionAnneauY,x,y)    #* on vérifie que l'anneau puisse être placé aux nouvelles coordonnées selon les règles du jeu
                             if not anneauEnDeplacement:     #* si anneauEnDeplacement est false c'est que la vérification d'avant est validée, donc on continue, sinon on ne fait rien
                                 tourJoueur = objetPlateau.placementAnneauxP2P(tourJoueur,x,y)      #* on place l'anneau
