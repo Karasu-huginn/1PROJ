@@ -10,7 +10,9 @@ class Plateau:
         self.marqueurSurChemin = False
         self.anneauSurChemin = False
         self.token = int
-    
+
+
+#* GETTERS
     def get_taillePlateauY(self):
         return self.taillePlateauY
     
@@ -22,7 +24,23 @@ class Plateau:
     
     def get_anneauxPlaces(self):
         return self.anneauxPlaces
+    
+    def get_pion(self,x,y):
+        return self.plateau[1][x][y]
+    
+    def get_case_pion(self):
+        x,y = pygame.mouse.get_pos()
+        x,y = x//50, y//25
+        return self.plateau[1][x][y]
+        
 
+#* SETTERS
+    def set_case_pion(self,valeur):
+        x,y = pygame.mouse.get_pos()
+        x,y = x//50, y//25
+        self.plateau[1][x][y] = valeur
+
+#* Méthodes
     def plateauInitialisation(self):
         self.plateau[0] = [[1]*self.taillePlateauX for i in range(self.taillePlateauY)]
         self.plateau[1] = [[0]*self.taillePlateauX for i in range(self.taillePlateauY)]
@@ -351,7 +369,6 @@ class Plateau:
             if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
                 if self.plateau[0][x][y] == 1 and self.plateau[1][x][y] == 0:  # case jouable
                     self.plateau[1][x][y] = "P"
-                    print("here1")
                     continue
                 elif self.plateau[1][x][y] == "A" or self.plateau[1][x][y] == "a":  # case avec anneau
                     break
@@ -395,14 +412,39 @@ class Plateau:
                 if self.plateau[1][x][y] == "m" or self.plateau[1][x][y] == "M":
                     if self.plateau[0][x][y] == 1 and self.plateau[1][x][y] == 0:
                         self.plateau[1][x][y] = "P"
-                        print("here2")
                         return True
                 elif self.plateau[1][x][y] == 0: 
                     self.plateau[1][x][y] = "P"
-                    print("here2")
                     return True
                 else:
                     return True
             else:
                 break
             break
+
+    def checkAlignementMarqueurs(self):
+        directions = {"up":[0,-2],"down":[0,2],"left":[-2,0],"right":[2,0],"upright":[1,-1],"downright":[1,1],"upleft":[-1,-1],"downleft":[-1,1]}
+        alignement = 0
+        for i in range(len(self.plateau[1])):
+            for u in range(len(self.plateau[1][i])):
+                if self.plateau[1][i][u] == "m" or self.plateau[1][i][u] == "M":
+                    marque = self.plateau[1][i][u]
+                    for k in directions:
+                        marqueursAlignesListe = [[i,u]]
+                        alignement = 0
+                        for j in range(1,5):
+                            x = directions[k][0]*j
+                            y = directions[k][1]*j
+                            if i+x < len(self.plateau[1]) and u+y < len(self.plateau[1][i]):
+                                if self.plateau[1][i+x][u+y] == marque:
+                                    marqueursAlignesListe.append([i+x,u+y])
+                                    alignement += 1
+                        if alignement >= 4:
+                            return True, marqueursAlignesListe
+        return False, list()
+    
+    def suppressionMarqueursAlignement(self, marqueurs):
+        for coords in marqueurs:
+            print(coords[0])
+            self.plateau[1][coords[0]][coords[1]] = 0
+    
