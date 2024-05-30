@@ -216,6 +216,7 @@ def mainP2P ():
                                     objetPlateau.update_display(screen)
                                     pygame.display.update()
             else:
+                #todo alignement P2P à faire
                 if estClique:
                     if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:
                         if objetPlateau.get_case_pion() == "A":
