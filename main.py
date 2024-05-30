@@ -199,6 +199,13 @@ def mainP2P ():
                                 tourJoueur = objetPlateau.placementAnneaux(tourJoueur)      #* on place l'anneau
                                 objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY)   #* on retourne les marqueurs du chemin s'il y en a
                                 objetPlateau.del_possibles_moves()
+                                marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
+                                if marqueursAlignes == True:
+                                    print(marqueursAlignesListe)
+                                    if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
+                                        tourJoueurAlignement = -1
+                                    elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
+                                        tourJoueurAlignement = -1
                                 if not local:
                                     message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                                     server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
@@ -217,9 +224,10 @@ def mainP2P ():
                                         objetPlateau.del_possibles_moves()
                                         if not local:
                                             message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                                            server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
+                                            server.send_message(connection,message_plateau)#* envoie du tableau après mouvements
                                             message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-                                            server.send_message(connection, message_tour)#* envoie du tableau après mouvements
+                                            server.send_message(connection,message_tour)#* envoie du tableau après mouvements
+                                            objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
                                             objetPlateau.update_display(screen)
                                             pygame.display.update()   
             else:
@@ -359,13 +367,13 @@ def mainIA():
                             tourJoueur = objetPlateau.placementAnneauxIA(tourJoueur,x,y)
                             objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY) #todo arg to fix
                             objetPlateau.del_possibles_moves()
-                            #marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
-                            #if marqueursAlignes == True:
-                            #    print(marqueursAlignesListe)
-                            #    if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
-                            #        tourJoueurAlignement = -1
-                            #    elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
-                            #        tourJoueurAlignement = -1
+                            marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
+                            if marqueursAlignes == True:
+                                print(marqueursAlignesListe)
+                                if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
+                                    tourJoueurAlignement = -1
+                                elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
+                                    tourJoueurAlignement = -1
                     else:
                         x, y = objetPlateau.gen_rand_pos_x_y_Anneaux()
                         if objetPlateau.checkifpossibles_moves:
@@ -373,8 +381,20 @@ def mainIA():
                             objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
                             if not anneauEnDeplacement:
                                 objetPlateau.del_possibles_moves()
-            #else:
-            #    #todo alignements pour ia
+            else:
+                print(estClique, (tourJoueur+tourJoueurAlignement)%2-1)
+                if estClique == ((tourJoueur+tourJoueurAlignement)%2-1):
+                    print("test")
+                    if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:
+                        if objetPlateau.get_case_pion() == "A":
+                            pointsBlancs += 1
+                        if objetPlateau.get_case_pion() == "a":
+                            pointsNoirs += 1
+                        objetPlateau.set_case_pion(0)
+                        objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
+                        marqueursAlignes = False
+                        tourJoueurAlignement = 0
+                #todo alignements pour ia
             
 
 
@@ -397,7 +417,7 @@ def mainIA():
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
 try:
-    input = 1
+    input = 3
     #input = int(input("Enter 1-réseau or 2-local: "))
     if input == 1:
         mainP2P()

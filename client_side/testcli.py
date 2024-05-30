@@ -148,6 +148,13 @@ def main ():
                                     tourJoueur = objetPlateau.placementAnneaux(tourJoueur)      #* on place l'anneau
                                     objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY)   #* on retourne les marqueurs du chemin s'il y en a
                                     objetPlateau.del_possibles_moves()
+                                    marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
+                                    if marqueursAlignes == True:
+                                        print(marqueursAlignesListe)
+                                        if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
+                                            tourJoueurAlignement = -1
+                                        elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
+                                            tourJoueurAlignement = -1
                                     message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                                     client.send_message(message_plateau)#* envoie du tableau après mouvements
                                     message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
