@@ -52,9 +52,6 @@ class Plateau:
         x,y = x//50, y//25
         self.plateau[1][x][y] = valeur
 
-    def set_pion(self,x,y,valeur):
-        self.plateau[1][x][y] = valeur
-
 #* Méthodes
     def plateauInitialisation(self):
         self.plateau[0] = [[1]*self.taillePlateauX for i in range(self.taillePlateauY)]
@@ -496,19 +493,8 @@ class Plateau:
             x = random.randint(0,self.taillePlateauX)
             y = random.randint(1,self.taillePlateauY-1)
             if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
-                if self.plateau[1][x][y] == "a" and self.plateau[0][x][y] == 1 or self.plateau[1][x][y] == "A" and self.plateau[0][x][y] == 1:
+                if self.plateau[1][x][y] == "a" or self.plateau[1][x][y] == "A" and self.plateau[0][x][y] == 1:
                     return x,y
-                
-                
-#?    def gen_rand_pos_x_y_Anneauxtest(self):
-#?        x = random.randint(0,self.taillePlateauX)
-#?        y = random.randint(0,self.taillePlateauY)
-#?        while True:
-#?            x = random.randint(0,self.taillePlateauX)
-#?            y = random.randint(1,self.taillePlateauY-1)
-#?            if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
-#?                if self.plateau[1][x][y] == "a" or self.plateau[1][x][y] == "A" and self.plateau[0][x][y] == 1:
-#?                    return x,y
     
     def gen_rand_pos_x_y_previsu(self):
         x = random.randint(0,self.taillePlateauX)

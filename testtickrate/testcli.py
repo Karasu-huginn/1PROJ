@@ -103,9 +103,24 @@ def main ():
         positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
         positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
         modeJeu = 1         #* 3 = partie normale, 1 = partie Blitz
+        ticks = 0
 
         first_exec = True 
         while windowStayOpened:
+
+
+            if ticks < 200:
+                ticks += 1
+            else:
+                message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
+                client.send_message(message_plateau)#* envoie du tableau après mouvements
+                message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
+                client.send_message(message_tour)#* envoie du tableau après mouvements
+                objetPlateau.update_display(screen)
+                pygame.display.update()   
+                ticks = 0
+                print("reset ticks")
+
             pygame.display.update()   
             anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
             pointsBlancs = 5 - anneauxBlancs
@@ -143,12 +158,6 @@ def main ():
                     if estClique: #* si on clique dans la fenetre
                         if objetPlateau.get_anneauxPlaces() < 2: #* vérif que tous les anneaux sont placés
                             tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
-                            message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                            client.send_message(message_plateau)#* envoie du tableau après mouvements
-                            message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-                            client.send_message(message_tour)#* envoie du tableau après mouvements
-                            objetPlateau.update_display(screen)
-                            pygame.display.update()   
                         else:
                             if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en marqueur et qu'on attend la position finale de l'anneau pour le replacer
                                 anneauEnDeplacement = objetPlateau.checkdeplacementAnneau()    #* on vérifie que l'anneau puisse être placé aux nouvelles coordonnées selon les règles du jeu
@@ -156,12 +165,6 @@ def main ():
                                     tourJoueur = objetPlateau.placementAnneaux(tourJoueur)      #* on place l'anneau
                                     objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY)   #* on retourne les marqueurs du chemin s'il y en a
                                     objetPlateau.del_possibles_moves()
-                                    message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                                    client.send_message(message_plateau)#* envoie du tableau après mouvements
-                                    message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-                                    client.send_message(message_tour)#* envoie du tableau après mouvements
-                                    objetPlateau.update_display(screen)
-                                    pygame.display.update()   
                             else:
                                 x,y = pygame.mouse.get_pos()
                                 x,y = x//50, y//25
@@ -169,13 +172,6 @@ def main ():
                                         anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante
                                         if not anneauEnDeplacement:
                                             objetPlateau.del_possibles_moves()
-                                        message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                                        client.send_message(message_plateau)#* envoie du tableau après mouvements
-                                        message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-                                        client.send_message(message_tour)#* envoie du tableau après mouvements
-                                        objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
-                                        objetPlateau.update_display(screen)
-                                        pygame.display.update()
                 else:
                     #todo alignement P2P à faire
                     if estClique:
@@ -184,16 +180,8 @@ def main ():
                             objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
                             marqueursAlignes = False
                             tourJoueurAlignement = 0
-                            message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                            client.send_message(message_plateau)#* envoie du tableau après mouvements
-                            message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-                            client.send_message(message_tour)#* envoie du tableau après mouvements
-                            objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
-                            objetPlateau.update_display(screen)
-                            pygame.display.update()  
 
 
-            #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\
             tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
             font = pygame.font.SysFont(None, 22)        #* texte à afficher
             img = font.render(tourJoueurTexte, True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc offi
