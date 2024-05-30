@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Plateau:
     def __init__(self, taillePlateau):
@@ -457,3 +458,11 @@ class Plateau:
             print(coords[0])
             self.plateau[1][coords[0]][coords[1]] = 0
     
+
+    def gen_rand_pos_x_y_empty(self):
+        x = random.randint(0,self.taillePlateauX-1)
+        y = random.randint(1,self.taillePlateauY-1)
+        while self.plateau[1][x][y] != 0 and self.plateau[0][x][y] != 1:
+            x = random.randint(0,self.taillePlateauX-1)
+            y = random.randint(1,self.taillePlateauY-1)
+        return x,y
