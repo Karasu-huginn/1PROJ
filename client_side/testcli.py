@@ -125,6 +125,7 @@ def main ():
                     elif element.startswith("tour:"): #* check l'identificant pour savoir de quelle donnée il s'agit
                         message_recu = element
                         tourJoueur = int(message_recu[5:]) #* formate la data retire l'identifiant
+                    objetPlateau.del_possibles_moves()
                     objetPlateau.update_display(screen) #* affiche le plateau avec un refresh
                     pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus
                 #* gestion tour invité (envoie de data vers server) 
@@ -158,6 +159,7 @@ def main ():
                                 x,y = x//50, y//25
                                 if objetPlateau.checkifpossibles_moves(x,y):
                                         anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante
+                                        objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
                                         if not anneauEnDeplacement:
                                             objetPlateau.del_possibles_moves()
                                         message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
@@ -182,7 +184,7 @@ def main ():
                         client.send_message(message_plateau)#* envoie du tableau après mouvements
                         message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
                         client.send_message(message_tour)#* envoie du tableau après mouvements
-                        objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
+                        #objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
                         objetPlateau.update_display(screen)
                         pygame.display.update()  
 
