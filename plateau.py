@@ -154,6 +154,36 @@ class Plateau:
 
 
 
+    def retournerMarqueursIA(self, positionAnneauX, positionAnneauY,x,y):     #* retourne tous les marqueurs sur le chemin prit par un anneau                                        #* récupère les coordonnées du curseur et les divise par la taille d'une case pour avoir les coordonnées sur le plateau
+        diffX = positionAnneauX-x                                       #* nombre de cases entre la position orginale et la nouvelle position de l'anneau
+        diffY = positionAnneauY-y
+        if abs(diffX) == abs(diffY):                                    #* vérifie que la case sélectionnée est une diagonale de la case originale
+            for i in range(1,abs(diffX)):
+                loopX = positionAnneauX-i*(diffX//abs(diffX))           #* définit les coordonnées d'une case où retourner le marqueur si présent
+                loopY = positionAnneauY-i*(diffY//abs(diffY))
+                if self.plateau[1][loopX][loopY] == "m":                #* retourne le marqueur
+                    self.plateau[1][loopX][loopY] = "M"
+                elif self.plateau[1][loopX][loopY] == "M":
+                    self.plateau[1][loopX][loopY] = "m"
+        elif abs(diffX)%2 == 0 and abs(diffY) == 0 or abs(diffY)%2 == 0 and abs(diffX) == 0:    #* vérifie que la case sélectionnée est une ligne horizontale ou verticale de la case originale
+            for i in range(1,(abs(diffX)+abs(diffY)+1)//2):
+                if abs(diffX) == 0:
+                    loopX = positionAnneauX
+                    loopY = positionAnneauY-i*(diffY//abs(diffY))*2
+                    if self.plateau[1][loopX][loopY] == "m":
+                        self.plateau[1][loopX][loopY] = "M"
+                    elif self.plateau[1][loopX][loopY] == "M":
+                        self.plateau[1][loopX][loopY] = "m"
+                else:
+                    loopX = positionAnneauX-i*(diffX//abs(diffX))*2
+                    loopY = positionAnneauY
+                    if self.plateau[1][loopX][loopY] == "m":
+                        self.plateau[1][loopX][loopY] = "M"
+                    elif self.plateau[1][loopX][loopY] == "M":
+                        self.plateau[1][loopX][loopY] = "m"
+
+
+
     #def retournerMarqueursP2P(self, positionAnneauX, positionAnneauY,x,y):     #* retourne tous les marqueurs sur le chemin prit par un anneau                                        #* récupère les coordonnées du curseur et les divise par la taille d'une case pour avoir les coordonnées sur le plateau
     #    diffX = positionAnneauX-x                                       #* nombre de cases entre la position orginale et la nouvelle position de l'anneau
     #    diffY = positionAnneauY-y

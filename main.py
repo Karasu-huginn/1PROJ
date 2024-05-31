@@ -374,7 +374,7 @@ def mainIA():
                         anneauEnDeplacement = objetPlateau.checkdeplacementAnneauIA(x,y)
                         if not anneauEnDeplacement:
                             tourJoueur = objetPlateau.placementAnneauxIA(tourJoueur,x,y)
-                            objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY) #todo arg to fix
+                            objetPlateau.retournerMarqueursIA(positionAnneauX, positionAnneauY,x,y)
                             objetPlateau.del_possibles_moves()
                             marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
                             if marqueursAlignes == True:
@@ -419,7 +419,7 @@ def mainIA():
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
 try:
-    input = 1
+    input = 3
     #input = int(input("Enter 1-réseau or 2-local: "))
     if input == 1:
         mainP2P()
