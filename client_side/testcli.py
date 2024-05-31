@@ -4,6 +4,7 @@ import pygame
 import threading
 from queue import Queue
 from plateau import *
+from entrer_ip import *
 BG_COLOR = [50,50,50]
 FONT_COLOR = [255,255,255]
 
@@ -65,11 +66,11 @@ def renduTexteTourJoueur(tourJoueur):       #* renvoie le texte à afficher selo
         return "Aux Noirs de jouer"
     
 
-def main ():
+def yinshclient (ip):
     queue = Queue()
     if __name__ == "__main__":
         host_name = Client.get_local_ip() #$ récupérer hostname pour bind la connexion (à changer pour un input)
-        #host_name = "10.24.233.178" #$ récupérer hostname pour bind la connexion (à changer pour un input)
+        host_name = ip #$ récupérer hostname pour bind la connexion (à changer pour un input)
         port = 1111 #* definition du port utilisé
         client = Client(host_name, port) #* création de l'instance server
         client.connect() #* connextion à l'adresse donné
@@ -212,4 +213,11 @@ def main ():
         else:
             print("Les blancs remportent la victoire !")
         pygame.quit()
+
+def main ():
+    ip = ''
+    ip = interface()
+    yinshclient(ip)
+
+
 main()
