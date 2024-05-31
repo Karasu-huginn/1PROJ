@@ -69,6 +69,7 @@ def main ():
     queue = Queue()
     if __name__ == "__main__":
         host_name = Client.get_local_ip() #$ récupérer hostname pour bind la connexion (à changer pour un input)
+        #host_name = "10.24.233.178" #$ récupérer hostname pour bind la connexion (à changer pour un input)
         port = 1111 #* definition du port utilisé
         client = Client(host_name, port) #* création de l'instance server
         client.connect() #* connextion à l'adresse donné
@@ -101,9 +102,18 @@ def main ():
         anneauEnDeplacement = False     #* détermine si un anneau est en train d'être déplacé (bool)
         positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
         positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
+        modeJeu = 1         #* 3 = partie normale, 1 = partie Blitz
 
         first_exec = True 
         while windowStayOpened:
+            pygame.display.update()   
+            anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
+            pointsBlancs = 5 - anneauxBlancs
+            pointsNoirs = 5 - anneauxNoirs
+            
+            if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
+                windowStayOpened = False
+
             objetPlateau.affichagePlateau(screen)   #* affichage des cases du plateau dans la fenêtre
             objetPlateau.affichagePions(screen)
             estClique = gestionClic(estClique)
@@ -115,7 +125,7 @@ def main ():
                 first_exec = False #* ajout de cette variable pour concel l'auto refresh permanent
 
                 #* gestion tour host
-            if tourJoueur%2 == 0: #* si le joueur à jouer n'est pas l'invité on receptionne le plateau lors qde chaque mouvements
+            if tourJoueur%2 == 0: #* si le joueur à jouer n'est pas l'invité on receptionne le plateau lors de chaque mouvements
                 while not queue.empty(): #* itère les éléments de la queue
                     element = queue.get() #* récupère les éléments de la queue
                     if element.startswith("plateau:"): #* check l'identificant pour savoir de quelle donnée il s'agit
@@ -131,8 +141,7 @@ def main ():
                 #* gestion tour invité (envoie de data vers server) 
             elif tourJoueur%2 == 1 :
                 if not marqueursAlignes:
-                    if estClique: #* si on clique dans la fenetre 
-                        print("je click")
+                    if estClique: #* si on clique dans la fenetre
                         if objetPlateau.get_anneauxPlaces() < 2: #* vérif que tous les anneaux sont placés
                             tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
                             message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
@@ -148,13 +157,6 @@ def main ():
                                     tourJoueur = objetPlateau.placementAnneaux(tourJoueur)      #* on place l'anneau
                                     objetPlateau.retournerMarqueurs(positionAnneauX, positionAnneauY)   #* on retourne les marqueurs du chemin s'il y en a
                                     objetPlateau.del_possibles_moves()
-                                    marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
-                                    if marqueursAlignes == True:
-                                        print(marqueursAlignesListe)
-                                        if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
-                                            tourJoueurAlignement = -1
-                                        elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
-                                            tourJoueurAlignement = -1
                                     message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                                     client.send_message(message_plateau)#* envoie du tableau après mouvements
                                     message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
@@ -166,7 +168,6 @@ def main ():
                                 x,y = x//50, y//25
                                 if objetPlateau.checkifpossibles_moves(x,y):
                                         anneauEnDeplacement, positionAnneauX, positionAnneauY = objetPlateau.selectionAnneaux(tourJoueur)   #* aucun anneau en déplacement donc on transforme l'anneau sélectionné en marqueur pour le déplacement à la boucle suivante
-                                        objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
                                         if not anneauEnDeplacement:
                                             objetPlateau.del_possibles_moves()
                                         message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
@@ -176,24 +177,21 @@ def main ():
                                         objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
                                         objetPlateau.update_display(screen)
                                         pygame.display.update()
-            else:
-                if estClique:
-                    if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:
-                        if objetPlateau.get_case_pion() == "A":
-                            pointsBlancs += 1
-                        if objetPlateau.get_case_pion() == "a":
-                            pointsNoirs += 1
-                        objetPlateau.set_case_pion(0)
-                        objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
-                        marqueursAlignes = False
-                        tourJoueurAlignement = 0
-                        message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                        client.send_message(message_plateau)#* envoie du tableau après mouvements
-                        message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-                        client.send_message(message_tour)#* envoie du tableau après mouvements
-                        #objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
-                        objetPlateau.update_display(screen)
-                        pygame.display.update()  
+                else:
+                    #todo alignement P2P à faire
+                    if estClique:
+                        if objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 1:
+                            objetPlateau.set_case_pion(0)
+                            objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
+                            marqueursAlignes = False
+                            tourJoueurAlignement = 0
+                            message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
+                            client.send_message(message_plateau)#* envoie du tableau après mouvements
+                            message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
+                            client.send_message(message_tour)#* envoie du tableau après mouvements
+                            objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
+                            objetPlateau.update_display(screen)
+                            pygame.display.update()  
 
 
             #?fontColor = [255*((tourJoueur+1)%2),255*((tourJoueur+1)%2),255*((tourJoueur+1)%2)]        #* couleur de la police en fonction du tour du joueur  /!\ Contestable /!\

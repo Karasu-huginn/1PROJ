@@ -191,9 +191,7 @@ def mainP2P ():
         if not marqueursAlignes:
             if (tourJoueur+tourJoueurAlignement)%2 == 0 or local == True: #* et que c'est le joueur blanc qui joue
                 if estClique: #* si on clique dans la fenetre 
-
                     if objetPlateau.get_anneauxPlaces() < (2+(local*2)): #* vérif que tous les anneaux sont placés
-
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
                         if not local:
                             message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
@@ -231,14 +229,14 @@ def mainP2P ():
                                     objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
                                     if not anneauEnDeplacement:
                                         objetPlateau.del_possibles_moves()
-                                        if not local:
-                                            message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                                            server.send_message(connection,message_plateau)#* envoie du tableau après mouvements
-                                            message_tour = "tour:" + str(tourJoueur+tourJoueurAlignement) #* ajout de l'identifiant de la donnée
-                                            server.send_message(connection,message_tour)#* envoie du tableau après mouvements
-                                            objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
-                                            objetPlateau.update_display(screen)
-                                            pygame.display.update()   
+                                    if not local:
+                                        message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
+                                        server.send_message(connection,message_plateau)#* envoie du tableau après mouvements
+                                        message_tour = "tour:" + str(tourJoueur+tourJoueurAlignement) #* ajout de l'identifiant de la donnée
+                                        server.send_message(connection,message_tour)#* envoie du tableau après mouvements
+                                        objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
+                                        objetPlateau.update_display(screen)
+                                        pygame.display.update()   
 
 
             #* gestion tour invité (réception data de client->validation->changement->update->sendboard)           
@@ -421,7 +419,7 @@ def mainIA():
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
 try:
-    input = 3
+    input = 1
     #input = int(input("Enter 1-réseau or 2-local: "))
     if input == 1:
         mainP2P()

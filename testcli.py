@@ -69,7 +69,7 @@ def main ():
     queue = Queue()
     if __name__ == "__main__":
         host_name = Client.get_local_ip() #$ récupérer hostname pour bind la connexion (à changer pour un input)
-        #host_name = "10.24.233.198" #$ récupérer hostname pour bind la connexion (à changer pour un input)
+        #host_name = "10.24.233.178" #$ récupérer hostname pour bind la connexion (à changer pour un input)
         port = 1111 #* definition du port utilisé
         client = Client(host_name, port) #* création de l'instance server
         client.connect() #* connextion à l'adresse donné
