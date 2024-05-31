@@ -135,7 +135,6 @@ def main ():
                     elif element.startswith("tour:"): #* check l'identificant pour savoir de quelle donnée il s'agit
                         message_recu = element
                         tourJoueur = int(message_recu[5:]) #* formate la data retire l'identifiant
-                    objetPlateau.del_possibles_moves()
                     objetPlateau.update_display(screen) #* affiche le plateau avec un refresh
                     pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus
                 #* gestion tour invité (envoie de data vers server) 

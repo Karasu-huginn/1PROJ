@@ -419,7 +419,7 @@ def mainIA():
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
 try:
-    input = 3
+    input = 2
     #input = int(input("Enter 1-réseau or 2-local: "))
     if input == 1:
         mainP2P()

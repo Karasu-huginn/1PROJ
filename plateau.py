@@ -216,52 +216,56 @@ class Plateau:
     def placementAnneaux(self, tourJoueur):    #* place un anneau où le joueur a cliqué
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
-        if self.plateau[0][x][y] == 1:          #* vérifie que la case sélectionnée est une intersection libre
-            if self.plateau[1][x][y] == 0 or self.plateau[1][x][y] == "P":  #* vérifie que la case sélectionnée est vide
-                if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
-                    self.plateau[1][x][y] = "A"
-                    tourJoueur+=1
-                    self.anneauxPlaces+=1
-                else:
-                    self.plateau[1][x][y] = "a"
-                    tourJoueur+=1
-                    self.anneauxPlaces+=1
+        if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
+            if self.plateau[0][x][y] == 1:          #* vérifie que la case sélectionnée est une intersection libre
+                if self.plateau[1][x][y] == 0 or self.plateau[1][x][y] == "P":  #* vérifie que la case sélectionnée est vide
+                    if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
+                        self.plateau[1][x][y] = "A"
+                        tourJoueur+=1
+                        self.anneauxPlaces+=1
+                    else:
+                        self.plateau[1][x][y] = "a"
+                        tourJoueur+=1
+                        self.anneauxPlaces+=1
         return tourJoueur
     
     def placementAnneauxIA(self, tourJoueur, x, y):
-        if self.plateau[0][x][y] == 1:
-            if self.plateau[1][x][y] == 0 or self.plateau[1][x][y] == "P":  #* vérifie que la case sélectionnée est vide
-                if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
-                    self.plateau[1][x][y] = "A"
-                    tourJoueur+=1
-                    self.anneauxPlaces+=1
-                else:
-                    self.plateau[1][x][y] = "a"
-                    tourJoueur+=1
-                    self.anneauxPlaces+=1
+        if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
+            if self.plateau[0][x][y] == 1:
+                if self.plateau[1][x][y] == 0 or self.plateau[1][x][y] == "P":  #* vérifie que la case sélectionnée est vide
+                    if tourJoueur%2 == 0:               #* choisit la couleur en fonction de si tourJoueur est pair ou impair
+                        self.plateau[1][x][y] = "A"
+                        tourJoueur+=1
+                        self.anneauxPlaces+=1
+                    else:
+                        self.plateau[1][x][y] = "a"
+                        tourJoueur+=1
+                        self.anneauxPlaces+=1
         return tourJoueur
  
     def selectionAnneaux(self, tourJoueur):     #* sélectionne un anneau à déplacer
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
-        if self.plateau[1][x][y] == chr((tourJoueur%2)*32+65):  #* vérifie que le pion sélectionné correspond à un anneau de la couleur du joueur (si tourJoueur est pair, 32 n'est pas ajouté à 65 et reste "m", sinon le chr() le passe en majuscule selon son code ASCII)
-            if tourJoueur%2 == 0:
-                self.plateau[1][x][y] = "M"                     #* remplace l'anneau par un marqueur en vue de la suite du tour
+        if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
+            if self.plateau[1][x][y] == chr((tourJoueur%2)*32+65):  #* vérifie que le pion sélectionné correspond à un anneau de la couleur du joueur (si tourJoueur est pair, 32 n'est pas ajouté à 65 et reste "m", sinon le chr() le passe en majuscule selon son code ASCII)
+                if tourJoueur%2 == 0:
+                    self.plateau[1][x][y] = "M"                     #* remplace l'anneau par un marqueur en vue de la suite du tour
+                else:
+                    self.plateau[1][x][y] = "m"
+                return True, x, y
             else:
-                self.plateau[1][x][y] = "m"
-            return True, x, y
-        else:
-            return False, 0, 0    
+                return False, 0, 0    
     
     def selectionAnneauxIA(self, tourJoueur, x, y):     #* sélectionne un anneau à déplacer
-        if self.plateau[1][x][y] == chr((tourJoueur%2)*32+65):  #* vérifie que le pion sélectionné correspond à un anneau de la couleur du joueur (si tourJoueur est pair, 32 n'est pas ajouté à 65 et reste "m", sinon le chr() le passe en majuscule selon son code ASCII)
-            if tourJoueur%2 == 0:
-                self.plateau[1][x][y] = "M"                     #* remplace l'anneau par un marqueur en vue de la suite du tour
+        if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
+            if self.plateau[1][x][y] == chr((tourJoueur%2)*32+65):  #* vérifie que le pion sélectionné correspond à un anneau de la couleur du joueur (si tourJoueur est pair, 32 n'est pas ajouté à 65 et reste "m", sinon le chr() le passe en majuscule selon son code ASCII)
+                if tourJoueur%2 == 0:
+                    self.plateau[1][x][y] = "M"                     #* remplace l'anneau par un marqueur en vue de la suite du tour
+                else:
+                    self.plateau[1][x][y] = "m"
+                return True, x, y
             else:
-                self.plateau[1][x][y] = "m"
-            return True, x, y
-        else:
-            return False, 0, 0 
+                return False, 0, 0 
         
     #def checkCaseDeplacementAnneau(self, loopX, loopY):     #* vérifie si la case respecte les règles de déplacement de l'anneau
     #    coordsFinales = [0,0]
@@ -321,20 +325,22 @@ class Plateau:
     def checkdeplacementAnneau(self):
         x,y = pygame.mouse.get_pos()
         x,y = x//50, y//25
-        if self.plateau[0][x][y] == 1:                     #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
-            if self.plateau[1][x][y] == "P":
-               return False
-            else:
-               return True
-        return True
+        if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
+            if self.plateau[0][x][y] == 1:                     #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
+                if self.plateau[1][x][y] == "P":
+                   return False
+                else:
+                   return True
+            return True
 
     def checkdeplacementAnneauIA(self,x,y):
-        if self.plateau[0][x][y] == 1:                     #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
-            if self.plateau[1][x][y] == "P":
-               return False
-            else:
-               return True
-        return True
+        if 0 <= y < self.taillePlateauX and 0 <= x < self.taillePlateauY:
+            if self.plateau[0][x][y] == 1:                     #* on vérifie que la case sélectionnée est une case jouable sur le plateau en lui même
+                if self.plateau[1][x][y] == "P":
+                   return False
+                else:
+                   return True
+            return True
     
     #def checkLigneDeplacementAnneauP2P(self, positionAnneauX, positionAnneauY,x,y):
     #    diffX = positionAnneauX-x
