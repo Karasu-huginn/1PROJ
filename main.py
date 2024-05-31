@@ -197,20 +197,19 @@ def main():
         # Gérer le texte défilant
         text_scroll_surface.fill(BG_COLOR)
         text_to_display = [
-            "Le but du jeu est de créer une rangée de cinq anneaux de votre couleur",
+            "But du jeu : Créer une rangée de cinq anneaux de votre couleur",
             "Le jeu se joue sur un plateau avec 5 anneaux noirs et 5 anneaux blancs ainsi que des pions de la même couleur.",
             "",
             "Chaque joueur commence la partie avec 5 marqueurs de sa couleur, qu'il place aux intersections",
             "",
-            "Chacun son tour, ......",
-            "Ligne de texte 1",
-            "Ligne de texte 2",
-            "Ligne de texte 3",
-            "Ligne de texte 4",
-            "Ligne de texte 5",
-            "Ligne de texte 6",
-            "Ligne de texte 7",
-            "Ligne de texte 8",
+            "À tour de rôle, chaque joueur effectue les actions suivantes :",
+            "1. Prendre un marqueur de sa réserve",
+            "2. Déplacer un anneau en respectant les règles de déplacement",
+            "3. Retourner les pions sur les intersections sautées (si applicable)",
+            "4. Vérifier si une rangée de cinq anneaux ou pions yinsh de sa couleur a été formée",
+            "5. Retirer les anneaux ou pions yinsh de la rangée formée et les remettre dans la réserve",
+            "6. Retirer un anneau de sa couleur du jeu",
+            "",
             "Fin du Jeu : Le jeu se termine dès qu'un joueur a réussi à aligner cinq anneaux ou pions yinsh de sa couleur. Ce joueur est alors déclaré vainqueur.",
         ]
 
@@ -560,20 +559,19 @@ def mainIA():
         #* Gérer le texte défilant
         text_scroll_surface.fill(BG_COLOR)
         text_to_display = [
-            "Le but du jeu est de créer une rangée de cinq anneaux de votre couleur",
+            "But du jeu : Créer une rangée de cinq anneaux de votre couleur",
             "Le jeu se joue sur un plateau avec 5 anneaux noirs et 5 anneaux blancs ainsi que des pions de la même couleur.",
             "",
             "Chaque joueur commence la partie avec 5 marqueurs de sa couleur, qu'il place aux intersections",
             "",
-            "Chacun son tour, ......",
-            "Ligne de texte 1",
-            "Ligne de texte 2",
-            "Ligne de texte 3",
-            "Ligne de texte 4",
-            "Ligne de texte 5",
-            "Ligne de texte 6",
-            "Ligne de texte 7",
-            "Ligne de texte 8",
+            "À tour de rôle, chaque joueur effectue les actions suivantes :",
+            "1. Prendre un marqueur de sa réserve",
+            "2. Déplacer un anneau en respectant les règles de déplacement",
+            "3. Retourner les pions sur les intersections sautées (si applicable)",
+            "4. Vérifier si une rangée de cinq anneaux ou pions yinsh de sa couleur a été formée",
+            "5. Retirer les anneaux ou pions yinsh de la rangée formée et les remettre dans la réserve",
+            "6. Retirer un anneau de sa couleur du jeu",
+            "",
             "Fin du Jeu : Le jeu se termine dès qu'un joueur a réussi à aligner cinq anneaux ou pions yinsh de sa couleur. Ce joueur est alors déclaré vainqueur.",
         ]
 
@@ -617,7 +615,7 @@ def mainIA():
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
 try:
-    input = 1
+    input = 2
     #input = int(input("Enter 1-réseau or 2-local: "))
     if input == 1:
         mainP2P()
