@@ -2,10 +2,11 @@ from tkinter import *
 from plateau import *
 from testserv import *
 from queue import Queue
+import subprocess
 import ast
 import threading
 import pygame
-import subprocess
+
 BG_COLOR = [50, 50, 50]
 FONT_COLOR = [255, 255, 255]
 BUTTON_BG_COLOR = [98, 114, 127]
@@ -73,6 +74,11 @@ def draw_button_charger(screen, text, position, size=(140, 50), bg_color=BUTTON_
     screen.blit(img, (rect.centerx - img.get_width() // 2, rect.centery - img.get_height() // 2))
     return rect
 
+def draw_text_top_right(screen, text):
+    font = pygame.font.SysFont(None, 40)
+    img = font.render(text, True, FONT_COLOR)
+    screen.blit(img, (screen.get_width() - img.get_width() - 10, 10))
+
 
 def main():
     pygame.init()
@@ -111,6 +117,11 @@ def main():
     scroll_speed = 20  # Augmenter la vitesse de défilement
 
     while windowStayOpened:
+        screen.fill(BG_COLOR)  # Nettoie l'écran avant chaque nouveau rendu
+
+        # Affiche l'image au centre en haut
+        screen.blit(yinsh_img, yinsh_img_rect)
+
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
             windowStayOpened = False
 
@@ -236,7 +247,20 @@ def main():
                 elif load_button_rect.collidepoint(mouse_pos):
                     subprocess.run(["python", "charger.py"])
                 elif reset_button_rect.collidepoint(mouse_pos):
-                    subprocess.run(["python", "reset.py"])
+                    for i in range(len(objetPlateau.plateau[1])):
+                        for u in range(len(objetPlateau.plateau[1][i])):
+                            if objetPlateau.plateau[1][i][u] != 0:
+                                objetPlateau.plateau [1][i][u] = 0
+                                tourJoueur = 0          #* détermine le tour du joueur en fonction de la parité du nombre (int)
+                                objetPlateau.anneauxPlaces = 0
+                                anneauEnDeplacement = False     #* détermine si un anneau est en train d'être déplacé (bool)
+                                positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
+                                positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
+                                pointsBlancs = 0
+                                pointsNoirs = 0
+                                marqueursAlignes = False
+                                marqueursAlignesListe = list()
+                                tourJoueurAlignement = 0
                 elif quit_button_rect.collidepoint(mouse_pos):
                     subprocess.run(["python", "quitter.py"])
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -251,6 +275,21 @@ def main():
         print("Les blancs remportent la victoire !")
     #todo proposition recommencer partie
     pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def mainP2P ():
@@ -421,13 +460,22 @@ def mainP2P ():
     pygame.quit()
 
 
+
+
+
+
+
+
+
+
+
+
 def mainIA():
 
     pygame.init()
-    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  #* Définit le mode de la fenêtre en plein écran
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Définit le mode de la fenêtre en plein écran
     screen.fill(BG_COLOR)
     windowStayOpened = True     #* fait tourner la boucle qui affiche la fenêtre pygame (bool)
-
 
     objetPlateau = Plateau(10)      #* instanciation par la classe Plateau, paramètre : taille du plateau
     objetPlateau.plateauInitialisation()    #* définit les cases valides du plateau sur la première dimension du plateau tri-dimensionnel (ouais flemme de m'emmerder avec plusieurs objets, 3 dimensions c'est plus simple)
@@ -443,11 +491,11 @@ def mainIA():
     marqueursAlignesListe = list()
     tourJoueurAlignement = 0
 
-    #* Configuration de la zone de texte défilante
+    # Configuration de la zone de texte défilante
     text_scroll_surface = pygame.Surface((screen.get_width() - 200, 400))
     text_scroll_surface.fill(BG_COLOR)
     scroll_y = 0
-    scroll_speed = 20  #* Augmenter la vitesse de défilement
+    scroll_speed = 20  # Augmenter la vitesse de défilement
 
     while windowStayOpened:
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
@@ -530,25 +578,26 @@ def mainIA():
                     marqueursAlignes = False
                     tourJoueurAlignement = 0
             
-        #* Dessiner les boutons
+
+        # Dessiner les boutons
         button_x = screen.get_width() - 350
         button_xx = screen.get_width() - 700
         button_charger = screen.get_width() - 190
         reset_button_rect = draw_button(screen, "Reset", (button_xx, 450))
         quit_button_rect = draw_button(screen, "Quitter", (button_x, 450))
 
-        #* Dessiner la ligne de séparation
-        line_y = 540  #* Position verticale de la ligne (juste au-dessus du texte défilant)
+        # Dessiner la ligne de séparation
+        line_y = 540  # Position verticale de la ligne (juste au-dessus du texte défilant)
         pygame.draw.line(screen, BUTTON_BORDER_COLOR, (100, line_y), (screen.get_width() - 100, line_y), 2)
 
         custom_text = "Règles du jeu YINSH"
         custom_font = pygame.font.SysFont(None, 40)
         custom_text_img = custom_font.render(custom_text, True, FONT_COLOR)
         custom_text_x = (screen.get_width() - custom_text_img.get_width()) // 2
-        custom_text_pos = (custom_text_x, 580)  #* Position du texte (x, y)
+        custom_text_pos = (custom_text_x, 580)  # Position du texte (x, y)
         screen.blit(custom_text_img, custom_text_pos)
 
-        #* Dessiner le texte "Vous jouez contre une IA" dans le coin supérieur droit
+        # Dessiner le texte "Vous jouez contre une IA" dans le coin supérieur droit
         opponent_text = "Vous jouez contre une IA"
         opponent_font = pygame.font.SysFont(None, 70)
         opponent_text_img = opponent_font.render(opponent_text, True, FONT_COLOR)
@@ -556,7 +605,7 @@ def mainIA():
         opponent_text_pos = (opponent_text_x, 240)
         screen.blit(opponent_text_img, opponent_text_pos)
 
-        #* Gérer le texte défilant
+        # Gérer le texte défilant
         text_scroll_surface.fill(BG_COLOR)
         text_to_display = [
             "But du jeu : Créer une rangée de cinq anneaux de votre couleur",
@@ -579,29 +628,44 @@ def mainIA():
         font = pygame.font.SysFont(None, 28)
         for i, line in enumerate(text_to_display):
             line_img = font.render(line, True, FONT_COLOR)
-            line_x = (text_scroll_surface.get_width() - line_img.get_width()) // 2  #* Centrer horizontalement
+            line_x = (text_scroll_surface.get_width() - line_img.get_width()) // 2  # Centrer horizontalement
             text_scroll_surface.blit(line_img, (line_x, i * line_height - scroll_y))
 
-        screen.blit(text_scroll_surface, (100, screen.get_height() - 430))  #* Ajuster la position verticale
+        screen.blit(text_scroll_surface, (100, screen.get_height() - 430))  # Ajuster la position verticale
   
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return  #* Quitte la fonction main()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  #* Si la touche Echap est pressée
+                return  # Quitte la fonction main()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  # Si la touche Echap est pressée
                 pygame.quit()
-                return  #* Quitte la fonction main()
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  #* Si le bouton gauche de la souris est cliqué
+                return  # Quitte la fonction main()
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Si le bouton gauche de la souris est cliqué
                 mouse_pos = event.pos
                 if reset_button_rect.collidepoint(mouse_pos):
-                    subprocess.run(["python", "reset.py"])
+                    for i in range(len(objetPlateau.plateau[1])):
+                        for u in range(len(objetPlateau.plateau[1][i])):
+                            if objetPlateau.plateau[1][i][u] != 0:
+                                objetPlateau.plateau [1][i][u] = 0
+                                tourJoueur = 0          #* détermine le tour du joueur en fonction de la parité du nombre (int)
+                                objetPlateau.anneauxPlaces = 0
+                                anneauEnDeplacement = False     #* détermine si un anneau est en train d'être déplacé (bool)
+                                positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
+                                positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
+                                pointsBlancs = 0
+                                pointsNoirs = 0
+                                marqueursAlignes = False
+                                marqueursAlignesListe = list()
+                                tourJoueurAlignement = 0
+
+                                
                 elif quit_button_rect.collidepoint(mouse_pos):
                     subprocess.run(["python", "quitter.py"])
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 4:  #* Scroll up
+                if event.button == 4:  # Scroll up
                     scroll_y = max(scroll_y - scroll_speed, 0)
-                elif event.button == 5:  #* Scroll down
+                elif event.button == 5:  # Scroll down
                     scroll_y = min(scroll_y + scroll_speed, len(text_to_display) * line_height - text_scroll_surface.get_height())
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
     if pointsNoirs > pointsBlancs:
@@ -615,7 +679,7 @@ def mainIA():
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
 try:
-    input = 2
+    input = 3
     #input = int(input("Enter 1-réseau or 2-local: "))
     if input == 1:
         mainP2P()
