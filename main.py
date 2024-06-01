@@ -170,14 +170,14 @@ def main():
                     marqueursAlignes = False
                     tourJoueurAlignement = 0
 
-        tourJoueurTexte = renduTexteTourJoueur(tourJoueur)
+        tourJoueurTexte = renduTexteTourJoueur(tourJoueur+tourJoueurAlignement)
         font = pygame.font.SysFont(None, 39)
         img = font.render(tourJoueurTexte, True, FONT_COLOR)
         text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
         text_y = yinsh_img_rect.bottom + 80
         screen.blit(img, (text_x, text_y))
 
-        tourJoueurTexte = renduTexteTourJoueur(tourJoueur)
+        tourJoueurTexte = renduTexteTourJoueur(tourJoueur+tourJoueurAlignement)
         font = pygame.font.SysFont(None, 39)
         img = font.render(tourJoueurTexte, True, FONT_COLOR)
         text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
@@ -350,10 +350,10 @@ def mainP2P ():
         estClique = gestionClic(estClique)
 
         #*gestion tour host (envoi data vers client)
-        if not marqueursAlignes:
-            if (tourJoueur+tourJoueurAlignement)%2 == 0 or local == True: #* et que c'est le joueur blanc qui joue
+        if (tourJoueur+tourJoueurAlignement)%2 == 0 or local == True: #* et que c'est le joueur blanc qui joue
+            #if not marqueursAlignes:
                 if estClique: #* si on clique dans la fenetre 
-                    if objetPlateau.get_anneauxPlaces() < (2+(local*2)): #* vérif que tous les anneaux sont placés
+                    if objetPlateau.get_anneauxPlaces() < 2: #* vérif que tous les anneaux sont placés
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
                         if not local:
                             message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
@@ -371,18 +371,27 @@ def mainP2P ():
                                 objetPlateau.del_possibles_moves()
                                 marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
                                 if marqueursAlignes == True:
-                                    print(marqueursAlignesListe)
-                                    if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
-                                        tourJoueurAlignement = -1
-                                    elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
-                                        tourJoueurAlignement = -1
-                                if not local:
-                                    message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                                    server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-                                    message_tour = "tour:" + str(tourJoueur+tourJoueurAlignement) #* ajout de l'identifiant de la donnée
-                                    server.send_message(connection, message_tour)#* envoie du tableau après mouvements
-                                    objetPlateau.update_display(screen)
-                                    pygame.display.update()   
+                                    if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:
+                                        if objetPlateau.get_case_pion() == "A":
+                                            pointsBlancs += 1
+                                        if objetPlateau.get_case_pion() == "a":
+                                            pointsNoirs += 1
+                                    print("point blancs: ", pointsBlancs)
+                                    print("point noir: ", pointsNoirs)
+                                    objetPlateau.set_case_pion(0)
+                                    objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
+                                    #print(marqueursAlignesListe)
+                                    #if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
+                                    #    tourJoueurAlignement = -1
+                                    #elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
+                                    #    tourJoueurAlignement = -1
+
+                                message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
+                                server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
+                                message_tour = "tour:" + str(tourJoueur+tourJoueurAlignement) #* ajout de l'identifiant de la donnée
+                                server.send_message(connection, message_tour)#* envoie du tableau après mouvements
+                                objetPlateau.update_display(screen)
+                                pygame.display.update()   
                         else:
                             x,y = pygame.mouse.get_pos()
                             x,y = x//50, y//25
@@ -402,41 +411,48 @@ def mainP2P ():
 
 
             #* gestion tour invité (réception data de client->validation->changement->update->sendboard)           
-            elif (tourJoueur+tourJoueurAlignement)%2 == 1 and local == False:
-                    while not queue.empty(): #* itère les éléments de la queue
-                        element = queue.get() #* récupère les éléments de la queue
-                        if element.startswith("plateau:"): #* check l'identificant pour savoir de quelle donnée il s'agit
-                            message_recu = element
-                            plateau_recu = ast.literal_eval(message_recu[8:]) #* formate la data retire l'identifiant
-                            objetPlateau.plateau = plateau_recu
-                        elif element.startswith("tour:"): #* check l'identificant pour savoir de quelle donnée il s'agit
-                            message_recu = element
-                            tourJoueur = int(message_recu[5:]) #* formate la data retire l'identifiant
-                        objetPlateau.del_possibles_moves()
-                        marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
-                        if marqueursAlignes == True:
-                            print(marqueursAlignesListe)
-                            if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
-                                tourJoueurAlignement = -1
-                            elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
-                                tourJoueurAlignement = -1
-                        objetPlateau.update_display(screen) #* affiche le plateau avec un refresh
-                        pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus
-        else:
-            #todo alignement P2P à faire
-            if estClique:
-                if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:
-                    objetPlateau.set_case_pion(0)
-                    objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
-                    marqueursAlignes = False
-                    tourJoueurAlignement = 0
-                    if not local:
-                        message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-                        server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-                        message_tour = "tour:" + str(tourJoueur+tourJoueurAlignement) #* ajout de l'identifiant de la donnée
-                        server.send_message(connection, message_tour)#* envoie du tableau après mouvements
-                        objetPlateau.update_display(screen)
-                        pygame.display.update()   
+
+            #else:
+            #    if estClique:
+            #        if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:
+            #            if objetPlateau.get_case_pion() == "A":
+            #                pointsBlancs += 1
+            #            if objetPlateau.get_case_pion() == "a":
+            #                pointsNoirs += 1
+            #            objetPlateau.set_case_pion(0)
+            #            objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
+            #            marqueursAlignes = False
+            #            tourJoueurAlignement = 0
+            #            if not local:
+            #                message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
+            #                server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
+            #                message_tour = "tour:" + str(tourJoueur+tourJoueurAlignement) #* ajout de l'identifiant de la donnée
+            #                server.send_message(connection, message_tour)#* envoie du tableau après mouvements
+            #                objetPlateau.update_display(screen)
+            #                pygame.display.update()
+
+
+
+        elif (tourJoueur+tourJoueurAlignement)%2 == 1 and local == False:
+                while not queue.empty(): #* itère les éléments de la queue
+                    element = queue.get() #* récupère les éléments de la queue
+                    if element.startswith("plateau:"): #* check l'identificant pour savoir de quelle donnée il s'agit
+                        message_recu = element
+                        plateau_recu = ast.literal_eval(message_recu[8:]) #* formate la data retire l'identifiant
+                        objetPlateau.plateau = plateau_recu
+                    elif element.startswith("tour:"): #* check l'identificant pour savoir de quelle donnée il s'agit
+                        message_recu = element
+                        tourJoueur = int(message_recu[5:]) #* formate la data retire l'identifiant
+                    objetPlateau.del_possibles_moves()
+                    #marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
+                    #if marqueursAlignes == True:
+                    #    print(marqueursAlignesListe)
+                    #    if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
+                    #        tourJoueurAlignement = -1
+                    #    elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
+                    #        tourJoueurAlignement = -1
+                    objetPlateau.update_display(screen) #* affiche le plateau avec un refresh
+                    pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus                             
 
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
         font = pygame.font.SysFont(None, 22)        #* texte à afficher
@@ -659,7 +675,7 @@ def mainIA():
                                 marqueursAlignesListe = list()
                                 tourJoueurAlignement = 0
 
-                                
+
                 elif quit_button_rect.collidepoint(mouse_pos):
                     subprocess.run(["python", "quitter.py"])
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -679,7 +695,7 @@ def mainIA():
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
 try:
-    input = 3
+    input = 1
     #input = int(input("Enter 1-réseau or 2-local: "))
     if input == 1:
         mainP2P()
