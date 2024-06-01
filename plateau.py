@@ -15,6 +15,7 @@ class Plateau:
 
 
 #* GETTERS
+
     def get_taillePlateauY(self):
         return self.taillePlateauY
     
@@ -96,14 +97,6 @@ class Plateau:
                     print(" ", end="")
             print("")
 
-    def affichagePlateau(self, screen):     #* affiche le plateau sur la fenêtre Pygame
-        for i in range(len(self.plateau[0])):
-            for u in range(len(self.plateau[0][i])):
-                if self.plateau[0][i][u] == 1:
-                    pygame.draw.rect(screen, (200,200,200), pygame.Rect((i*50, u*25, 50, 25)))
-                if self.plateau[0][i][u] == 0:
-                    pygame.draw.rect(screen, (50,50,50), pygame.Rect((i*50, u*25, 50, 25)))
-
     def affichagePions(self, screen):       #* affiche les pions sur la fenêtre Pygame
         for i in range(len(self.plateau[1])):
             for u in range(len(self.plateau[1][i])):
@@ -112,14 +105,11 @@ class Plateau:
                 elif self.plateau[1][i][u] == "M":
                     pygame.draw.circle(screen, (255,255,255),(i*50+25,u*25+12), 8)
                 elif self.plateau[1][i][u] == "a":
-                    pygame.draw.circle(screen, (0,0,0),(i*50+25,u*25+12), 12)
-                    pygame.draw.circle(screen, (200,200,200),(i*50+25,u*25+12), 8)
+                    pygame.draw.circle(screen, (0,0,0),(i*50+25,u*25+12), 12,4)
                 elif self.plateau[1][i][u] == "A":
-                    pygame.draw.circle(screen, (255,255,255),(i*50+25,u*25+12), 12)
-                    pygame.draw.circle(screen, (200,200,200),(i*50+25,u*25+12), 8)
+                    pygame.draw.circle(screen, (255,255,255),(i*50+25,u*25+12), 12,4)
                 elif self.plateau[1][i][u] == "P":
-                    pygame.draw.circle(screen, (255,165,0,128),(i*50+25,u*25+12), 12)
-                    pygame.draw.circle(screen, (200,200,200),(i*50+25,u*25+12), 8)
+                    pygame.draw.circle(screen, (255,165,0,128),(i*50+25,u*25+12), 12,4)
 
                         
     def retournerMarqueurs(self, positionAnneauX, positionAnneauY):     #* retourne tous les marqueurs sur le chemin prit par un anneau
