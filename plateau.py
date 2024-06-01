@@ -372,6 +372,14 @@ class Plateau:
         self.affichagePlateau(screen)  #* affiche le plateau
         self.affichagePions(screen) #* affiche les pions si ils sont présent
 
+    def affichagePlateau(self, screen):     #* affiche le plateau sur la fenêtre Pygame
+        for i in range(len(self.plateau[0])):
+            for u in range(len(self.plateau[0][i])):
+                if self.plateau[0][i][u] == 1:
+                    pygame.draw.rect(screen, (200,200,200), pygame.Rect((i*50, u*25, 50, 25)))
+                if self.plateau[0][i][u] == 0:
+                    pygame.draw.rect(screen, (50,50,50), pygame.Rect((i*50, u*25, 50, 25)))
+
     def del_possibles_moves(self):
         for i in range(len(self.plateau[1])):
             for u in range(len(self.plateau[1][i])):

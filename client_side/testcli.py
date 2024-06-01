@@ -5,8 +5,11 @@ import threading
 from queue import Queue
 from plateau import *
 from entrer_ip import *
+import subprocess
 BG_COLOR = [50,50,50]
 FONT_COLOR = [255,255,255]
+BUTTON_BORDER_COLOR = [0, 0, 0]
+BUTTON_BG_COLOR = [98, 114, 127]
 
 class Client:
     def __init__(self, host_name, port):
@@ -65,6 +68,35 @@ def renduTexteTourJoueur(tourJoueur):       #* renvoie le texte à afficher selo
     else:
         return "Aux Noirs de jouer"
     
+def draw_button(screen, text, position, size=(300, 50), bg_color=BUTTON_BG_COLOR, border_color=BUTTON_BORDER_COLOR):
+    font = pygame.font.SysFont(None, 30)
+    rect = pygame.Rect(position, size)
+    pygame.draw.rect(screen, border_color, rect, border_radius=12)
+    inner_rect = rect.inflate(-4, -4)
+    pygame.draw.rect(screen, bg_color, inner_rect, border_radius=10)
+    img = font.render(text, True, [0, 0, 0])
+    screen.blit(img, (rect.centerx - img.get_width() // 2, rect.centery - img.get_height() // 2))
+    return rect
+
+def draw_button_save(screen, text, position, size=(140, 50), bg_color=BUTTON_BG_COLOR, border_color=BUTTON_BORDER_COLOR):
+    font = pygame.font.SysFont(None, 30)
+    rect = pygame.Rect(position, size)
+    pygame.draw.rect(screen, border_color, rect, border_radius=12)
+    inner_rect = rect.inflate(-4, -4)
+    pygame.draw.rect(screen, bg_color, inner_rect, border_radius=10)
+    img = font.render(text, True, [0, 0, 0])
+    screen.blit(img, (rect.centerx - img.get_width() // 2, rect.centery - img.get_height() // 2))
+    return rect
+
+def draw_button_charger(screen, text, position, size=(140, 50), bg_color=BUTTON_BG_COLOR, border_color=BUTTON_BORDER_COLOR):
+    font = pygame.font.SysFont(None, 30)
+    rect = pygame.Rect(position, size)
+    pygame.draw.rect(screen, border_color, rect, border_radius=12)
+    inner_rect = rect.inflate(-4, -4)
+    pygame.draw.rect(screen, bg_color, inner_rect, border_radius=10)
+    img = font.render(text, True, [0, 0, 0])
+    screen.blit(img, (rect.centerx - img.get_width() // 2, rect.centery - img.get_height() // 2))
+    return rect
 
 def yinshclient (ip):
     queue = Queue()
@@ -89,11 +121,17 @@ def yinshclient (ip):
         receive_messages_thread.start() #* démarrage du thread
         
         pygame.init()
-        windowWidth = 600       #* Largeur fenêtre (int)
-        windowHeight = 600      #* Hauteur fenêtre (int)
+        screen = pygame.display.set_mode((0, 0))  # Définit le mode de la fenêtre en plein écran
+        screen.fill(BG_COLOR)
         windowStayOpened = True     #* fait tourner la boucle qui affiche la fenêtre pygame (bool)
-        screen = pygame.display.set_mode((windowWidth, windowHeight))
-        screen.fill(BG_COLOR)       #* BG_COLOR = variable globale équivalente à une directive de preproc (ah et si on a le moindre point en moins parce-que c'est une variable globale c'est que le full prof sait pas dev hein, c'est du basique là)
+
+        # Charger l'image yinsh.png
+        yinsh_img = pygame.image.load("yinsh.png")
+        new_width, new_height = 600, 200
+        yinsh_img = pygame.transform.scale(yinsh_img, (new_width, new_height))
+        yinsh_img_rect = yinsh_img.get_rect()
+        yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  # Positionne l'image au centre en haut
+
         estClique = False       #* utile pour la fonction gestionClic uniquement, détermine si le clic est déjà enfoncé lors du passage dans la boucle ou pas(bool)
         marqueursAlignes = False
         marqueursAlignesListe = list()
@@ -106,7 +144,12 @@ def yinshclient (ip):
         positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
         modeJeu = 1         #* 3 = partie normale, 1 = partie Blitz
 
-        first_exec = True 
+        # Configuration de la zone de texte défilante
+        text_scroll_surface = pygame.Surface((screen.get_width() - 200, 400))
+        text_scroll_surface.fill(BG_COLOR)
+        scroll_y = 0
+        scroll_speed = 20  # Augmenter la vitesse de défilement
+ 
         while windowStayOpened: #* boucle execution pygame
             anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
             pointsBlancs = 5 - anneauxBlancs
@@ -217,26 +260,105 @@ def yinshclient (ip):
                         objetPlateau.update_display(screen) #* affiche le plateau avec un refresh
                         pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus                             
 
-            tourJoueurTexte = renduTexteTourJoueur(tourJoueur)  #* texte à afficher selon le tour du joueur
-            font = pygame.font.SysFont(None, 22)        #* texte à afficher
-            img = font.render(tourJoueurTexte, True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc office
-            txt = font.render("Vous jouez les noirs", True, FONT_COLOR)    #* blabla chiant de pygame, plus d'infos sur la doc office
-            screen.blit(img, (20, 20))      #* pareil
-            screen.blit(txt, (375, 20))      #* pareil
-            for event in pygame.event.get():    #* on récupère les events qui se passent
-                if event.type == pygame.QUIT:       #* si l'event est un clic sur la croix de la fenêtre
-                    client.close()
-                    receive_messages_thread.join()  #* fermeture du thread
-                    windowStayOpened = False        #* on toggle la variable pour arrêter la boucle
-                    client.connected = False
-            pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
+ # Dessiner les boutons
+            button_x = screen.get_width() - 350
+            button_xx = screen.get_width() - 700
+            button_charger = screen.get_width() - 190
+            reset_button_rect = draw_button(screen, "Reset", (button_xx, 450))
+            quit_button_rect = draw_button(screen, "Quitter", (button_x, 450))
     
-        client.connected = False
-    if pointsNoirs > pointsBlancs:
-        print("Les noirs remportent la victoire !")
-    else:
-        print("Les blancs remportent la victoire !")
-    pygame.quit()
+            # Dessiner la ligne de séparation
+            line_y = 540  # Position verticale de la ligne (juste au-dessus du texte défilant)
+            pygame.draw.line(screen, BUTTON_BORDER_COLOR, (100, line_y), (screen.get_width() - 100, line_y), 2)
+    
+            custom_text = "Règles du jeu YINSH"
+            custom_font = pygame.font.SysFont(None, 50)
+            custom_text_img = custom_font.render(custom_text, True, FONT_COLOR)
+            custom_text_x = (screen.get_width() - custom_text_img.get_width()) // 2
+            custom_text_pos = (custom_text_x, 580)  # Position du texte (x, y)
+            screen.blit(custom_text_img, custom_text_pos)
+    
+            tourJoueurTexte = "Vous avez les Noirs"
+            font = pygame.font.SysFont(None, 39)
+            img = font.render(tourJoueurTexte, True, FONT_COLOR)
+            text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
+            text_y = yinsh_img_rect.bottom + 80
+            screen.blit(img, (text_x, text_y))
+
+            tourJoueurTexte = renduTexteTourJoueur(tourJoueur)
+            font = pygame.font.SysFont(None, 39)
+            img = font.render(tourJoueurTexte, True, FONT_COLOR)
+            text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
+            text_y = yinsh_img_rect.bottom + 150
+            screen.blit(img, (text_x, text_y))
+    
+            # Gérer le texte défilant
+            text_scroll_surface.fill(BG_COLOR)
+            text_to_display = [
+                "But du jeu : Créer une rangée de cinq anneaux de votre couleur",
+                "Le jeu se joue sur un plateau avec 5 anneaux noirs et 5 anneaux blancs ainsi que des pions de la même couleur.",
+                "",
+                "Chaque joueur commence la partie avec 5 marqueurs de sa couleur, qu'il place aux intersections",
+                "",
+                "À tour de rôle, chaque joueur effectue les actions suivantes :",
+                "1. Prendre un marqueur de sa réserve",
+                "2. Déplacer un anneau en respectant les règles de déplacement",
+                "3. Retourner les pions sur les intersections sautées (si applicable)",
+                "4. Vérifier si une rangée de cinq anneaux ou pions yinsh de sa couleur a été formée",
+                "5. Retirer les anneaux ou pions yinsh de la rangée formée et les remettre dans la réserve",
+                "6. Retirer un anneau de sa couleur du jeu",
+                "",
+                "Fin du Jeu : Le jeu se termine dès qu'un joueur a réussi à aligner cinq anneaux ou pions yinsh de sa couleur. Ce joueur est alors déclaré vainqueur.",
+            ]
+    
+            line_height = 30
+            font = pygame.font.SysFont(None, 28)
+            for i, line in enumerate(text_to_display):
+                line_img = font.render(line, True, FONT_COLOR)
+                line_x = (text_scroll_surface.get_width() - line_img.get_width()) // 2  # Centrer horizontalement
+                text_scroll_surface.blit(line_img, (line_x, i * line_height - scroll_y))
+    
+            screen.blit(text_scroll_surface, (100, screen.get_height() - 430))  # Ajuster la position verticale
+    
+    
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return  # Quitte la fonction main()
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  # Si la touche Echap est pressée
+                    pygame.quit()
+                    return  # Quitte la fonction main()
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Si le bouton gauche de la souris est cliqué
+                    mouse_pos = event.pos
+                    if reset_button_rect.collidepoint(mouse_pos):
+                        for i in range(len(objetPlateau.plateau[1])):
+                            for u in range(len(objetPlateau.plateau[1][i])):
+                                if objetPlateau.plateau[1][i][u] != 0:
+                                    objetPlateau.plateau [1][i][u] = 0
+                                    tourJoueur = 0          #* détermine le tour du joueur en fonction de la parité du nombre (int)
+                                    objetPlateau.anneauxPlaces = 0
+                                    anneauEnDeplacement = False     #* détermine si un anneau est en train d'être déplacé (bool)
+                                    positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
+                                    positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
+                                    pointsBlancs = 0
+                                    pointsNoirs = 0
+                                    marqueursAlignes = False
+                                    marqueursAlignesListe = list()
+                                    tourJoueurAlignement = 0
+                    elif quit_button_rect.collidepoint(mouse_pos):
+                        subprocess.run(["python", "quitter.py"])
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 4:  # Scroll up
+                        scroll_y = max(scroll_y - scroll_speed, 0)
+                    elif event.button == 5:  # Scroll down
+                        scroll_y = min(scroll_y + scroll_speed, len(text_to_display) * line_height - text_scroll_surface.get_height())
+            pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
+        if pointsNoirs > pointsBlancs:
+            print("Les noirs remportent la victoire !")
+        else:
+            print("Les blancs remportent la victoire !")
+        #todo proposition recommencer partie
+        pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
 def main ():
     #ip = ''
