@@ -93,6 +93,11 @@ def main():
     yinsh_img_rect = yinsh_img.get_rect()
     yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  # Positionne l'image au centre en haut
 
+    boardImage = pygame.image.load("yinsh_board.png")
+    boardImage = pygame.transform.scale(boardImage, (535,500))
+    boardImage_rect = boardImage.get_rect()
+    boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
+
     
 
     objetPlateau = Plateau(10)      #* instanciation par la classe Plateau, paramètre : taille du plateau
@@ -125,7 +130,7 @@ def main():
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
             windowStayOpened = False
 
-        objetPlateau.affichagePlateau(screen)   #* affichage des cases du plateau dans la fenêtre
+        screen.blit(boardImage, boardImage_rect)    #* affichage du plateau dans l'interface
         objetPlateau.affichagePions(screen)     #* affichage des pions dans la fenêtre
 
         estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
@@ -317,6 +322,11 @@ def mainP2P ():
     yinsh_img_rect = yinsh_img.get_rect()
     yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  # Positionne l'image au centre en haut
 
+    boardImage = pygame.image.load("yinsh_board.png")
+    boardImage = pygame.transform.scale(boardImage, (535,500))
+    boardImage_rect = boardImage.get_rect()
+    boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
+
     objetPlateau = Plateau(10)      #* instanciation par la classe Plateau, paramètre : taille du plateau
     objetPlateau.plateauInitialisation()    #* définit les cases valides du plateau sur la première dimension du plateau tri-dimensionnel (ouais flemme de m'emmerder avec plusieurs objets, 3 dimensions c'est plus simple)
 
@@ -351,7 +361,7 @@ def mainP2P ():
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
             windowStayOpened = False
         
-        objetPlateau.affichagePlateau(screen)   #* affichage des cases du plateau dans la fenêtre
+        screen.blit(boardImage, boardImage_rect)    #* affichage du plateau dans l'interface
         objetPlateau.affichagePions(screen)     #* affichage des pions dans la fenêtre
         estClique = gestionClic(estClique)
 
@@ -582,6 +592,11 @@ def mainIA():
     screen.fill(BG_COLOR)
     windowStayOpened = True     #* fait tourner la boucle qui affiche la fenêtre pygame (bool)
 
+    boardImage = pygame.image.load("yinsh_board.png")
+    boardImage = pygame.transform.scale(boardImage, (535,500))
+    boardImage_rect = boardImage.get_rect()
+    boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
+
     objetPlateau = Plateau(10)      #* instanciation par la classe Plateau, paramètre : taille du plateau
     objetPlateau.plateauInitialisation()    #* définit les cases valides du plateau sur la première dimension du plateau tri-dimensionnel (ouais flemme de m'emmerder avec plusieurs objets, 3 dimensions c'est plus simple)
     estClique = False       #* utile pour la fonction gestionClic uniquement, détermine si le clic est déjà enfoncé lors du passage dans la boucle ou pas(bool)
@@ -605,7 +620,7 @@ def mainIA():
     while windowStayOpened:
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
             windowStayOpened = False
-        objetPlateau.affichagePlateau(screen)   #* affichage des cases du plateau dans la fenêtre
+        screen.blit(boardImage, boardImage_rect)    #* affichage du plateau dans l'interface
         objetPlateau.affichagePions(screen)     #* affichage des pions dans la fenêtre
         estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
         if (tourJoueur+tourJoueurAlignement) % 2 == 0:
