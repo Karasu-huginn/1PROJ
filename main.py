@@ -357,8 +357,9 @@ def mainP2P ():
     receive_messages_thread.start() #* démarrage du thread
 
     while windowStayOpened: #* boucle execution pygame
+        screen.fill(BG_COLOR)
         screen.blit(yinsh_img, yinsh_img_rect)
-        screen.fill(BG_COLOR)  # Nettoie l'écran avant chaque nouveau rendu
+        screen.blit(boardImage, boardImage_rect)
         anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
         pointsBlancs = 5 - anneauxBlancs
         pointsNoirs = 5 - anneauxNoirs
