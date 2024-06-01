@@ -132,6 +132,11 @@ def yinshclient (ip):
         yinsh_img_rect = yinsh_img.get_rect()
         yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  # Positionne l'image au centre en haut
 
+        boardImage = pygame.image.load("yinsh_board.png")
+        boardImage = pygame.transform.scale(boardImage, (535,500))
+        boardImage_rect = boardImage.get_rect()
+        boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
+
         estClique = False       #* utile pour la fonction gestionClic uniquement, détermine si le clic est déjà enfoncé lors du passage dans la boucle ou pas(bool)
         marqueursAlignes = False
         marqueursAlignesListe = list()
@@ -158,7 +163,7 @@ def yinshclient (ip):
             if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
                 windowStayOpened = False
 
-            objetPlateau.affichagePlateau(screen)   #* affichage des cases du plateau dans la fenêtre
+            screen.blit(boardImage, boardImage_rect)    #* affichage du plateau dans l'interface
             objetPlateau.affichagePions(screen)     #* affichage des pions dans la fenêtre
             estClique = gestionClic(estClique)
 

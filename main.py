@@ -302,8 +302,15 @@ def mainP2P ():
     host_name = Server.get_local_ip() #* récupérer hostname pour bind la connexion
     port = 1111 #* definition du port utilisé
     server = Server(host_name, port) #* création de l'instance server
+    valid = True
     server.bind() #* bind la connexion avec le port et l'adresse ip
-    connection, addr = server.accept_connection() #* accept la connexion du client -> serveur
+
+    ip = Server.get_local_ip()
+    server.interfaceP2Phost(ip)
+    
+    connection, addr, valid = server.accept_connection() #* accept la connexion du client -> serveur
+    valid = False
+
     #test connection
     message_recu = server.receive_message(connection) #* test de connection
     message = ("Server : Bonjour le serveur est aussi vivant ! :D") #* test de connection
