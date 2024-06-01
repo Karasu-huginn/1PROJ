@@ -156,6 +156,8 @@ def yinshclient (ip):
         scroll_speed = 20  # Augmenter la vitesse de défilement
  
         while windowStayOpened: #* boucle execution pygame
+            screen.blit(yinsh_img, yinsh_img_rect)
+            screen.fill(BG_COLOR)  # Nettoie l'écran avant chaque nouveau rendu
             anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
             pointsBlancs = 5 - anneauxBlancs
             pointsNoirs = 5 - anneauxNoirs

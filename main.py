@@ -304,13 +304,9 @@ def mainP2P ():
     server = Server(host_name, port) #* création de l'instance server
     valid = True
     server.bind() #* bind la connexion avec le port et l'adresse ip
-
     ip = Server.get_local_ip()
     server.interfaceP2Phost(ip)
-    
     connection, addr, valid = server.accept_connection() #* accept la connexion du client -> serveur
-    valid = False
-
     #test connection
     message_recu = server.receive_message(connection) #* test de connection
     message = ("Server : Bonjour le serveur est aussi vivant ! :D") #* test de connection
@@ -361,6 +357,8 @@ def mainP2P ():
     receive_messages_thread.start() #* démarrage du thread
 
     while windowStayOpened: #* boucle execution pygame
+        screen.blit(yinsh_img, yinsh_img_rect)
+        screen.fill(BG_COLOR)  # Nettoie l'écran avant chaque nouveau rendu
         anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
         pointsBlancs = 5 - anneauxBlancs
         pointsNoirs = 5 - anneauxNoirs
