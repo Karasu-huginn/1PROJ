@@ -79,25 +79,6 @@ def draw_button(screen, text, position, size=(300, 50), bg_color=BUTTON_BG_COLOR
     screen.blit(img, (rect.centerx - img.get_width() // 2, rect.centery - img.get_height() // 2))
     return rect
 
-def draw_button_save(screen, text, position, size=(140, 50), bg_color=BUTTON_BG_COLOR, border_color=BUTTON_BORDER_COLOR):
-    font = pygame.font.SysFont(None, 30)
-    rect = pygame.Rect(position, size)
-    pygame.draw.rect(screen, border_color, rect, border_radius=12)
-    inner_rect = rect.inflate(-4, -4)
-    pygame.draw.rect(screen, bg_color, inner_rect, border_radius=10)
-    img = font.render(text, True, [0, 0, 0])
-    screen.blit(img, (rect.centerx - img.get_width() // 2, rect.centery - img.get_height() // 2))
-    return rect
-
-def draw_button_charger(screen, text, position, size=(140, 50), bg_color=BUTTON_BG_COLOR, border_color=BUTTON_BORDER_COLOR):
-    font = pygame.font.SysFont(None, 30)
-    rect = pygame.Rect(position, size)
-    pygame.draw.rect(screen, border_color, rect, border_radius=12)
-    inner_rect = rect.inflate(-4, -4)
-    pygame.draw.rect(screen, bg_color, inner_rect, border_radius=10)
-    img = font.render(text, True, [0, 0, 0])
-    screen.blit(img, (rect.centerx - img.get_width() // 2, rect.centery - img.get_height() // 2))
-    return rect
 
 def yinshclient (ip):
     queue = Queue()
