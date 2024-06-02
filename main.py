@@ -374,11 +374,11 @@ def mainP2P (modeJeu):
         screen.fill(BG_COLOR)
         screen.blit(yinsh_img, yinsh_img_rect)
         screen.blit(boardImage, boardImage_rect)
-        if objetPlateau.get_anneauxPlaces() > 5 and anneauEnDeplacement == False:
+        if objetPlateau.get_anneauxPlaces() > 10 and anneauEnDeplacement == False:
             anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
             pointsBlancs = 5 - anneauxBlancs
             pointsNoirs = 5 - anneauxNoirs
-        if tempTicks < 500:
+        if tempTicks < 200:
             tempTicks += 1
         else:
             tempTicks = 0
@@ -386,6 +386,7 @@ def mainP2P (modeJeu):
             print("pointsBlancs :", pointsBlancs)
             print("AnneauxNoirs : ", anneauxNoirs)
             print("pointsNoirs :", pointsNoirs)
+            print("anneaux Places : ",objetPlateau.get_anneauxPlaces())
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
             windowStayOpened = False
         

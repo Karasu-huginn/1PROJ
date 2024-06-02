@@ -157,7 +157,7 @@ def yinshclient (ip):
         scroll_speed = 20  # Augmenter la vitesse de défilement
  
         while windowStayOpened: #* boucle execution pygame
-            if objetPlateau.get_anneauxPlaces() > 5:
+            if objetPlateau.get_anneauxPlaces() > 10:
                 anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
                 pointsBlancs = 5 - anneauxBlancs
                 pointsNoirs = 5 - anneauxNoirs

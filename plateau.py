@@ -42,10 +42,9 @@ class Plateau:
         for i in range(len(self.plateau[1])):
             for u in range(len(self.plateau[1][i])):
                 if self.plateau[1][i][u] == "A":
-                    anneauxNoirs += 1
-                elif self.plateau[1][i][u] == "a":
                     anneauxBlancs += 1
-        print(anneauxBlancs, anneauxNoirs)
+                elif self.plateau[1][i][u] == "a":
+                    anneauxNoirs += 1
         return anneauxBlancs, anneauxNoirs
 
 #* SETTERS
