@@ -386,10 +386,10 @@ def yinshclient (ip):
         pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
 def main ():
-    #ip = ''
-    #ip = interface()
+    ip = ''
+    ip = interface()
 
-    ip = Client.get_local_ip() #* obtenir ip local pour test 
+    #ip = Client.get_local_ip() #* obtenir ip local pour test 
     yinshclient(ip)
 
 
