@@ -4,6 +4,7 @@ from testserv import *
 from menu import *
 from jouer_sur_ce_pc import *
 from normal_blitz import *
+from interface_win import *
 from queue import Queue
 import subprocess
 import ast
@@ -277,9 +278,9 @@ def main(modeJeu):
                     scroll_y = min(scroll_y + scroll_speed, len(text_to_display) * line_height - text_scroll_surface.get_height())
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
     if pointsNoirs > pointsBlancs:
-        print("Les noirs remportent la victoire !")
+        win("Les noirs remportent la victoire !")
     else:
-        print("Les blancs remportent la victoire !")
+        win("Les blancs remportent la victoire !")
     #todo proposition recommencer partie
     pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
@@ -596,11 +597,11 @@ def mainP2P (modeJeu):
                     scroll_y = min(scroll_y + scroll_speed, len(text_to_display) * line_height - text_scroll_surface.get_height())
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
     if pointsNoirs > pointsBlancs:
-        print("Les noirs remportent la victoire !")
+        win("Les noirs remportent la victoire !")
     else:
-        print("Les blancs remportent la victoire !")
+        win("Les blancs remportent la victoire !")
     #todo proposition recommencer partie
-    pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
+    #pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
 
 
@@ -815,9 +816,9 @@ def mainIA(modeJeu):
                     scroll_y = min(scroll_y + scroll_speed, len(text_to_display) * line_height - text_scroll_surface.get_height())
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
     if pointsNoirs > pointsBlancs:
-        print("Les noirs remportent la victoire !")
+        win("Les noirs remportent la victoire !")
     else:
-        print("Les blancs remportent la victoire !")
+        win("Les blancs remportent la victoire !")
     #todo proposition recommencer partie
     pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
                     
