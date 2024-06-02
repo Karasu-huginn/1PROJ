@@ -185,13 +185,20 @@ def main(modeJeu):
         text_y = yinsh_img_rect.bottom + 80
         screen.blit(img, (text_x, text_y))
 
-        tourJoueurTexte = renduTexteTourJoueur(tourJoueur+tourJoueurAlignement)
-        font = pygame.font.SysFont(None, 39)
-        img = font.render(tourJoueurTexte, True, FONT_COLOR)
-        text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
-        text_y = yinsh_img_rect.bottom + 150
-        screen.blit(img, (text_x, text_y))
+        anneauxblanc, anneauxnoir = objetPlateau.get_anneaux_nombre()
 
+        tourJoueurTexteBlanc = (f"le jour blanc possède: {anneauxblanc}")
+        font = pygame.font.SysFont(None, 39)
+        imgBlanc = font.render(tourJoueurTexteBlanc, True, FONT_COLOR)
+        text_x_blanc = (screen.get_width() - imgBlanc.get_width()) // 2  # Centrer horizontalement
+        text_y_blanc = yinsh_img_rect.bottom + 150
+        screen.blit(imgBlanc, (text_x_blanc, text_y_blanc))
+        
+        tourJoueurTexteNoir = (f"le jour noir possède: {anneauxnoir}")
+        imgNoir = font.render(tourJoueurTexteNoir, True, FONT_COLOR)
+        text_x_noir = (screen.get_width() - imgNoir.get_width()) // 2  # Centrer horizontalement
+        text_y_noir = yinsh_img_rect.bottom + 180  # Ajouter un décalage pour ne pas superposer les textes
+        screen.blit(imgNoir, (text_x_noir, text_y_noir))
     
         # Dessiner les boutons
         button_x = screen.get_width() - 350
@@ -510,6 +517,21 @@ def mainP2P (modeJeu):
         text_y = yinsh_img_rect.bottom + 150
         screen.blit(img, (text_x, text_y))
 
+        anneauxblanc, anneauxnoir = objetPlateau.get_anneaux_nombre()
+
+        tourJoueurTexteBlanc = (f"le jour blanc possède: {anneauxblanc}")
+        font = pygame.font.SysFont(None, 39)
+        imgBlanc = font.render(tourJoueurTexteBlanc, True, FONT_COLOR)
+        text_x_blanc = (screen.get_width() - imgBlanc.get_width()) // 2  # Centrer horizontalement
+        text_y_blanc = yinsh_img_rect.bottom + 210
+        screen.blit(imgBlanc, (text_x_blanc, text_y_blanc))
+        
+        tourJoueurTexteNoir = (f"le jour noir possède: {anneauxnoir}")
+        imgNoir = font.render(tourJoueurTexteNoir, True, FONT_COLOR)
+        text_x_noir = (screen.get_width() - imgNoir.get_width()) // 2  # Centrer horizontalement
+        text_y_noir = yinsh_img_rect.bottom + 240  # Ajouter un décalage pour ne pas superposer les textes
+        screen.blit(imgNoir, (text_x_noir, text_y_noir))
+
     
         # Dessiner les boutons
         button_x = screen.get_width() - 350
@@ -620,6 +642,12 @@ def mainIA(modeJeu):
     screen.fill(BG_COLOR)
     windowStayOpened = True     #* fait tourner la boucle qui affiche la fenêtre pygame (bool)
 
+    yinsh_img = pygame.image.load("yinsh.png")
+    new_width, new_height = 600, 200
+    yinsh_img = pygame.transform.scale(yinsh_img, (new_width, new_height))
+    yinsh_img_rect = yinsh_img.get_rect()
+    yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  
+
     boardImage = pygame.image.load("yinsh_board.png")
     boardImage = pygame.transform.scale(boardImage, (535,500))
     boardImage_rect = boardImage.get_rect()
@@ -645,6 +673,10 @@ def mainIA(modeJeu):
     scroll_speed = 20  # Augmenter la vitesse de défilement
 
     while windowStayOpened:
+        screen.fill(BG_COLOR)
+        screen.blit(yinsh_img, yinsh_img_rect)
+
+        screen.blit(boardImage, boardImage_rect)
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
             windowStayOpened = False
         screen.blit(boardImage, boardImage_rect)    #* affichage du plateau dans l'interface
@@ -751,6 +783,16 @@ def mainIA(modeJeu):
         opponent_text_x = screen.get_width() - opponent_text_img.get_width() - 600
         opponent_text_pos = (opponent_text_x, 240)
         screen.blit(opponent_text_img, opponent_text_pos)
+
+        anneauxblanc, anneauxnoir = objetPlateau.get_anneaux_nombre()
+
+        tourJoueurTexteBlanc = (f"le jour blanc possède: {anneauxblanc}")
+        font = pygame.font.SysFont(None, 39)
+        imgBlanc = font.render(tourJoueurTexteBlanc, True, FONT_COLOR)
+        text_x_blanc = (screen.get_width() - imgBlanc.get_width()) // 2  # Centrer horizontalement
+        text_y_blanc = 200 + 210
+        screen.blit(imgBlanc, (text_x_blanc, text_y_blanc))
+        
 
         # Gérer le texte défilant
         text_scroll_surface.fill(BG_COLOR)
