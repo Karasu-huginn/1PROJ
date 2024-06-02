@@ -83,7 +83,7 @@ def draw_text_top_right(screen, text):
     screen.blit(img, (screen.get_width() - img.get_width() - 10, 10))
 
 
-def main():
+def main(modeJeu):
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Définit le mode de la fenêtre en plein écran
     screen.fill(BG_COLOR)
@@ -113,7 +113,6 @@ def main():
     positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
     pointsBlancs = 0
     pointsNoirs = 0
-    modeJeu = 3         #* 3 = partie normale, 1 = partie Blitz
     marqueursAlignes = False
     marqueursAlignesListe = list()
     tourJoueurAlignement = 0
@@ -139,7 +138,7 @@ def main():
         estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
         if not marqueursAlignes:
             if estClique:                       #! valeur à changer avant rendu final !
-                if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
+                if objetPlateau.get_anneauxPlaces() < 10:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
                     tourJoueur = objetPlateau.placementAnneaux(tourJoueur)     #* placement des anneaux
                 else:
                     if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en m arqueur et qu'on attend la position finale de l'anneau pour le replacer
@@ -300,7 +299,7 @@ def main():
 
 
 
-def mainP2P ():
+def mainP2P (modeJeu):
     queue = Queue()
     host_name = Server.get_local_ip() #* récupérer hostname pour bind la connexion
     port = 1111 #* definition du port utilisé
@@ -343,7 +342,6 @@ def mainP2P ():
     anneauEnDeplacement = False     #* détermine si un anneau est en train d'être déplacé (bool)
     positionAnneauX = 0     #* position originale abscisse de l'anneau qui est déplacé (int)
     positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
-    modeJeu = 1         #* 3 = partie normale, 1 = partie Blitz
     marqueursAlignes = False
     marqueursAlignesListe = list()
     tourJoueurAlignement = 0
@@ -378,7 +376,7 @@ def mainP2P ():
         if (tourJoueur+tourJoueurAlignement)%2 == 0: #* et que c'est le joueur blanc qui joue
             #if not marqueursAlignes:
                 if estClique: #* si on clique dans la fenetre 
-                    if objetPlateau.get_anneauxPlaces() < 2: #* vérif que tous les anneaux sont placés
+                    if objetPlateau.get_anneauxPlaces() < 5: #* vérif que tous les anneaux sont placés
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
                         message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                         server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
@@ -594,7 +592,7 @@ def mainP2P ():
 
 
 
-def mainIA():
+def mainIA(modeJeu):
 
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Définit le mode de la fenêtre en plein écran
@@ -615,7 +613,6 @@ def mainIA():
     positionAnneauY = 0     #* position originale ordonnée de l'anneau qui est déplacé (int)
     pointsBlancs = 0
     pointsNoirs = 0
-    modeJeu = 3         #* 3 = partie normale, 1 = partie Blitz
     marqueursAlignes = False
     marqueursAlignesListe = list()
     tourJoueurAlignement = 0
@@ -635,7 +632,7 @@ def mainIA():
         if (tourJoueur+tourJoueurAlignement) % 2 == 0:
             if not marqueursAlignes:
                 if estClique:                       #! valeur à changer avant rendu final !
-                    if objetPlateau.get_anneauxPlaces() < 4:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
+                    if objetPlateau.get_anneauxPlaces() < 10:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur)     #* placement des anneaux
                     else:
                         if anneauEnDeplacement:     #* si l'anneau a déjà été transformé en m arqueur et qu'on attend la position finale de l'anneau pour le replacer
@@ -674,7 +671,7 @@ def mainIA():
                         tourJoueurAlignement = 0
         else:
             if not marqueursAlignes:
-                if objetPlateau.get_anneauxPlaces() < 4:
+                if objetPlateau.get_anneauxPlaces() < 10:
                     x, y = objetPlateau.gen_rand_pos_x_y_empty()
                     tourJoueur = objetPlateau.placementAnneauxIA(tourJoueur,x,y)
                 else:
@@ -824,7 +821,13 @@ while True:
     value = menu()
     if value == 1:
         #réseau
-        mainP2P()
+        value2 = normal_or_blitz()
+        if value2 == 1:
+            #normal
+            mainP2P(3)
+        elif value2 == 2:
+            #blitz
+            mainP2P(1)
     elif value == 2:
         #local
         inlocal = True
@@ -835,19 +838,19 @@ while True:
                 value2 = normal_or_blitz()
                 if value2 == 1:
                     #normal
-                    main()
+                    main(3)
                 elif value2 == 2:
                     #blitz
-                    main()#todo à adapter
+                    main(1)#todo à adapter
             elif value1 == 2:
                 #jouer contre ia
                 value2 = normal_or_blitz()
                 if value2 == 1:
                     #normal
-                    mainIA()
+                    mainIA(3)
                 elif value2 == 2:
                     #blitz
-                    mainIA()#todo à adapter
+                    mainIA(1)#todo à adapter
                 elif value1 == 3:
                     continue
             else:

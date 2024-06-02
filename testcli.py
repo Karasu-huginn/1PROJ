@@ -171,7 +171,7 @@ def yinshclient (ip):
             if (tourJoueur+tourJoueurAlignement)%2 == 1: #* et que c'est le joueur blanc qui joue
                 #if not marqueursAlignes:
                     if estClique: #* si on clique dans la fenetre 
-                        if objetPlateau.get_anneauxPlaces() < 2: #* vérif que tous les anneaux sont placés
+                        if objetPlateau.get_anneauxPlaces() < 5: #* vérif que tous les anneaux sont placés
                             tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
                             
                             message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
