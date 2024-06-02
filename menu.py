@@ -93,6 +93,15 @@ def menu():
         rect_jouer_en_ligne = afficher_texte(fenetre,"1. Jouer en ligne", 50, hauteur_fenetre // 2.5 + 50, NOIR, police_hover if 50 < mouse_x < 50 + police_hover.size("1. Jouer en ligne")[0] and hauteur_fenetre // 2.5 + 50 < mouse_y < hauteur_fenetre // 2.5 + 50 + police_hover.size("1. Jouer en ligne")[1] else police)
         rect_jouer_sur_ce_pc = afficher_texte(fenetre,"2. Jouer sur ce PC", 50, hauteur_fenetre // 2.5 + 100 + 30, NOIR, police_hover if 50 < mouse_x < 50 + police_hover.size("2. Jouer sur ce PC")[0] and hauteur_fenetre // 2.5 + 100 + 30 < mouse_y < hauteur_fenetre // 2.5 + 100 + 30 + police_hover.size("2. Jouer sur ce PC")[1] else police)
         
+        # Calculer la position pour le texte "Retour" en bas à droite
+        texte_retour = "you can't click here"
+        largeur_texte_retour, hauteur_texte_retour = police.size(texte_retour)
+        x_retour = largeur_fenetre - largeur_texte_retour - 50
+        y_retour = hauteur_fenetre - hauteur_texte_retour - 50
+
+        # Afficher le texte "Retour" avec effet de survol
+        rect_retour = afficher_texte(fenetre,texte_retour, x_retour, y_retour, NOIR, police_hover if x_retour < mouse_x < x_retour + largeur_texte_retour and y_retour < mouse_y < y_retour + hauteur_texte_retour else police)
+
         # Récupérer les boutons cliqués de la souris
         mouse_click = pygame.mouse.get_pressed()
         
@@ -106,6 +115,10 @@ def menu():
             pygame.quit()
             return 2
             
+        if rect_retour.collidepoint((mouse_x, mouse_y)) and mouse_click[0] == 1:
+            #retour_menu()
+            pygame.quit()
+            #todo ICI JE SUIS ICI
         pygame.display.flip()
 
 #def jouer_en_ligne():
