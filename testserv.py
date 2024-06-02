@@ -32,14 +32,14 @@ class Server:
         font = pygame.font.Font(None, 74)
         button_font = pygame.font.Font(None, 40)
 
-        # Texte "En attente du client..."
+        #* Texte "En attente du client..."
         text_surface = font.render(f"En attente du client sur {ip}...", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2))
 
-        # Position et dimensions du bouton "Revenir au menu"
+        #* Position et dimensions du bouton "Revenir au menu"
         menu_button_rect = pygame.Rect(WIDTH - 300, HEIGHT - 100, 250, 60)
 
-        # Variables pour l'animation des points
+        #* Variables pour l'animation des points
         dots_animation_timer = pygame.time.get_ticks()
         dots_animation_delay = 500
         dots_count = 0
@@ -56,24 +56,24 @@ class Server:
                     self.close()
                     return None, None, False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # Si le user clique sur le bouton "Revenir au menu"
+                    #* Si le user clique sur le bouton "Revenir au menu"
                     if menu_button_rect.collidepoint(event.pos):
                         self.close()
                         return None, None, False
 
-            # Animation des points
+            #* Animation des points
             current_time = pygame.time.get_ticks()
             if current_time - dots_animation_timer >= dots_animation_delay:
                 dots_animation_timer = current_time
                 dots_count = (dots_count + 1) % 4
 
             screen.fill((128, 128, 128))
-            # Affichage du texte "En attente du client..." avec les trois petits points animés
+            #* Affichage du texte "En attente du client..." avec les trois petits points animés
             text_with_dots = "En attente du client sur " + ip + "." * dots_count
             text_surface = font.render(text_with_dots, True, (0, 0, 0))
             text_rect = text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2))
             screen.blit(text_surface, text_rect)
-            # Affichage du bouton "Revenir au menu"
+            #* Affichage du bouton "Revenir au menu"
             pygame.draw.rect(screen, (50, 50, 50), menu_button_rect, border_radius=10)
             pygame.draw.rect(screen, (255, 255, 255), menu_button_rect, 2, border_radius=10)
             menu_text = button_font.render("Revenir au menu", True, (255, 255, 255))
@@ -82,7 +82,7 @@ class Server:
             pygame.display.flip()
             clock.tick(30)
 
-            # Acceptation de la connexion
+            #* Acceptation de la connexion
             connection, addr = self.server_socket.accept()
             print(f"Connected to client : {addr}")
             self.connected = True
@@ -90,25 +90,25 @@ class Server:
         return connection, addr, self.connected
         
     def interfaceP2Phost(self, ip):
-        # Définition de la fenêtre en plein écran
+        #* Définition de la fenêtre en plein écran
         
         info = pygame.display.Info()
         WIDTH, HEIGHT = info.current_w, info.current_h
         screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
         pygame.display.set_caption("Loading Page")
 
-        # Définition de la police de caractère
+        #* Définition de la police de caractère
         font = pygame.font.Font(None, 74)
         button_font = pygame.font.Font(None, 40)
 
-        # Texte "En attente du client..."
+        #* Texte "En attente du client..."
         text_surface = font.render(f"En attente du client sur {ip}...", True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2))
 
-        # Position et dimensions du bouton "Revenir au menu"
+        #* Position et dimensions du bouton "Revenir au menu"
         menu_button_rect = pygame.Rect(WIDTH - 300, HEIGHT - 100, 250, 60)
 
-        # Variables pour l'animation des points
+        #* Variables pour l'animation des points
         dots_animation_timer = pygame.time.get_ticks()
         dots_animation_delay = 500
         dots_count = 0
@@ -121,18 +121,18 @@ class Server:
                 self.stop_event.set()
                 break
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # Si le user clique sur le bouton "Revenir au menu"
+                #* Si le user clique sur le bouton "Revenir au menu"
                 if menu_button_rect.collidepoint(event.pos):
                     self.stop_event.set()
                     break
         dots_animation_timer, dots_count = self.animate_dots(dots_animation_timer, dots_animation_delay, dots_count)
         screen.fill((128, 128, 128))
-        # Affichage du texte "En attente du client..." avec les trois petits points animés
+        #* Affichage du texte "En attente du client..." avec les trois petits points animés
         text_with_dots = "En attente du client sur " + ip + "." * dots_count
         text_surface = font.render(text_with_dots, True, (0, 0, 0))
         text_rect = text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2))
         screen.blit(text_surface, text_rect)
-        # Affichage du bouton "Revenir au menu"
+        #* Affichage du bouton "Revenir au menu"
         pygame.draw.rect(screen, (50, 50, 50), menu_button_rect, border_radius=10)
         pygame.draw.rect(screen, (255, 255, 255), menu_button_rect, 2, border_radius=10)
         menu_text = button_font.render("Revenir au menu", True, (255, 255, 255))
@@ -144,7 +144,7 @@ class Server:
     def animate_dots(self, dots_animation_timer, dots_animation_delay, dots_count):
         current_time = pygame.time.get_ticks()
         if current_time - dots_animation_timer > dots_animation_delay:
-            dots_count = (dots_count + 1) % 4  # 0, 1, 2, 3, 0, 1, 2, 3,...
+            dots_count = (dots_count + 1) % 4  #* 0, 1, 2, 3, 0, 1, 2, 3,...
             dots_animation_timer = current_time
         return dots_animation_timer, dots_count
 
@@ -171,16 +171,8 @@ class Server:
         while self.connected:
             message_recu = self.receive_message(connection)
             if message_recu.startswith("plateau:"):
-                #plateau_recu = ast.literal_eval(message_recu[8:])
                 queue.put(str(message_recu))
                 print("un plateau à été ajouté à la queue")
             elif message_recu.startswith("tour:"):
-                #tourJoueur = int(message_recu[5:])
                 queue.put(str(message_recu))
                 print("un tour à été ajouté à la queue")
-
-    #def data_sending (self,plateau,connection,tourJoueur):
-    #    message_plateau = "plateau:" + str(plateau) #* ajout de l'identifiant de la donnée
-    #    self.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-    #    message_tour = "tour:" + str(tourJoueur) #* ajout de l'identifiant de la donnée
-    #    self.send_message(connection, message_tour)#* envoie du tourn après mouvements

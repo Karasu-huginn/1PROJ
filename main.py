@@ -32,22 +32,6 @@ def renduTexteTourJoueur(tourJoueur):       #* renvoie le texte à afficher selo
     else:
         return "Aux Noirs de jouer"
 
-def debugCasePos():                 #* affiche dans la console les coordonnées de la case sur laquelle on clique, fonction de debug uniquement
-    x,y = pygame.mouse.get_pos()
-    x,y = x//50, y//25
-    print(x,y)
-
-def debugCaseValide(oldX,oldY):     #* affiche si la case cliquée est valide pour bouger l'anneau (selon des conditions dont je ne me souviens pas)
-    x,y = pygame.mouse.get_pos()
-    x,y = x//50, y//25
-    diffX = oldX - x
-    diffY = oldY - y
-    print(diffX,diffY)
-    if abs(diffX) == abs(diffY) or abs(diffX)%2 == 0 and abs(diffY) == 0 or abs(diffY)%2 == 0 and abs(diffX) == 0:
-        print("valide")
-    else:
-        print("invalide")
-
 def draw_button(screen, text, position, size=(300, 50), bg_color=BUTTON_BG_COLOR, border_color=BUTTON_BORDER_COLOR):
     font = pygame.font.SysFont(None, 30)
     rect = pygame.Rect(position, size)
@@ -86,16 +70,16 @@ def draw_text_top_right(screen, text):
 
 def main(modeJeu, easterEgg):
     pygame.init()
-    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Définit le mode de la fenêtre en plein écran
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  #* Définit le mode de la fenêtre en plein écran
     screen.fill(BG_COLOR)
     windowStayOpened = True     #* fait tourner la boucle qui affiche la fenêtre pygame (bool)
    
-    # Charger l'image yinsh.png
+    #* Charger l'image yinsh.png
     yinsh_img = pygame.image.load("yinsh.png")
     new_width, new_height = 600, 200
     yinsh_img = pygame.transform.scale(yinsh_img, (new_width, new_height))
     yinsh_img_rect = yinsh_img.get_rect()
-    yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  # Positionne l'image au centre en haut
+    yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  #* Positionne l'image au centre en haut
 
     if easterEgg == 42:
         boardImage = pygame.image.load("yinsh_board_easter_egg.png")
@@ -103,7 +87,7 @@ def main(modeJeu, easterEgg):
         boardImage = pygame.image.load("yinsh_board.png")
     boardImage = pygame.transform.scale(boardImage, (535,500))
     boardImage_rect = boardImage.get_rect()
-    boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
+    boardImage_rect.topleft = (5,0)  #* Positionne l'image dans le coin
 
     
 
@@ -121,16 +105,16 @@ def main(modeJeu, easterEgg):
     marqueursAlignesListe = list()
     tourJoueurAlignement = 0
 
-    # Configuration de la zone de texte défilante
+    #* Configuration de la zone de texte défilante
     text_scroll_surface = pygame.Surface((screen.get_width() - 200, 400))
     text_scroll_surface.fill(BG_COLOR)
     scroll_y = 0
-    scroll_speed = 20  # Augmenter la vitesse de défilement
+    scroll_speed = 20  #* Augmenter la vitesse de défilement
 
     while windowStayOpened:
-        screen.fill(BG_COLOR)  # Nettoie l'écran avant chaque nouveau rendu
+        screen.fill(BG_COLOR)  #* Nettoie l'écran avant chaque nouveau rendu
 
-        # Affiche l'image au centre en haut
+        #* Affiche l'image au centre en haut
         screen.blit(yinsh_img, yinsh_img_rect)
 
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
@@ -141,7 +125,7 @@ def main(modeJeu, easterEgg):
 
         estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
         if not marqueursAlignes:
-            if estClique:                       #! valeur à changer avant rendu final !
+            if estClique:
                 if objetPlateau.get_anneauxPlaces() < 10:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
                     tourJoueur = objetPlateau.placementAnneaux(tourJoueur)     #* placement des anneaux
                 else:
@@ -153,7 +137,6 @@ def main(modeJeu, easterEgg):
                             objetPlateau.del_possibles_moves()
                             marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
                             if marqueursAlignes == True:
-                                print(marqueursAlignesListe)
                                 if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
                                     tourJoueurAlignement = -1
                                 elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
@@ -184,7 +167,7 @@ def main(modeJeu, easterEgg):
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur+tourJoueurAlignement)
         font = pygame.font.SysFont(None, 39)
         img = font.render(tourJoueurTexte, True, FONT_COLOR)
-        text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
+        text_x = (screen.get_width() - img.get_width()) // 2  #* Centrer horizontalement
         text_y = yinsh_img_rect.bottom + 80
         screen.blit(img, (text_x, text_y))
 
@@ -193,37 +176,37 @@ def main(modeJeu, easterEgg):
         tourJoueurTexteBlanc = (f"le jour blanc possède: {anneauxblanc}")
         font = pygame.font.SysFont(None, 39)
         imgBlanc = font.render(tourJoueurTexteBlanc, True, FONT_COLOR)
-        text_x_blanc = (screen.get_width() - imgBlanc.get_width()) // 2  # Centrer horizontalement
+        text_x_blanc = (screen.get_width() - imgBlanc.get_width()) // 2  #* Centrer horizontalement
         text_y_blanc = yinsh_img_rect.bottom + 150
         screen.blit(imgBlanc, (text_x_blanc, text_y_blanc))
         
         tourJoueurTexteNoir = (f"le jour noir possède: {anneauxnoir}")
         imgNoir = font.render(tourJoueurTexteNoir, True, FONT_COLOR)
-        text_x_noir = (screen.get_width() - imgNoir.get_width()) // 2  # Centrer horizontalement
-        text_y_noir = yinsh_img_rect.bottom + 180  # Ajouter un décalage pour ne pas superposer les textes
+        text_x_noir = (screen.get_width() - imgNoir.get_width()) // 2  #* Centrer horizontalement
+        text_y_noir = yinsh_img_rect.bottom + 180  #* Ajouter un décalage pour ne pas superposer les textes
         screen.blit(imgNoir, (text_x_noir, text_y_noir))
     
-        # Dessiner les boutons
+        #* Dessiner les boutons
         button_x = screen.get_width() - 350
         button_charger = screen.get_width() - 190
         reset_button_rect = draw_button(screen, "Reset", (button_x, 340))
         quit_button_rect = draw_button(screen, "Quitter", (button_x, 415))
-        #save_button_rect = draw_button_save(screen, "Sauvegarder", (button_x, 265))
-        #load_button_rect = draw_button_charger(screen, "Charger", (button_charger, 265))
+        #*save_button_rect = draw_button_save(screen, "Sauvegarder", (button_x, 265))
+        #*load_button_rect = draw_button_charger(screen, "Charger", (button_charger, 265))
 
-        # Dessiner la ligne de séparation
-        line_y = 540  # Position verticale de la ligne (juste au-dessus du texte défilant)
+        #* Dessiner la ligne de séparation
+        line_y = 540  #* Position verticale de la ligne (juste au-dessus du texte défilant)
         pygame.draw.line(screen, BUTTON_BORDER_COLOR, (100, line_y), (screen.get_width() - 100, line_y), 2)
 
         custom_text = "Règles du jeu YINSH"
         custom_font = pygame.font.SysFont(None, 50)
         custom_text_img = custom_font.render(custom_text, True, FONT_COLOR)
         custom_text_x = (screen.get_width() - custom_text_img.get_width()) // 2
-        custom_text_pos = (custom_text_x, 580)  # Position du texte (x, y)
+        custom_text_pos = (custom_text_x, 580)  #* Position du texte (x, y)
         screen.blit(custom_text_img, custom_text_pos)
 
 
-        # Gérer le texte défilant
+        #* Gérer le texte défilant
         text_scroll_surface.fill(BG_COLOR)
         text_to_display = [
             "But du jeu : Créer une rangée de cinq anneaux de votre couleur",
@@ -246,19 +229,19 @@ def main(modeJeu, easterEgg):
         font = pygame.font.SysFont(None, 28)
         for i, line in enumerate(text_to_display):
             line_img = font.render(line, True, FONT_COLOR)
-            line_x = (text_scroll_surface.get_width() - line_img.get_width()) // 2  # Centrer horizontalement
+            line_x = (text_scroll_surface.get_width() - line_img.get_width()) // 2  #* Centrer horizontalement
             text_scroll_surface.blit(line_img, (line_x, i * line_height - scroll_y))
 
-        screen.blit(text_scroll_surface, (100, screen.get_height() - 430))  # Ajuster la position verticale
+        screen.blit(text_scroll_surface, (100, screen.get_height() - 430))  #* Ajuster la position verticale
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return  # Quitte la fonction main()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  # Si la touche Echap est pressée
+                return  #* Quitte la fonction main()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  #* Si la touche Echap est pressée
                 pygame.quit()
-                return  # Quitte la fonction main()
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Si le bouton gauche de la souris est cliqué
+                return  #* Quitte la fonction main()
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  #* Si le bouton gauche de la souris est cliqué
                 mouse_pos = event.pos
                 if reset_button_rect.collidepoint(mouse_pos):
                     for i in range(len(objetPlateau.plateau[1])):
@@ -278,16 +261,15 @@ def main(modeJeu, easterEgg):
                 elif quit_button_rect.collidepoint(mouse_pos):
                     pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 4:  # Scroll up
+                if event.button == 4:  #* Scroll up
                     scroll_y = max(scroll_y - scroll_speed, 0)
-                elif event.button == 5:  # Scroll down
+                elif event.button == 5:  #* Scroll down
                     scroll_y = min(scroll_y + scroll_speed, len(text_to_display) * line_height - text_scroll_surface.get_height())
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
-    if pointsNoirs > pointsBlancs:
+    if pointsNoirs < pointsBlancs:
         win("Les noirs remportent la victoire !")
     else:
         win("Les blancs remportent la victoire !")
-    #todo proposition recommencer partie
     pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
 
@@ -312,33 +294,25 @@ def mainP2P (modeJeu,easterEgg):
     port = 1111 #* definition du port utilisé
     server = Server(host_name, port) #* création de l'instance server
     valid = True
-    #server.bind() #* bind la connexion avec le port et l'adresse ip
-
-    #receive_connection_thread = threading.Thread(target=server.accept_connection(), args=()) #* liaison du process à faire tourner sur le thread
-    #receive_connection_thread.start() #* démarrage du thread
-#
-    #while not server.connected: 
-    #    ip = Server.get_local_ip()
-    #    server.interfaceP2Phost(ip)
 
     connection, addr, valid = server.bind_and_accept(host_name) #* accept la connexion du client -> serveur
-    #test connection
+    #*test connection
     message_recu = server.receive_message(connection) #* test de connection
     message = ("Server : Bonjour le serveur est aussi vivant ! :D") #* test de connection
     server.send_message(connection, message) #* test de connection
 
     
     pygame.init()
-    screen = pygame.display.set_mode((0, 0))  # Définit le mode de la fenêtre en plein écran
+    screen = pygame.display.set_mode((0, 0))  #* Définit le mode de la fenêtre en plein écran
     screen.fill(BG_COLOR)
     windowStayOpened = True     #* fait tourner la boucle qui affiche la fenêtre pygame (bool)
 
-    # Charger l'image yinsh.png
+    #* Charger l'image yinsh.png
     yinsh_img = pygame.image.load("yinsh.png")
     new_width, new_height = 600, 200
     yinsh_img = pygame.transform.scale(yinsh_img, (new_width, new_height))
     yinsh_img_rect = yinsh_img.get_rect()
-    yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  # Positionne l'image au centre en haut
+    yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  #* Positionne l'image au centre en haut
 
     if easterEgg == 42:
         boardImage = pygame.image.load("yinsh_board_easter_egg.png")
@@ -346,7 +320,7 @@ def mainP2P (modeJeu,easterEgg):
         boardImage = pygame.image.load("yinsh_board.png")
     boardImage = pygame.transform.scale(boardImage, (535,500))
     boardImage_rect = boardImage.get_rect()
-    boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
+    boardImage_rect.topleft = (5,0)  #* Positionne l'image dans le coin
 
     objetPlateau = Plateau(10)      #* instanciation par la classe Plateau, paramètre : taille du plateau
     objetPlateau.plateauInitialisation()    #* définit les cases valides du plateau sur la première dimension du plateau tri-dimensionnel (ouais flemme de m'emmerder avec plusieurs objets, 3 dimensions c'est plus simple)
@@ -364,18 +338,16 @@ def mainP2P (modeJeu,easterEgg):
     anneauxBlancs = 0
     anneauxNoirs = 0
 
-    # Configuration de la zone de texte défilante
+    #* Configuration de la zone de texte défilante
     text_scroll_surface = pygame.Surface((screen.get_width() - 200, 400))
     text_scroll_surface.fill(BG_COLOR)
     scroll_y = 0
-    scroll_speed = 20  # Augmenter la vitesse de défilement
+    scroll_speed = 20  #* Augmenter la vitesse de défilement
 
     server.send_message(connection, str(objetPlateau.plateau)) #* envoie d'une liste vide au client
     server.send_message(connection, str(tourJoueur)) #* envoie du tour par défaut au client
     receive_messages_thread = threading.Thread(target=server.receive_messages_thread, args=(queue,connection)) #* liaison du process à faire tourner sur le thread
     receive_messages_thread.start() #* démarrage du thread
-
-    tempTicks = 0
 
     while windowStayOpened: #* boucle execution pygame
 
@@ -387,15 +359,6 @@ def mainP2P (modeJeu,easterEgg):
             anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
             pointsBlancs = 5 - anneauxBlancs
             pointsNoirs = 5 - anneauxNoirs
-        if tempTicks < 200:
-            tempTicks += 1
-        else:
-            tempTicks = 0
-            print("AnneauxBlancs : ", anneauxBlancs)
-            print("pointsBlancs :", pointsBlancs)
-            print("AnneauxNoirs : ", anneauxNoirs)
-            print("pointsNoirs :", pointsNoirs)
-            print("anneaux Places : ",objetPlateau.get_anneauxPlaces())
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
             windowStayOpened = False
         
@@ -405,7 +368,6 @@ def mainP2P (modeJeu,easterEgg):
 
         #*gestion tour host (envoi data vers client)
         if (tourJoueur+tourJoueurAlignement)%2 == 0: #* et que c'est le joueur blanc qui joue
-            #if not marqueursAlignes:
                 if estClique: #* si on clique dans la fenetre 
                     if objetPlateau.get_anneauxPlaces() < 5: #* vérif que tous les anneaux sont placés
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur) #* placements d'anneaux si nécessaire
@@ -429,15 +391,8 @@ def mainP2P (modeJeu,easterEgg):
                                             pointsBlancs += 1
                                         if objetPlateau.get_case_pion() == "a":
                                             pointsNoirs += 1
-                                    print("point blancs: ", pointsBlancs)
-                                    print("point noir: ", pointsNoirs)
                                     objetPlateau.set_case_pion(0)
                                     objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
-                                    #print(marqueursAlignesListe)
-                                    #if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
-                                    #    tourJoueurAlignement = -1
-                                    #elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
-                                    #    tourJoueurAlignement = -1
 
                                 message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
                                 server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
@@ -459,29 +414,7 @@ def mainP2P (modeJeu,easterEgg):
                                     server.send_message(connection,message_tour)#* envoie du tableau après mouvements
                                     objetPlateau.gen_all_previews(positionAnneauX,positionAnneauY)
                                     objetPlateau.update_display(screen)
-                                    pygame.display.update()   
-
-
-            #* gestion tour invité (réception data de client->validation->changement->update->sendboard)           
-
-            #else:
-            #    if estClique:
-            #        if objetPlateau.get_case_pion() == "A" and (tourJoueur+tourJoueurAlignement)%2 == 1 or objetPlateau.get_case_pion() == "a" and (tourJoueur+tourJoueurAlignement)%2 == 0:
-            #            if objetPlateau.get_case_pion() == "A":
-            #                pointsBlancs += 1
-            #            if objetPlateau.get_case_pion() == "a":
-            #                pointsNoirs += 1
-            #            objetPlateau.set_case_pion(0)
-            #            objetPlateau.suppressionMarqueursAlignement(marqueursAlignesListe)
-            #            marqueursAlignes = False
-            #            tourJoueurAlignement = 0
-            #            if not local:
-            #                message_plateau = "plateau:" + str(objetPlateau.plateau) #* ajout de l'identifiant de la donnée
-            #                server.send_message(connection, message_plateau)#* envoie du tableau après mouvements
-            #                message_tour = "tour:" + str(tourJoueur+tourJoueurAlignement) #* ajout de l'identifiant de la donnée
-            #                server.send_message(connection, message_tour)#* envoie du tableau après mouvements
-            #                objetPlateau.update_display(screen)
-            #                pygame.display.update()
+                                    pygame.display.update()
 
 
 
@@ -496,27 +429,20 @@ def mainP2P (modeJeu,easterEgg):
                         message_recu = element
                         tourJoueur = int(message_recu[5:]) #* formate la data retire l'identifiant
                     objetPlateau.del_possibles_moves()
-                    #marqueursAlignes, marqueursAlignesListe = objetPlateau.checkAlignementMarqueurs()
-                    #if marqueursAlignes == True:
-                    #    print(marqueursAlignesListe)
-                    #    if objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "m" and tourJoueur%2 == 1:    #* check si le premier marqueur de la liste est de la même couleur que le joueur actuellement en train de jouer, si c'est le cas il faut que le joueur soit à nouveau en train de jouer au prochain tour
-                    #        tourJoueurAlignement = -1
-                    #    elif objetPlateau.plateau[1][marqueursAlignesListe[0][0]][marqueursAlignesListe[0][1]] == "M" and tourJoueur%2 == 0:
-                    #        tourJoueurAlignement = -1
                     objetPlateau.update_display(screen) #* affiche le plateau avec un refresh
                     pygame.display.update() #* refresh de l'interface pour afficher les changement si dessus                             
 
         tourJoueurTexte = "Vous avez les Blancs"
         font = pygame.font.SysFont(None, 39)
         img = font.render(tourJoueurTexte, True, FONT_COLOR)
-        text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
+        text_x = (screen.get_width() - img.get_width()) // 2  #* Centrer horizontalement
         text_y = yinsh_img_rect.bottom + 80
         screen.blit(img, (text_x, text_y))
 
         tourJoueurTexte = renduTexteTourJoueur(tourJoueur)
         font = pygame.font.SysFont(None, 39)
         img = font.render(tourJoueurTexte, True, FONT_COLOR)
-        text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
+        text_x = (screen.get_width() - img.get_width()) // 2  #* Centrer horizontalement
         text_y = yinsh_img_rect.bottom + 150
         screen.blit(img, (text_x, text_y))
 
@@ -621,11 +547,10 @@ def mainP2P (modeJeu,easterEgg):
                 elif event.button == 5:  # Scroll down
                     scroll_y = min(scroll_y + scroll_speed, len(text_to_display) * line_height - text_scroll_surface.get_height())
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
-    if pointsNoirs > pointsBlancs:
+    if pointsNoirs < pointsBlancs:
         win("Les noirs remportent la victoire !")
     else:
         win("Les blancs remportent la victoire !")
-    #todo proposition recommencer partie
     #pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
 
 
@@ -690,7 +615,7 @@ def mainIA(modeJeu,easterEgg):
         estClique = gestionClic(estClique)      #* transforme le click hold en toggle 
         if (tourJoueur+tourJoueurAlignement) % 2 == 0:
             if not marqueursAlignes:
-                if estClique:                       #! valeur à changer avant rendu final !
+                if estClique:
                     if objetPlateau.get_anneauxPlaces() < 10:    #* si les joueurs n'ont pas encore terminé de placer leurs anneaux
                         tourJoueur = objetPlateau.placementAnneaux(tourJoueur)     #* placement des anneaux
                     else:
@@ -863,27 +788,14 @@ def mainIA(modeJeu,easterEgg):
                 elif event.button == 5:  # Scroll down
                     scroll_y = min(scroll_y + scroll_speed, len(text_to_display) * line_height - text_scroll_surface.get_height())
         pygame.display.update()         #* on met à jour l'affichage de la fenêtre pour appliquer tous les changements survenus dans l'itération de la boucle
-    if pointsNoirs > pointsBlancs:
+    if pointsNoirs < pointsBlancs:
         win("Les noirs remportent la victoire !")
     else:
         win("Les blancs remportent la victoire !")
-    #todo proposition recommencer partie
     pygame.quit()       #* une fois en dehors de la boucle, ferme la fenêtre pygame
                     
 
         
-#$ truc temporaire à la con sera remplacé par une interface pygame
-#try:
-#    input = 1
-#    #input = int(input("Enter 1-réseau or 2-local: "))
-#    if input == 1:
-#        mainP2P()
-#    elif input == 2:
-#        main()
-#    elif input == 3:
-#        mainIA()
-#except ValueError:
-#    print("Error: Invalid input. Please enter 1 or 2.")
 
 inlocal = False
 easterEgg = 0
