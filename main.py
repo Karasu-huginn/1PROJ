@@ -306,10 +306,16 @@ def mainP2P ():
     port = 1111 #* definition du port utilisé
     server = Server(host_name, port) #* création de l'instance server
     valid = True
-    server.bind() #* bind la connexion avec le port et l'adresse ip
-    ip = Server.get_local_ip()
-    server.interfaceP2Phost(ip)
-    connection, addr, valid = server.accept_connection() #* accept la connexion du client -> serveur
+    #server.bind() #* bind la connexion avec le port et l'adresse ip
+
+    #receive_connection_thread = threading.Thread(target=server.accept_connection(), args=()) #* liaison du process à faire tourner sur le thread
+    #receive_connection_thread.start() #* démarrage du thread
+#
+    #while not server.connected: 
+    #    ip = Server.get_local_ip()
+    #    server.interfaceP2Phost(ip)
+
+    connection, addr, valid = server.bind_and_accept(host_name) #* accept la connexion du client -> serveur
     #test connection
     message_recu = server.receive_message(connection) #* test de connection
     message = ("Server : Bonjour le serveur est aussi vivant ! :D") #* test de connection
@@ -819,38 +825,39 @@ def mainIA():
 #except ValueError:
 #    print("Error: Invalid input. Please enter 1 or 2.")
 
-inlocal = False
-while True:
-    value = menu()
-    if value == 1:
-        #réseau
-        mainP2P()
-    elif value == 2:
-        #local
-        inlocal = True
-        while inlocal:
-            value1 = localplay()
-            if value1 == 1:
-                #jouer à 2
-                value2 = normal_or_blitz()
-                if value2 == 1:
-                    #normal
-                    main()
-                elif value2 == 2:
-                    #blitz
-                    main()#todo à adapter
-            elif value1 == 2:
-                #jouer contre ia
-                value2 = normal_or_blitz()
-                if value2 == 1:
-                    #normal
-                    mainIA()
-                elif value2 == 2:
-                    #blitz
-                    mainIA()#todo à adapter
-                elif value1 == 3:
-                    continue
-            else:
-                break
+#inlocal = False
+#while True:
+#    value = menu()
+#    if value == 1:
+#        #réseau
+#        mainP2P()
+#    elif value == 2:
+#        #local
+#        inlocal = True
+#        while inlocal:
+#            value1 = localplay()
+#            if value1 == 1:
+#                #jouer à 2
+#                value2 = normal_or_blitz()
+#                if value2 == 1:
+#                    #normal
+#                    main()
+#                elif value2 == 2:
+#                    #blitz
+#                    main()#todo à adapter
+#            elif value1 == 2:
+#                #jouer contre ia
+#                value2 = normal_or_blitz()
+#                if value2 == 1:
+#                    #normal
+#                    mainIA()
+#                elif value2 == 2:
+#                    #blitz
+#                    mainIA()#todo à adapter
+#                elif value1 == 3:
+#                    continue
+#            else:
+#                break
 
 
+mainP2P()
