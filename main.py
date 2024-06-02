@@ -838,6 +838,9 @@ while True:
             else:
                 break
     elif value == 42:
-        easterEgg = value
+        if easterEgg == 42:
+            easterEgg = 0
+        else:
+            easterEgg = value
     
 
