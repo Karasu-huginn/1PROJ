@@ -1,6 +1,9 @@
 from tkinter import *
 from plateau import *
 from testserv import *
+from menu import *
+from jouer_sur_ce_pc import *
+from normal_blitz import *
 from queue import Queue
 import subprocess
 import ast
@@ -804,14 +807,50 @@ def mainIA():
 
         
 #$ truc temporaire à la con sera remplacé par une interface pygame
-try:
-    input = 1
-    #input = int(input("Enter 1-réseau or 2-local: "))
-    if input == 1:
+#try:
+#    input = 1
+#    #input = int(input("Enter 1-réseau or 2-local: "))
+#    if input == 1:
+#        mainP2P()
+#    elif input == 2:
+#        main()
+#    elif input == 3:
+#        mainIA()
+#except ValueError:
+#    print("Error: Invalid input. Please enter 1 or 2.")
+
+inlocal = False
+while True:
+    value = menu()
+    if value == 1:
+        #réseau
         mainP2P()
-    elif input == 2:
-        main()
-    elif input == 3:
-        mainIA()
-except ValueError:
-    print("Error: Invalid input. Please enter 1 or 2.")
+    elif value == 2:
+        #local
+        inlocal = True
+        while inlocal:
+            value1 = localplay()
+            if value1 == 1:
+                #jouer à 2
+                value2 = normal_or_blitz()
+                if value2 == 1:
+                    #normal
+                    main()
+                elif value2 == 2:
+                    #blitz
+                    main()#todo à adapter
+            elif value1 == 2:
+                #jouer contre ia
+                value2 = normal_or_blitz()
+                if value2 == 1:
+                    #normal
+                    mainIA()
+                elif value2 == 2:
+                    #blitz
+                    mainIA()#todo à adapter
+                elif value1 == 3:
+                    continue
+            else:
+                break
+
+
