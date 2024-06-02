@@ -84,7 +84,7 @@ def draw_text_top_right(screen, text):
     screen.blit(img, (screen.get_width() - img.get_width() - 10, 10))
 
 
-def main(modeJeu):
+def main(modeJeu, easterEgg):
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Définit le mode de la fenêtre en plein écran
     screen.fill(BG_COLOR)
@@ -97,7 +97,10 @@ def main(modeJeu):
     yinsh_img_rect = yinsh_img.get_rect()
     yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  # Positionne l'image au centre en haut
 
-    boardImage = pygame.image.load("yinsh_board.png")
+    if easterEgg == 42:
+        boardImage = pygame.image.load("yinsh_board_easter_egg.png")
+    else:
+        boardImage = pygame.image.load("yinsh_board.png")
     boardImage = pygame.transform.scale(boardImage, (535,500))
     boardImage_rect = boardImage.get_rect()
     boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
@@ -303,7 +306,7 @@ def main(modeJeu):
 
 
 
-def mainP2P (modeJeu):
+def mainP2P (modeJeu,easterEgg):
     queue = Queue()
     host_name = Server.get_local_ip() #* récupérer hostname pour bind la connexion
     port = 1111 #* definition du port utilisé
@@ -337,7 +340,10 @@ def mainP2P (modeJeu):
     yinsh_img_rect = yinsh_img.get_rect()
     yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  # Positionne l'image au centre en haut
 
-    boardImage = pygame.image.load("yinsh_board.png")
+    if easterEgg == 42:
+        boardImage = pygame.image.load("yinsh_board_easter_egg.png")
+    else:
+        boardImage = pygame.image.load("yinsh_board.png")
     boardImage = pygame.transform.scale(boardImage, (535,500))
     boardImage_rect = boardImage.get_rect()
     boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
@@ -632,7 +638,7 @@ def mainP2P (modeJeu):
 
 
 
-def mainIA(modeJeu):
+def mainIA(modeJeu,easterEgg):
 
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Définit le mode de la fenêtre en plein écran
@@ -645,7 +651,10 @@ def mainIA(modeJeu):
     yinsh_img_rect = yinsh_img.get_rect()
     yinsh_img_rect.midtop = (screen.get_width() // 1.6, 20)  
 
-    boardImage = pygame.image.load("yinsh_board.png")
+    if easterEgg == 42:
+        boardImage = pygame.image.load("yinsh_board_easter_egg.png")
+    else:
+        boardImage = pygame.image.load("yinsh_board.png")
     boardImage = pygame.transform.scale(boardImage, (535,500))
     boardImage_rect = boardImage.get_rect()
     boardImage_rect.topleft = (5,0)  # Positionne l'image dans le coin
@@ -877,6 +886,7 @@ def mainIA(modeJeu):
 #    print("Error: Invalid input. Please enter 1 or 2.")
 
 inlocal = False
+easterEgg = 0
 while True:
     value = menu()
     if value == 1:
@@ -884,10 +894,10 @@ while True:
         value2 = normal_or_blitz()
         if value2 == 1:
             #normal
-            mainP2P(3)
+            mainP2P(3,easterEgg)
         elif value2 == 2:
             #blitz
-            mainP2P(1)
+            mainP2P(1,easterEgg)
     elif value == 2:
         #local
         inlocal = True
@@ -898,10 +908,10 @@ while True:
                 value2 = normal_or_blitz()
                 if value2 == 1:
                     #normal
-                    main(3)
+                    main(3,easterEgg)
                 elif value2 == 2:
                     #blitz
-                    main(1)#todo à adapter
+                    main(1,easterEgg)
             elif value1 == 2:
                 #jouer contre ia
                 value2 = normal_or_blitz()
@@ -910,9 +920,12 @@ while True:
                     mainIA(3)
                 elif value2 == 2:
                     #blitz
-                    mainIA(1)#todo à adapter
+                    mainIA(1,easterEgg)
                 elif value1 == 3:
                     continue
             else:
                 break
+    elif value == 42:
+        easterEgg = value
+    
 

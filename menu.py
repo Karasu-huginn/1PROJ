@@ -117,8 +117,8 @@ def menu():
             
         if rect_retour.collidepoint((mouse_x, mouse_y)) and mouse_click[0] == 1:
             #retour_menu()
-            pygame.quit()
             #todo ICI JE SUIS ICI
+            return 42
         pygame.display.flip()
 
 #def jouer_en_ligne():
