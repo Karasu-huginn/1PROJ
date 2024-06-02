@@ -205,8 +205,8 @@ def main(modeJeu):
         button_charger = screen.get_width() - 190
         reset_button_rect = draw_button(screen, "Reset", (button_x, 340))
         quit_button_rect = draw_button(screen, "Quitter", (button_x, 415))
-        save_button_rect = draw_button_save(screen, "Sauvegarder", (button_x, 265))
-        load_button_rect = draw_button_charger(screen, "Charger", (button_charger, 265))
+        #save_button_rect = draw_button_save(screen, "Sauvegarder", (button_x, 265))
+        #load_button_rect = draw_button_charger(screen, "Charger", (button_charger, 265))
 
         # Dessiner la ligne de séparation
         line_y = 540  # Position verticale de la ligne (juste au-dessus du texte défilant)
@@ -257,11 +257,7 @@ def main(modeJeu):
                 return  # Quitte la fonction main()
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Si le bouton gauche de la souris est cliqué
                 mouse_pos = event.pos
-                if save_button_rect.collidepoint(mouse_pos):
-                    subprocess.run(["python", "sauvegarder.py"])
-                elif load_button_rect.collidepoint(mouse_pos):
-                    subprocess.run(["python", "charger.py"])
-                elif reset_button_rect.collidepoint(mouse_pos):
+                if reset_button_rect.collidepoint(mouse_pos):
                     for i in range(len(objetPlateau.plateau[1])):
                         for u in range(len(objetPlateau.plateau[1][i])):
                             if objetPlateau.plateau[1][i][u] != 0:
@@ -277,7 +273,7 @@ def main(modeJeu):
                                 marqueursAlignesListe = list()
                                 tourJoueurAlignement = 0
                 elif quit_button_rect.collidepoint(mouse_pos):
-                    subprocess.run(["python", "quitter.py"])
+                    pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 4:  # Scroll up
                     scroll_y = max(scroll_y - scroll_speed, 0)
@@ -851,7 +847,7 @@ def mainIA(modeJeu):
 
 
                 elif quit_button_rect.collidepoint(mouse_pos):
-                    subprocess.run(["python", "quitter.py"])
+                    pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 4:  # Scroll up
                     scroll_y = max(scroll_y - scroll_speed, 0)
