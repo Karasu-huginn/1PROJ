@@ -305,10 +305,16 @@ def mainP2P (modeJeu):
     port = 1111 #* definition du port utilisé
     server = Server(host_name, port) #* création de l'instance server
     valid = True
-    server.bind() #* bind la connexion avec le port et l'adresse ip
-    ip = Server.get_local_ip()
-    server.interfaceP2Phost(ip)
-    connection, addr, valid = server.accept_connection() #* accept la connexion du client -> serveur
+    #server.bind() #* bind la connexion avec le port et l'adresse ip
+
+    #receive_connection_thread = threading.Thread(target=server.accept_connection(), args=()) #* liaison du process à faire tourner sur le thread
+    #receive_connection_thread.start() #* démarrage du thread
+#
+    #while not server.connected: 
+    #    ip = Server.get_local_ip()
+    #    server.interfaceP2Phost(ip)
+
+    connection, addr, valid = server.bind_and_accept(host_name) #* accept la connexion du client -> serveur
     #test connection
     message_recu = server.receive_message(connection) #* test de connection
     message = ("Server : Bonjour le serveur est aussi vivant ! :D") #* test de connection
@@ -869,5 +875,4 @@ while True:
                     continue
             else:
                 break
-
 
