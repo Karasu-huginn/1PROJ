@@ -39,12 +39,13 @@ class Plateau:
     def get_anneaux_nombre(self):
         anneauxNoirs = 0
         anneauxBlancs = 0
-        for i in range(len(self.plateau)):
-            for u in range(len(self.plateau)):
+        for i in range(len(self.plateau[1])):
+            for u in range(len(self.plateau[1][i])):
                 if self.plateau[1][i][u] == "A":
                     anneauxNoirs += 1
                 elif self.plateau[1][i][u] == "a":
                     anneauxBlancs += 1
+        print(anneauxBlancs, anneauxNoirs)
         return anneauxBlancs, anneauxNoirs
 
 #* SETTERS

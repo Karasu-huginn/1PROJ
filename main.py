@@ -345,6 +345,8 @@ def mainP2P (modeJeu):
     marqueursAlignes = False
     marqueursAlignesListe = list()
     tourJoueurAlignement = 0
+    anneauxBlancs = 0
+    anneauxNoirs = 0
 
     # Configuration de la zone de texte défilante
     text_scroll_surface = pygame.Surface((screen.get_width() - 200, 400))
@@ -357,14 +359,26 @@ def mainP2P (modeJeu):
     receive_messages_thread = threading.Thread(target=server.receive_messages_thread, args=(queue,connection)) #* liaison du process à faire tourner sur le thread
     receive_messages_thread.start() #* démarrage du thread
 
+    tempTicks = 0
+
     while windowStayOpened: #* boucle execution pygame
+
+
         screen.fill(BG_COLOR)
         screen.blit(yinsh_img, yinsh_img_rect)
         screen.blit(boardImage, boardImage_rect)
-        anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
-        pointsBlancs = 5 - anneauxBlancs
-        pointsNoirs = 5 - anneauxNoirs
-
+        if objetPlateau.get_anneauxPlaces() > 5 and anneauEnDeplacement == False:
+            anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
+            pointsBlancs = 5 - anneauxBlancs
+            pointsNoirs = 5 - anneauxNoirs
+        if tempTicks < 500:
+            tempTicks += 1
+        else:
+            tempTicks = 0
+            print("AnneauxBlancs : ", anneauxBlancs)
+            print("pointsBlancs :", pointsBlancs)
+            print("AnneauxNoirs : ", anneauxNoirs)
+            print("pointsNoirs :", pointsNoirs)
         if pointsBlancs == modeJeu or pointsNoirs == modeJeu:
             windowStayOpened = False
         
