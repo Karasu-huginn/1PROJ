@@ -157,7 +157,10 @@ def yinshclient (ip):
         scroll_speed = 20  # Augmenter la vitesse de défilement
  
         while windowStayOpened: #* boucle execution pygame
-            if objetPlateau.get_anneauxPlaces() > 10:
+            screen.fill(BG_COLOR)
+            screen.blit(yinsh_img, yinsh_img_rect)
+            screen.blit(boardImage, boardImage_rect)
+            if objetPlateau.get_anneauxPlaces() > 10 and anneauEnDeplacement == False:
                 anneauxBlancs, anneauxNoirs = objetPlateau.get_anneaux_nombre()
                 pointsBlancs = 5 - anneauxBlancs
                 pointsNoirs = 5 - anneauxNoirs
@@ -298,6 +301,21 @@ def yinshclient (ip):
             text_x = (screen.get_width() - img.get_width()) // 2  # Centrer horizontalement
             text_y = yinsh_img_rect.bottom + 150
             screen.blit(img, (text_x, text_y))
+
+            anneauxblanc, anneauxnoir = objetPlateau.get_anneaux_nombre()
+
+            tourJoueurTexteBlanc = (f"le jour blanc possède: {anneauxblanc}")
+            font = pygame.font.SysFont(None, 39)
+            imgBlanc = font.render(tourJoueurTexteBlanc, True, FONT_COLOR)
+            text_x_blanc = (screen.get_width() - imgBlanc.get_width()) // 2  # Centrer horizontalement
+            text_y_blanc = yinsh_img_rect.bottom + 210
+            screen.blit(imgBlanc, (text_x_blanc, text_y_blanc))
+            
+            tourJoueurTexteNoir = (f"le jour noir possède: {anneauxnoir}")
+            imgNoir = font.render(tourJoueurTexteNoir, True, FONT_COLOR)
+            text_x_noir = (screen.get_width() - imgNoir.get_width()) // 2  # Centrer horizontalement
+            text_y_noir = yinsh_img_rect.bottom + 240  # Ajouter un décalage pour ne pas superposer les textes
+            screen.blit(imgNoir, (text_x_noir, text_y_noir))
     
             # Gérer le texte défilant
             text_scroll_surface.fill(BG_COLOR)
