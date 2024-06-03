@@ -19,11 +19,13 @@ class Server:
         print(f"Connected to client : {addr}")
         self.connected = True
 
-    def bind_and_accept(self, ip):
+    def bind (self):
         self.server_socket.bind((self.host_name, self.port))
         self.server_socket.listen()
-
         print(f"Server listening on {self.host_name}:{self.port}")
+    def bind_and_accept(self, ip):
+
+
         pygame.init()
         info = pygame.display.Info()
         WIDTH, HEIGHT = info.current_w, info.current_h
@@ -45,9 +47,6 @@ class Server:
         dots_count = 0
 
         clock = pygame.time.Clock()
-
-        thread = threading.Thread(target=self.accept_connection)
-        thread.start()
 
         while not self.connected:
             for event in pygame.event.get():
