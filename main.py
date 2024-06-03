@@ -798,51 +798,48 @@ def mainIA(modeJeu,easterEgg):
 
         
 
-#inlocal = False
+inlocal = False
 easterEgg = 0
-#   while True:
-#       value = menu()
-#       if value == 1:
-#           #réseau
-#           value2 = normal_or_blitz()
-#           if value2 == 1:
-#               #normal
-#               mainP2P(3,easterEgg)
-#           elif value2 == 2:
-#               #blitz
-#               mainP2P(1,easterEgg)
-#       elif value == 2:
-#           #local
-#           inlocal = True
-#           while inlocal:
-#               value1 = localplay()
-#               if value1 == 1:
-#                   #jouer à 2
-#                   value2 = normal_or_blitz()
-#                   if value2 == 1:
-#                       #normal
-#                       main(3,easterEgg)
-#                   elif value2 == 2:
-#                       #blitz
-#                       main(1,easterEgg)
-#               elif value1 == 2:
-#                   #jouer contre ia
-#                   value2 = normal_or_blitz()
-#                   if value2 == 1:
-#                       #normal
-#                       mainIA(3)
-#                   elif value2 == 2:
-#                       #blitz
-#                       mainIA(1,easterEgg)
-#                   elif value1 == 3:
-#                       continue
-#               else:
-#                   break
-#       elif value == 42:
-#           if easterEgg == 42:
-#               easterEgg = 0
-#           else:
-#               easterEgg = value
-
-
-mainP2P(1,easterEgg)
+while True:
+    value = menu()
+    if value == 1:
+        #réseau
+        value2 = normal_or_blitz()
+        if value2 == 1:
+            #normal
+            mainP2P(3,easterEgg)
+        elif value2 == 2:
+            #blitz
+            mainP2P(1,easterEgg)
+    elif value == 2:
+        #local
+        inlocal = True
+        while inlocal:
+            value1 = localplay()
+            if value1 == 1:
+                #jouer à 2
+                value2 = normal_or_blitz()
+                if value2 == 1:
+                    #normal
+                    main(3,easterEgg)
+                elif value2 == 2:
+                    #blitz
+                    main(1,easterEgg)
+            elif value1 == 2:
+                #jouer contre ia
+                value2 = normal_or_blitz()
+                if value2 == 1:
+                    #normal
+                    mainIA(3)
+                elif value2 == 2:
+                    #blitz
+                    mainIA(1,easterEgg)
+                elif value1 == 3:
+                    continue
+            else:
+                break
+    elif value == 42:
+        if easterEgg == 42:
+            easterEgg = 0
+        else:
+            easterEgg = value
